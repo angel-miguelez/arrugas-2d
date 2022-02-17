@@ -10,4 +10,9 @@ python -m main  # sin el .py
 Se necesita tener instaladas las siguientes librerías:
 * json
 * pygame
-* python_menu
+* pygame_menu
+
+Para este último:
+```
+pip install pygame-menu -U
+```
