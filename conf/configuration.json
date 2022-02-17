@@ -1,0 +1,11 @@
+{
+    "player": {
+        "movement": {
+            "up": "w",
+            "down": "s",
+            "right": "d",
+            "left": "a"
+        }
+    },
+    "sound": {}
+}
