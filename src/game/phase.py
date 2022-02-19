@@ -5,6 +5,8 @@ from pygame.locals import *
 
 from conf.configuration import ConfManager
 from game.scene import Scene
+from game.level import Level
+from res.levels import *
 
 
 class Phase(Scene):
@@ -63,5 +65,10 @@ class PhaseTest(Phase):
         pass
 
     def draw(self, surface):
-        surface.fill((0, 0, 0))
+        surface.fill((0, 0, 0)) #Background color
+
+        level = Level(level_test, surface) #Setup level structure
+        level.run() #Draw the level
+
+        #Player with movement
         pygame.draw.circle(surface, (255, 255, 255), (self.x, self.y), 4, 0)
