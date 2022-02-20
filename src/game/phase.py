@@ -24,8 +24,6 @@ class Phase(Scene):
         self.MOVE_RIGHT = self._conf.getBind("player.movement.right")
         self.MOVE_LEFT = self._conf.getBind("player.movement.left")
 
-        self.level = Level(level_test, NULL)  # Setup level structure
-
     def onEnter(self):
         pygame.mouse.set_visible(False)
 
@@ -40,6 +38,8 @@ class PhaseTest(Phase):
 
     def __init__(self, director):
         super().__init__(director, "PhaseTest")
+
+        self.level = Level(basic_layout, NULL)  # Setup level structure
 
         self.x, self.y = (400, 400)
         self.speedX, self.speedY = 5, 5

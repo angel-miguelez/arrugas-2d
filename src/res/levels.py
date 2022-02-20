@@ -32,8 +32,8 @@ level_test = [
 ]
 
 basic_layout = [
-    '                       ',
-    '                       ',
+    '                        ',
+    '                        ',
     '          XXXXXX        ',
     '          X    X        ',
     '          X    X        ',
@@ -52,8 +52,8 @@ basic_layout = [
     '          X    XXXXXXX  ',
     '          X    X        ',
     '          XXXXXX        ',
-    '                       ',
-    '                       ',
+    '                        ',
+    '                        ',
 ]
 
 rooms = [

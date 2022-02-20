@@ -33,7 +33,7 @@ class Level:
 
                 #Check to see if we have to add a wall tile
                 if cell == 'X':
-                    inside = ~inside #Complement of current value
+                    inside = not inside #Complement of current value
 
                     tile = Tile((x, y), tile_size, 'gray')
                     self.tiles.add(tile)
@@ -45,7 +45,6 @@ class Level:
                 
                 #Check to see if we have a door
                 if cell == 'D':
-                    inside = ~inside  # Complement of current value
 
                     #Get the room we want to add
                     while True:
@@ -57,15 +56,17 @@ class Level:
                     #Get the room from the list of rooms based on the random number
                     room = rooms[num]
 
+                    print(room)
+
                     if inside:
-                        """
+                        
                         #The empty space on the map is to the right of the door
                         col = col_index + 1
 
                         #Get the door position in the room
                         for room_row_index, room_row in enumerate(room):
                             for room_col_index, room_cell in enumerate(room_row):
-                                if cell == 'D':
+                                if room_cell == 'D':
                                     r = room_row_index
                                     c = room_col_index
 
@@ -75,40 +76,76 @@ class Level:
 
                         #Iterate to add each cell
                         for room_row_index, room_row in enumerate(room):
+                            aux_x = start_col
                             for room_col_index, room_cell in enumerate(room_row):
                                 if room_cell == 'X':
-                                    tile = Tile((start_row * tile_size, start_col * tile_size), tile_size, 'white')
+                                    
+                                    if aux_x == 0:
+                                        x = aux_x + tile_size
+                                    else:
+                                        x = aux_x * tile_size
+                                    if start_row == 0:
+                                        y = start_row + tile_size
+                                    else:
+                                        y = start_row * tile_size
+
+                                    tile = Tile((x, y), tile_size, 'white')
                                     self.tiles.add(tile)
                                 
-                                start_row -= 1
-                                start_col -= 1
-                        """
+                                aux_x -= 1
+                            
+                            start_row -= 1
+                        
                     else:
 
                         #The empty space on the map is to the left of the door
                         col = col_index - 1
+                        """
+                        print("Row:")
+                        print(row_index)
+                        print("Col:")
+                        print(col)
+                        print("Col_index: ")
+                        print(col_index)
+                        """
 
                         #Get the door position in the room
                         for room_row_index, room_row in enumerate(room):
                             for room_col_index, room_cell in enumerate(room_row):
-                                if cell == 'D':
+                                if room_cell == 'D':
                                     r = room_row_index
                                     c = room_col_index
 
                         #Calculating starting point to add the room on the basic layout
                         start_row = row_index - r
                         start_col = col - c
+                        
+                        print(start_row)
+                        print(start_col)
 
                         #Iterate to add each cell
                         for room_row_index, room_row in enumerate(room):
+                            aux_x = start_col
                             for room_col_index, room_cell in enumerate(room_row):
                                 if room_cell == 'X':
-                                    tile = Tile((start_row * tile_size, start_col * tile_size), tile_size, 'white')
+                                    if aux_x == 0:
+                                        x = aux_x + tile_size
+                                    else:
+                                        x = aux_x * tile_size
+
+                                    if start_row == 0:
+                                        y = start_row + tile_size
+                                    else:
+                                        y = start_row * tile_size
+
+                                    tile = Tile((x, y), tile_size, 'white')
                                     self.tiles.add(tile)
 
-                                start_col += 1
+                                aux_x += 1
                             
                             start_row += 1
+                
+                    inside = not inside  # Complement of current value
 
                     
 
