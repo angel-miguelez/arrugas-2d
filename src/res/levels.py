@@ -66,11 +66,11 @@ rooms = [
         'XXXXX',
     ],
     [
-        'XXXXXXXXX',
-        'X       X',
-        'X       D',
-        'X       X',
-        'XXXXXXXXX',
+        'XXXXXXX',
+        'X     X',
+        'X     D',
+        'X     X',
+        'XXXXXXX',
     ],
     [
         'XXXXXXXXXX',

@@ -37,17 +37,20 @@ class Level:
         for room_row_index, room_row in enumerate(room):
             aux_x = start_col
             for room_col_index, room_cell in enumerate(room_row):
+                #Check to see if there is a wall on the room layout
                 if room_cell == 'X':
 
                     if aux_x == 0:
                         x = aux_x + tile_size
                     else:
                         x = aux_x * tile_size
+
                     if start_row == 0:
                         y = start_row + tile_size
                     else:
                         y = start_row * tile_size
 
+                    #Adding the tile to the tile group
                     tile = Tile((x, y), tile_size, 'white')
                     self.tiles.add(tile)
 
