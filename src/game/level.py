@@ -14,8 +14,52 @@ class Level:
 
         self.setup_level(level_data)
 
-    def __addRoom(self, layout, room, layout_pos, room_pos):
-        pass
+    def __addRoom(self, room, layout_door_pos, orientation):
+        row_index = layout_door_pos[0]
+        col = layout_door_pos[1]
+
+        #Get the door position in the room
+        for room_row_index, room_row in enumerate(room):
+            for room_col_index, room_cell in enumerate(room_row):
+                if room_cell == 'D':
+                    r = room_row_index
+                    c = room_col_index
+
+        #Calculating starting point to add the room on the basic layout
+        if orientation:
+            start_row = row_index + r
+            start_col = col + c
+        else:
+            start_row = row_index - r
+            start_col = col - c
+
+        #Iterate to add each cell
+        for room_row_index, room_row in enumerate(room):
+            aux_x = start_col
+            for room_col_index, room_cell in enumerate(room_row):
+                if room_cell == 'X':
+
+                    if aux_x == 0:
+                        x = aux_x + tile_size
+                    else:
+                        x = aux_x * tile_size
+                    if start_row == 0:
+                        y = start_row + tile_size
+                    else:
+                        y = start_row * tile_size
+
+                    tile = Tile((x, y), tile_size, 'white')
+                    self.tiles.add(tile)
+
+                if orientation:
+                    aux_x -= 1
+                else: 
+                    aux_x += 1
+
+            if orientation:
+                start_row -= 1
+            else: 
+                start_row += 1
     
     def setSurface(self, surface):
         self.display_surface = surface
@@ -56,94 +100,21 @@ class Level:
                     #Get the room from the list of rooms based on the random number
                     room = rooms[num]
 
-                    print(room)
-
                     if inside:
                         
                         #The empty space on the map is to the right of the door
                         col = col_index + 1
 
-                        #Get the door position in the room
-                        for room_row_index, room_row in enumerate(room):
-                            for room_col_index, room_cell in enumerate(room_row):
-                                if room_cell == 'D':
-                                    r = room_row_index
-                                    c = room_col_index
-
-                        #Calculating starting point to add the room on the basic layout
-                        start_row = row_index + r
-                        start_col = col + c
-
-                        #Iterate to add each cell
-                        for room_row_index, room_row in enumerate(room):
-                            aux_x = start_col
-                            for room_col_index, room_cell in enumerate(room_row):
-                                if room_cell == 'X':
-                                    
-                                    if aux_x == 0:
-                                        x = aux_x + tile_size
-                                    else:
-                                        x = aux_x * tile_size
-                                    if start_row == 0:
-                                        y = start_row + tile_size
-                                    else:
-                                        y = start_row * tile_size
-
-                                    tile = Tile((x, y), tile_size, 'white')
-                                    self.tiles.add(tile)
-                                
-                                aux_x -= 1
-                            
-                            start_row -= 1
+                        #Add the room
+                        self.__addRoom(room, (row_index, col), inside)
                         
                     else:
 
                         #The empty space on the map is to the left of the door
                         col = col_index - 1
-                        """
-                        print("Row:")
-                        print(row_index)
-                        print("Col:")
-                        print(col)
-                        print("Col_index: ")
-                        print(col_index)
-                        """
 
-                        #Get the door position in the room
-                        for room_row_index, room_row in enumerate(room):
-                            for room_col_index, room_cell in enumerate(room_row):
-                                if room_cell == 'D':
-                                    r = room_row_index
-                                    c = room_col_index
-
-                        #Calculating starting point to add the room on the basic layout
-                        start_row = row_index - r
-                        start_col = col - c
-                        
-                        print(start_row)
-                        print(start_col)
-
-                        #Iterate to add each cell
-                        for room_row_index, room_row in enumerate(room):
-                            aux_x = start_col
-                            for room_col_index, room_cell in enumerate(room_row):
-                                if room_cell == 'X':
-                                    if aux_x == 0:
-                                        x = aux_x + tile_size
-                                    else:
-                                        x = aux_x * tile_size
-
-                                    if start_row == 0:
-                                        y = start_row + tile_size
-                                    else:
-                                        y = start_row * tile_size
-
-                                    tile = Tile((x, y), tile_size, 'white')
-                                    self.tiles.add(tile)
-
-                                aux_x += 1
-                            
-                            start_row += 1
+                        #Add the room
+                        self.__addRoom(room, (row_index, col), inside)
                 
                     inside = not inside  # Complement of current value
 
