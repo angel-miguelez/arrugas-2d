@@ -1,18 +1,29 @@
+from asyncio.windows_events import NULL
 from operator import le
 import pygame
+import numpy as np
 from game.tiles import Tile
-from res.levels import tile_size
+from res.levels import *
 
 class Level:
     def __init__(self, level_data, surface):
         self.display_surface = surface
-        self.setup_level(level_data)
         self.world_shift_x = 0
         self.world_shift_y = 0
+        self.levels = np.zeros((room_num), dtype=bool)
+
+        self.setup_level(level_data)
+
+    def __addRoom(self, layout, room, layout_pos, room_pos):
+        pass
+    
+    def setSurface(self, surface):
+        self.display_surface = surface
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()  #Group of tiles that form the level
         self.player = pygame.sprite.GroupSingle() #Group to represent the player
+        inside = False
         
         #Iterate through the level layout in order to build it
         for row_index, row in enumerate(layout):
@@ -22,6 +33,8 @@ class Level:
 
                 #Check to see if we have to add a wall tile
                 if cell == 'X':
+                    inside = ~inside #Complement of current value
+
                     tile = Tile((x, y), tile_size, 'gray')
                     self.tiles.add(tile)
                 
@@ -29,10 +42,84 @@ class Level:
                 if cell == 'P':
                     tile = Tile((x, y), tile_size, 'red')
                     self.tiles.add(tile)
+                
+                #Check to see if we have a door
+                if cell == 'D':
+                    inside = ~inside  # Complement of current value
+
+                    #Get the room we want to add
+                    while True:
+                        num = np.random.randint(0, room_num)
+                        if self.levels[num] == False:
+                            self.levels[num] = True
+                            break
+
+                    #Get the room from the list of rooms based on the random number
+                    room = rooms[num]
+
+                    if inside:
+                        """
+                        #The empty space on the map is to the right of the door
+                        col = col_index + 1
+
+                        #Get the door position in the room
+                        for room_row_index, room_row in enumerate(room):
+                            for room_col_index, room_cell in enumerate(room_row):
+                                if cell == 'D':
+                                    r = room_row_index
+                                    c = room_col_index
+
+                        #Calculating starting point to add the room on the basic layout
+                        start_row = row_index + r
+                        start_col = col + c
+
+                        #Iterate to add each cell
+                        for room_row_index, room_row in enumerate(room):
+                            for room_col_index, room_cell in enumerate(room_row):
+                                if room_cell == 'X':
+                                    tile = Tile((start_row * tile_size, start_col * tile_size), tile_size, 'white')
+                                    self.tiles.add(tile)
+                                
+                                start_row -= 1
+                                start_col -= 1
+                        """
+                    else:
+
+                        #The empty space on the map is to the left of the door
+                        col = col_index - 1
+
+                        #Get the door position in the room
+                        for room_row_index, room_row in enumerate(room):
+                            for room_col_index, room_cell in enumerate(room_row):
+                                if cell == 'D':
+                                    r = room_row_index
+                                    c = room_col_index
+
+                        #Calculating starting point to add the room on the basic layout
+                        start_row = row_index - r
+                        start_col = col - c
+
+                        #Iterate to add each cell
+                        for room_row_index, room_row in enumerate(room):
+                            for room_col_index, room_cell in enumerate(room_row):
+                                if room_cell == 'X':
+                                    tile = Tile((start_row * tile_size, start_col * tile_size), tile_size, 'white')
+                                    self.tiles.add(tile)
+
+                                start_col += 1
+                            
+                            start_row += 1
+
+                    
+
 
     def run(self):
         #Update method that allows us to move through the map based on the player inputs
         #self.tiles.update(self.world_shift_x, self.world_shift_y)
 
-        self.tiles.draw(self.display_surface) #Draw the level itself
-        self.player.draw(self.display_surface) #Draw the player
+        if self.display_surface == NULL:
+            print("ERROR: No display surface to draw on.")
+            exit(-1)
+        else:    
+            self.tiles.draw(self.display_surface) #Draw the level itself
+            self.player.draw(self.display_surface) #Draw the player

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from asyncio.windows_events import NULL
 import pygame
 from pygame.locals import *
 
@@ -23,6 +23,8 @@ class Phase(Scene):
         self.MOVE_DOWN = self._conf.getBind("player.movement.down")
         self.MOVE_RIGHT = self._conf.getBind("player.movement.right")
         self.MOVE_LEFT = self._conf.getBind("player.movement.left")
+
+        self.level = Level(level_test, NULL)  # Setup level structure
 
     def onEnter(self):
         pygame.mouse.set_visible(False)
@@ -67,8 +69,8 @@ class PhaseTest(Phase):
     def draw(self, surface):
         surface.fill((0, 0, 0)) #Background color
 
-        level = Level(level_test, surface) #Setup level structure
-        level.run() #Draw the level
+        self.level.setSurface(surface)
+        self.level.run() #Draw the level
 
         #Player with movement
         pygame.draw.circle(surface, (255, 255, 255), (self.x, self.y), 4, 0)

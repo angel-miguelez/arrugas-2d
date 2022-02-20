@@ -1,4 +1,5 @@
 tile_size = 32 #Tile size used as a base to construct the level
+room_num = 3
 
 """
     The following variable consist of a list of strings that sets the layout for the level
@@ -28,4 +29,54 @@ level_test = [
     '      XXXXXXXXX        ',
     '                       ',
     '                       ',
+]
+
+basic_layout = [
+    '                       ',
+    '                       ',
+    '          XXXXXX        ',
+    '          X    X        ',
+    '          X    X        ',
+    '          X    X        ',
+    '          X    X        ',
+    '          X    X        ',
+    '          D    D        ',
+    '          X    X        ',
+    '          X    X        ',
+    '          X    XXXXXXX  ',
+    '          X    XXP   X  ',
+    '          X    XX    X  ',
+    '          X          X  ',
+    '          X    XX    X  ',
+    '          D    XX    X  ',
+    '          X    XXXXXXX  ',
+    '          X    X        ',
+    '          XXXXXX        ',
+    '                       ',
+    '                       ',
+]
+
+rooms = [
+    [
+        'XXXXX',
+        'X   X',
+        'X   D',
+        'X   X',
+        'X   X',
+        'XXXXX',
+    ],
+    [
+        'XXXXXXXXX',
+        'X       X',
+        'X       D',
+        'X       X',
+        'XXXXXXXXX',
+    ],
+    [
+        'XXXXXXXXXX',
+        'X        X',
+        'X        D',
+        'X        X',
+        'XXXXXXXXXX',
+    ]
 ]
