@@ -1,0 +1,8 @@
+row 1 = idle (1 - 5)
+row 2 = run (6 - 13)
+row 3 = jump (14 - 16)
+row 4 = fall (17 - 18)
+row 5 = attack = (19 - 24)
+row 6 = taking damage = (25)
+row 7 = dead (26 - 32)
+row 8 = shield blocking = (33 - 34)

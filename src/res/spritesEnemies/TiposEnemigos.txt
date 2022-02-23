@@ -1,0 +1,24 @@
+Básicos
+	0 No hace nada (X)
+	1 Movimiento
+		1 Sencillo (X)
+		2 Con diagonales (X)
+	2 Radio (X)
+	3 Movimiento Aleatorio (X)
+	4 Disparo (X)
+	5 Aparición (X)
+
+Normales
+	1 Teleportación (X)
+	2 Seguimiento
+		1 Veloz (X)
+		2 Lento (X)
+	3 Rayos
+
+Avanzado
+	1 Seguimiento y Disparo/Golpe (X)
+	2 Dash y muerte cuando detecta al jugador (X)
+
+(X): Sprite ya conseguida
+
+Restante: N3 Rayos 
