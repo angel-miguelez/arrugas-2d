@@ -6,211 +6,167 @@
 
 import pygame, sys, os
 from pygame.locals import *
+from gestorRecursos import *
 
-# Movimientos
-IZQUIERDA = 0
-DERECHA = 1
-ARRIBA = 2
-ABAJO = 3
-QUIETO = 4
-
-#Posturas
-SPRITE_QUIETO = 0
-SPRITE_ANDANDO = 1
+# movements
+left = 0
+right = 1
+up = 2
+down = 3
+stop = 4
 
 
-VELOCIDAD_JUGADOR = 0.2 # Pixeles por milisegundo
-VELOCIDAD_SALTO_JUGADOR = 0.3 # Pixeles por milisegundo
-RETARDO_ANIMACION_JUGADOR = 5 # updates que durará cada imagen del personaje
+#playerSpeed = 0.2 # Pixeles por milisegundo
+#animationDelay = 5 # updates que durará cada imagen del personaje
                               # debería de ser un valor distinto para cada postura
 
 
-
 # -------------------------------------------------
-# Clase GestorRecursos
-
-# En este caso se implementa como una clase vacía, solo con métodos de clase
-class GestorRecursos(object):
-    recursos = {}
-            
-    @classmethod
-    def CargarImagen(cls, nombre, colorkey=None):
-        # Si el nombre de archivo está entre los recursos ya cargados
-        if nombre in cls.recursos:
-            # Se devuelve ese recurso
-            return cls.recursos[nombre]
-        # Si no ha sido cargado anteriormente
-        else:
-            # Se carga la imagen indicando la carpeta en la que está
-            fullname = os.path.join('imagenes', nombre)
-            try:
-                imagen = pygame.image.load(fullname)
-            except pygame.error as message:
-                print ("Cannot load image:", fullname)
-                raise SystemExit
-            imagen = imagen.convert()
-            if colorkey is not None:
-                if colorkey is -1:
-                    colorkey = imagen.get_at((0,0))
-                imagen.set_colorkey(colorkey, RLEACCEL)
-            # Se almacena
-            cls.recursos[nombre] = imagen
-            # Se devuelve
-            return imagen
-
-    @classmethod
-    def CargarArchivoCoordenadas(cls, nombre):
-        # Si el nombre de archivo está entre los recursos ya cargados
-        if nombre in cls.recursos:
-            # Se devuelve ese recurso
-            return cls.recursos[nombre]
-        # Si no ha sido cargado anteriormente
-        else:
-            # Se carga el recurso indicando el nombre de su carpeta
-            fullname = os.path.join('imagenes', nombre)
-            pfile=open(fullname,'r')
-            datos=pfile.read()
-            pfile.close()
-            # Se almacena
-            cls.recursos[nombre] = datos
-            # Se devuelve
-            return datos
-
-
-# -------------------------------------------------
-# Clases de los objetos del juego
+# Character class
 # -------------------------------------------------
 
-class Jugador(pygame.sprite.Sprite):
-    "Jugador"
+class Character(pygame.sprite.Sprite):
+    "Character"
 
-    def __init__(self):
-        # Primero invocamos al constructor de la clase padre
+    def __init__(self, imageFile, coordFile, imageNum, coordScreen, speed, animationDelay):
         pygame.sprite.Sprite.__init__(self);
-        # Se carga la hoja
-        self.hoja = GestorRecursos.CargarImagen('old_man.png',-1)
-        self.hoja = self.hoja.convert_alpha()
-        # El movimiento que esta realizando
-        self.movimiento = QUIETO
-        # Lado hacia el que esta mirando
-        self.mirando = ABAJO
+        # load sheet
+        self.sheet =GestorRecursos.CargarImagen(imageFile, -1)
+        self.sheet = self.sheet.convert_alpha()
+        # movement realized
+        self.movement = stop
+        # where's looking
+        self.looking = down
 
-        # Leemos las coordenadas de un archivo de texto
-        datos = GestorRecursos.CargarArchivoCoordenadas('coordMan.txt')
-        datos = datos.split()
-        self.numPostura = 1;
-        self.numImagenPostura = 0;
+        # reading coords from file
+        data = GestorRecursos.CargarArchivoCoordenadas(coordFile)
+        data = data.split()
+        self.positionNum = 1;
+        self.imagePositionNum = 0;
         cont = 0;
-        numImagenes = [3, 3, 3, 3]        
-        self.coordenadasHoja = [];
-        for linea in range(0, 4):
-            self.coordenadasHoja.append([])
-            tmp = self.coordenadasHoja[linea]
-            for postura in range(1, numImagenes[linea]+1):
-                tmp.append(pygame.Rect((int(datos[cont]), int(datos[cont+1])), (int(datos[cont+2]), int(datos[cont+3]))))
+        self.sheetCoord = [];
+        for line in range(0, 4):
+            self.sheetCoord.append([])
+            tmp = self.sheetCoord[line]
+            for position in range(1, imageNum[line]+1):
+                tmp.append(pygame.Rect((int(data[cont]), int(data[cont+1])), (int(data[cont+2]), int(data[cont+3]))))
                 cont += 4
 
-        # El retardo a la hora de cambiar la imagen del Sprite (para que no se mueva demasiado rápido)
-        self.retardoMovimiento = 0;
+        # delay while changing positions
+        self.movementDelay = 0;
 
-        # En que postura esta inicialmente
-        self.numPostura = ABAJO
+        # initial position
+        self.positionNum = down
 
-        # La posicion inicial del Sprite
-        self.rect = pygame.Rect(100,100,self.coordenadasHoja[self.numPostura][self.numImagenPostura][2],self.coordenadasHoja[self.numPostura][self.numImagenPostura][3])
+        # rectangle tam
+        self.rect = pygame.Rect(100,100,self.sheetCoord[self.positionNum][self.imagePositionNum][2],self.sheetCoord[self.positionNum][self.imagePositionNum][3])
 
-        # La posicion x e y que ocupa
-        self.posicionx = 300
-        self.posiciony = 300
-        self.rect.left = self.posicionx
-        self.rect.bottom = self.posiciony
-        # Velocidad en el eje y (para los saltos)
-        #  En el eje x se utilizaria si hubiese algun tipo de inercia
-        self.velocidady = 0
+        # X and Y coordinates on screen
+        self.positionX = coordScreen[0]
+        self.positionY = coordScreen[1]
+        self.rect.left = self.positionX
+        self.rect.bottom = self.positionY
 
-        # Y actualizamos la postura del Sprite inicial, llamando al metodo correspondiente
-        self.actualizarPostura()
+	# player speed and animation delay(smooth the sprite changes)
+        self.animationDelay = animationDelay
+        self.playerSpeed = speed
 
-
-
-    def actualizarPostura(self):
-        self.retardoMovimiento -= 1
-        # Miramos si ha pasado el retardo para dibujar una nueva postura
-        if (self.retardoMovimiento < 0):
-            self.retardoMovimiento = RETARDO_ANIMACION_JUGADOR
-            # Si ha pasado, actualizamos la postura
-            self.numImagenPostura += 1
-            if self.numImagenPostura >= len(self.coordenadasHoja[self.numPostura]):
-                self.numImagenPostura = 0;
-            if self.numImagenPostura < 0:
-                self.numImagenPostura = len(self.coordenadasHoja[self.numPostura])-1
-            self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-            # Si esta mirando a la izquiera, cogemos la porcion de la hoja
-            if self.mirando == IZQUIERDA:
-                self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-            #  Si no, si mira a la derecha, invertimos esa imagen
-            elif self.mirando == DERECHA:
-                 self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-            elif self.mirando == ARRIBA:
-                self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-            elif self.mirando == ABAJO:
-                self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][self.numImagenPostura])
-            if self.movimiento == QUIETO:
-                self.image = self.hoja.subsurface(self.coordenadasHoja[self.numPostura][0])
+        # update sprites
+        self.updatePosition()
 
 
 
-    def mover(self,teclasPulsadas, arriba, abajo, izquierda, derecha):
+    def updatePosition(self):
+        self.movementDelay -= 1
+        # check if time between sprites updates
+        if (self.movementDelay < 0):
+            self.movementDelay = self.animationDelay
+            # update sprite
+            self.imagePositionNum += 1
+            if self.imagePositionNum >= len(self.sheetCoord[self.positionNum]):
+                self.imagePositionNum = 0;
+            if self.imagePositionNum < 0:
+                self.imagePositionNum = len(self.sheetCoord[self.positionNum])-1
+            self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+            # watching left
+            if self.looking == left:
+                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+            #  watching right
+            elif self.looking == right:
+                 self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+            # watching up
+            elif self.looking == up:
+                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+            # watching down
+            elif self.looking == down:
+                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+            # no movement is being done
+            if self.movement == stop:
+                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][0])
 
-        # Indicamos la acción a realizar segun la tecla pulsada para el jugador
-        if teclasPulsadas[arriba]:
-            self.movimiento = ARRIBA
-        elif teclasPulsadas[izquierda]:
-            self.movimiento = IZQUIERDA
-        elif teclasPulsadas[derecha]:
-            self.movimiento = DERECHA
-        elif teclasPulsadas[abajo]:
-            self.movimiento = ABAJO
-        else:
-            self.movimiento = QUIETO
 
 
-
-
-    def update(self, tiempo):
-        # Si vamos a la izquierda
-        if self.movimiento == IZQUIERDA:
-            # Esta mirando a la izquierda
-            self.mirando = IZQUIERDA
-            # Actualizamos la posicion
-            self.posicionx -= (int)(VELOCIDAD_JUGADOR * tiempo)
-            self.rect.left = self.posicionx
-            self.numPostura = 0
-        elif self.movimiento == DERECHA:
-            # Esta mirando a la derecha
-            self.mirando = DERECHA
-            # Actualizamos la posicion
-            self.posicionx += (int)(VELOCIDAD_JUGADOR * tiempo)
-            self.rect.left = self.posicionx
-            self.numPostura = 1
-        elif self.movimiento == ARRIBA:
-            # Está mirando arriba
-            self.mirando = ARRIBA
-            # Actualizamos la posición
-            self.posiciony -= (int)(VELOCIDAD_JUGADOR * tiempo)
-            self.rect.bottom = self.posiciony
-            self.numPostura = 2
-        elif self.movimiento == ABAJO:
-            # Está mirando abajo 
-            self.mirando = ABAJO
-            # Actualizamos la posición
-            self.posiciony += (int)(VELOCIDAD_JUGADOR * tiempo)
-            self.rect.bottom = self.posiciony
-            self.numPostura = 3
-        # Actualizamos la imagen a mostrar
-        self.actualizarPostura()
+    def update(self, time):
+        # moving left
+        if self.movement == left:
+            # looking left
+            self.looking = left
+            # update screen coordinates
+            self.positionX -= (int)(self.playerSpeed * time)
+            self.rect.left = self.positionX
+            self.positionNum = 0
+        # moving right
+        elif self.movement == right:
+            # looking right
+            self.looking = right
+            # update screen coordinates
+            self.positionX += (int)(self.playerSpeed * time)
+            self.rect.left = self.positionX
+            self.positionNum = 1
+        # moving up
+        elif self.movement == up:
+            # looking up
+            self.looking = up
+            # update screen coordinates
+            self.positionY -= (int)(self.playerSpeed * time)
+            self.rect.bottom = self.positionY
+            self.positionNum = 2
+        # moving down
+        elif self.movement == down:
+            # looking down
+            self.looking = down
+            # update screen coordinates
+            self.positionY += (int)(self.playerSpeed * time)
+            self.rect.bottom = self.positionY
+            self.positionNum = 3
+        # while stopped not changes are done
+        # update
+        self.updatePosition()
         return
         
+# -------------------------------------------------
+# Player class
+
+class Player(Character):
+    "Main character"
+    def __init__(self):
+        # called constructor of father class
+        Character.__init__(self, 'old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], 0.3, 0);
+
+        #move function
+    def move(self,toggledKeys, upControl, downControl, leftControl, rightControl):
+
+        # Indicamos la acción a realizar segun la tecla pulsada para el jugador
+        if toggledKeys[upControl]:
+            self.movement = up
+        elif toggledKeys[leftControl]:
+            self.movement = left
+        elif toggledKeys[rightControl]:
+            self.movement = right
+        elif toggledKeys[downControl]:
+            self.movement = down
+        else:
+            self.movement = stop
 
 
 
@@ -233,8 +189,9 @@ def main():
     pygame.display.set_caption('Ejemplo de uso de Sprites')
 
     # Creamos los jugadores
-    jugador1 = Jugador()
-
+    #jugador1 = Character('old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], 0.3, 0)
+    jugador1 = Player()
+    
     # Creamos el grupo de Sprites de jugadores
     grupoJugadores = pygame.sprite.Group( jugador1 )
 
@@ -243,7 +200,7 @@ def main():
     while True:
 
         # Hacemos que el reloj espere a un determinado fps
-        tiempo_pasado = reloj.tick(60)
+        time_pasado = reloj.tick(60)
 
         # Para cada evento, hacemos
         for event in pygame.event.get():
@@ -253,22 +210,22 @@ def main():
                 sys.exit()
 
         # Miramos que teclas se han pulsado
-        teclasPulsadas = pygame.key.get_pressed()
+        toggledKeys = pygame.key.get_pressed()
 
         # Si la tecla es Escape
-        if teclasPulsadas[K_ESCAPE]:
+        if toggledKeys[K_ESCAPE]:
             # Se sale del programa
             pygame.quit()
             sys.exit()
 
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
-        jugador1.mover(teclasPulsadas, K_UP, K_DOWN, K_LEFT, K_RIGHT)
+        jugador1.move(toggledKeys, K_UP, K_DOWN, K_LEFT, K_RIGHT)
 
 
 
         # Actualizamos los jugadores actualizando el grupo
-        grupoJugadores.update(tiempo_pasado)
+        grupoJugadores.update(time_pasado)
 
 
         # Dibujar el fondo de color
