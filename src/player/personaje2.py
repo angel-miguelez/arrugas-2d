@@ -7,6 +7,7 @@
 import pygame, sys, os
 from pygame.locals import *
 from gestorRecursos import *
+import math 
 
 # movements
 left = 0
@@ -14,12 +15,13 @@ right = 1
 up = 2
 down = 3
 stop = 4
+diagUpLeft = 5
+diagUpRight = 6
+diagDownLeft = 7
+diagDownRight = 8
 
-
-#playerSpeed = 0.2 # Pixeles por milisegundo
-#animationDelay = 5 # updates que durará cada imagen del personaje
-                              # debería de ser un valor distinto para cada postura
-
+#const
+diag = 0.707
 
 # -------------------------------------------------
 # Character class
@@ -37,7 +39,6 @@ class Character(pygame.sprite.Sprite):
     # speed 
     # animationDelay -> delay on each movement of the characters
     # updateByTime -> if sprite is updated every moment(basic0) or updated while moving(player) 
-    
     
     
         pygame.sprite.Sprite.__init__(self);
@@ -78,12 +79,12 @@ class Character(pygame.sprite.Sprite):
         self.positionY = coordScreen[1]
         self.rect.left = self.positionX
         self.rect.bottom = self.positionY
-        
+
 	# player speed and animation delay(smooth the sprite changes)
-        self.animationDelay = animationDelay
-        self.playerSpeed = speed
-        self.updateByTime = updateByTime
-        self.scale = scale
+	self.animationDelay = animationDelay
+	self.playerSpeed = speed
+	self.updateByTime = updateByTime
+	self.scale = scale
 
         # update sprites
         self.updatePosition()
@@ -120,7 +121,6 @@ class Character(pygame.sprite.Sprite):
                     self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][0]), self.scale)
 
 
-
     def update(self, time):
         # moving left
         if self.movement == left:
@@ -154,6 +154,42 @@ class Character(pygame.sprite.Sprite):
             self.positionY += (int)(self.playerSpeed * time)
             self.rect.bottom = self.positionY
             self.positionNum = 3
+        elif self.movement == diagUpLeft:
+            # looking down
+            self.looking = up
+            # update screen coordinates
+            self.positionY -= (int)(diag * self.playerSpeed * time)
+            self.positionX -= (int)(diag * self.playerSpeed * time)
+            self.rect.bottom = self.positionY
+            self.rect.left = self.positionX
+            self.positionNum = 2
+        elif self.movement == diagUpRight:
+            # looking down
+            self.looking = up
+            # update screen coordinates
+            self.positionY -= (int)(diag * self.playerSpeed * time)
+            self.positionX += (int)(diag * self.playerSpeed * time)
+            self.rect.bottom = self.positionY
+            self.rect.left = self.positionX
+            self.positionNum = 2
+        elif self.movement == diagDownLeft:
+            # looking down
+            self.looking = down
+            # update screen coordinates
+            self.positionY += (int)(diag * self.playerSpeed * time)
+            self.positionX -= (int)(diag * self.playerSpeed * time)
+            self.rect.bottom = self.positionY
+            self.rect.left = self.positionX
+            self.positionNum = 3
+        elif self.movement == diagDownRight:
+            # looking down
+            self.looking = down
+            # update screen coordinates
+            self.positionY += (int)(diag * self.playerSpeed * time)
+            self.positionX += (int)(diag * self.playerSpeed * time)
+            self.rect.bottom = self.positionY
+            self.rect.left = self.positionX
+            self.positionNum = 3
         # while stopped not changes are done
         # update
         self.updatePosition()
@@ -172,7 +208,15 @@ class Player(Character):
     def move(self,toggledKeys, upControl, downControl, leftControl, rightControl):
 
         # Indicamos la acción a realizar segun la tecla pulsada para el jugador
-        if toggledKeys[upControl]:
+        if (toggledKeys[upControl] and toggledKeys[leftControl]):
+            self.movement = diagUpLeft
+        elif (toggledKeys[upControl] and toggledKeys[rightControl]):
+            self.movement = diagUpRight
+        elif (toggledKeys[downControl] and toggledKeys[leftControl]):
+            self.movement = diagDownLeft
+        elif (toggledKeys[downControl] and toggledKeys[rightControl]):
+            self.movement = diagDownRight
+        elif toggledKeys[upControl]:
             self.movement = up
         elif toggledKeys[leftControl]:
             self.movement = left
@@ -182,7 +226,8 @@ class Player(Character):
             self.movement = down
         else:
             self.movement = stop
-
+        
+        
 # -------------------------------------------------
 # Basic enemy 0 class
 
