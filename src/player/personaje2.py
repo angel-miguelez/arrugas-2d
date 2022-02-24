@@ -28,10 +28,21 @@ stop = 4
 class Character(pygame.sprite.Sprite):
     "Character"
 
-    def __init__(self, imageFile, coordFile, imageNum, coordScreen, speed, animationDelay):
+    def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime):
+    # imageFile -> file with image data
+    # coordFile -> File with all the coordinades of the sprites from imageFile
+    # imageNUm -> array with the number of diferent sprites. ex: [4, 4] 2 positions with 4 different sprites each position
+    # coordScreen -> coordinates on screen where sprite is initialized
+    # scale -> size of the sprites
+    # speed 
+    # animationDelay -> delay on each movement of the characters
+    # updateByTime -> if sprite is updated every moment(basic0) or updated while moving(player) 
+    
+    
+    
         pygame.sprite.Sprite.__init__(self);
         # load sheet
-        self.sheet =GestorRecursos.CargarImagen(imageFile, -1)
+        self.sheet = GestorRecursos.CargarImagen(imageFile, -1)
         self.sheet = self.sheet.convert_alpha()
         # movement realized
         self.movement = stop
@@ -45,7 +56,8 @@ class Character(pygame.sprite.Sprite):
         self.imagePositionNum = 0;
         cont = 0;
         self.sheetCoord = [];
-        for line in range(0, 4):
+        numLines = len(imageNum)
+        for line in range(0, numLines):
             self.sheetCoord.append([])
             tmp = self.sheetCoord[line]
             for position in range(1, imageNum[line]+1):
@@ -56,7 +68,7 @@ class Character(pygame.sprite.Sprite):
         self.movementDelay = 0;
 
         # initial position
-        self.positionNum = down
+        self.positionNum = left
 
         # rectangle tam
         self.rect = pygame.Rect(100,100,self.sheetCoord[self.positionNum][self.imagePositionNum][2],self.sheetCoord[self.positionNum][self.imagePositionNum][3])
@@ -66,10 +78,12 @@ class Character(pygame.sprite.Sprite):
         self.positionY = coordScreen[1]
         self.rect.left = self.positionX
         self.rect.bottom = self.positionY
-
+        
 	# player speed and animation delay(smooth the sprite changes)
         self.animationDelay = animationDelay
         self.playerSpeed = speed
+        self.updateByTime = updateByTime
+        self.scale = scale
 
         # update sprites
         self.updatePosition()
@@ -87,22 +101,23 @@ class Character(pygame.sprite.Sprite):
                 self.imagePositionNum = 0;
             if self.imagePositionNum < 0:
                 self.imagePositionNum = len(self.sheetCoord[self.positionNum])-1
-            self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+            self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
             # watching left
             if self.looking == left:
-                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+                self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
             #  watching right
             elif self.looking == right:
-                 self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+                 self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
             # watching up
             elif self.looking == up:
-                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+                self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
             # watching down
             elif self.looking == down:
-                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum])
+                self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
             # no movement is being done
-            if self.movement == stop:
-                self.image = self.sheet.subsurface(self.sheetCoord[self.positionNum][0])
+            if(self.updateByTime == 0):
+                if self.movement == stop:
+                    self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][0]), self.scale)
 
 
 
@@ -151,7 +166,7 @@ class Player(Character):
     "Main character"
     def __init__(self):
         # called constructor of father class
-        Character.__init__(self, 'old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], 0.3, 0);
+        Character.__init__(self, 'old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], (32,32), 0.3, 1, 0);
 
         #move function
     def move(self,toggledKeys, upControl, downControl, leftControl, rightControl):
@@ -167,6 +182,15 @@ class Player(Character):
             self.movement = down
         else:
             self.movement = stop
+
+# -------------------------------------------------
+# Basic enemy 0 class
+
+class Basic0(Character):
+    "Main character"
+    def __init__(self):
+        # called constructor of father class
+        Character.__init__(self, 'Worm Sprite Sheet.png', 'coordBasic0.txt', [7],[100, 100], (32,32), 0.3, 5, 1);
 
 
 
@@ -191,9 +215,10 @@ def main():
     # Creamos los jugadores
     #jugador1 = Character('old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], 0.3, 0)
     jugador1 = Player()
+    basic0 = Basic0()
     
     # Creamos el grupo de Sprites de jugadores
-    grupoJugadores = pygame.sprite.Group( jugador1 )
+    grupoJugadores = pygame.sprite.Group( jugador1, basic0 )
 
 
     # El bucle de eventos
