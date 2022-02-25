@@ -12,7 +12,7 @@ class GestorRecursos(object):
     recursos = {}
             
     @classmethod
-    def CargarImagen(cls, nombre, colorkey=None):
+    def CargarImagen(cls, nombre, colorkey=None, transparency=False):
         # Si el nombre de archivo está entre los recursos ya cargados
         if nombre in cls.recursos:
             # Se devuelve ese recurso
@@ -20,13 +20,15 @@ class GestorRecursos(object):
         # Si no ha sido cargado anteriormente
         else:
             # Se carga la imagen indicando la carpeta en la que está
-            fullname = os.path.join('imagenes', nombre)
+            # fullname = os.path.join('imagenes', nombre)
+            fullname = os.path.join("..", "img", nombre)
             try:
                 imagen = pygame.image.load(fullname)
             except pygame.error as message:
                 print ('Cannot load image:', fullname)	
-                raise SystemExit 
-            imagen = imagen.convert()
+                raise SystemExit
+
+            imagen = imagen.convert_alpha() if transparency else imagen.convert()
             if colorkey is not None:
                 if colorkey is -1:
                     colorkey = imagen.get_at((0,0))
@@ -45,7 +47,7 @@ class GestorRecursos(object):
         # Si no ha sido cargado anteriormente
         else:
             # Se carga el recurso indicando el nombre de su carpeta
-            fullname = os.path.join('imagenes', nombre)
+            fullname = os.path.join('..', 'img', nombre)
             pfile=open(fullname,'r')
             datos=pfile.read()
             pfile.close()

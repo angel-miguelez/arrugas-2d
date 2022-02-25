@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
-from asyncio.windows_events import NULL
+
 import pygame
 from pygame.locals import *
+import sys
 
 from conf.configuration import ConfManager
+
+from effects.occlusion import Occlude
+
 from game.scene import Scene
 from game.level import Level
+
+from player.personaje2 import Player
+
+from objects.glasses import Glasses
+from objects.labcoat import LabCoat
+
 from res.levels import *
 
 
@@ -39,32 +49,39 @@ class PhaseTest(Phase):
     def __init__(self, director):
         super().__init__(director, "PhaseTest")
 
-        self.level = Level(basic_layout, NULL)  # Setup level structure
+        # Level
+        self.level = Level(basic_layout, None)  # Setup level structure
 
-        self.x, self.y = (400, 400)
-        self.speedX, self.speedY = 5, 5
+        # Player
+        # self.x, self.y = (400, 400)
+        # self.speedX, self.speedY = 5, 5
+        self.player = Player()
+        self.playerGroup = pygame.sprite.Group(self.player)
+
+        # Objects
+        self.glasses = Glasses(self.playerGroup, self, position=(300, 300))
+        self.labcoat = LabCoat(self.playerGroup, self, position=(400, 400))
+        self.objectsGroup = pygame.sprite.Group(self.glasses, self.labcoat)
+
+        # Effects
+        self.occlude = Occlude()
+
 
     def events(self, events):
 
         for event in events:
-
-            if event.type == pygame.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-                print("[Phase1] Finishing phase1")
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 self._director.pop()
 
         keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[self.MOVE_UP]:
-            self.y -= self.speedY
-        elif keys_pressed[self.MOVE_DOWN]:
-            self.y += self.speedY
-        elif keys_pressed[self.MOVE_RIGHT]:
-            self.x += self.speedX
-        elif keys_pressed[self.MOVE_LEFT]:
-            self.x -= self.speedX
-
+        self.player.move(keys_pressed, self.MOVE_UP, self.MOVE_DOWN, self.MOVE_LEFT, self.MOVE_RIGHT)
 
     def update(self, time):
-        pass
+        self.playerGroup.update(time)
+        self.objectsGroup.update(time)
 
     def draw(self, surface):
         surface.fill((0, 0, 0)) #Background color
@@ -72,5 +89,13 @@ class PhaseTest(Phase):
         self.level.setSurface(surface)
         self.level.run() #Draw the level
 
-        #Player with movement
-        pygame.draw.circle(surface, (255, 255, 255), (self.x, self.y), 4, 0)
+        self.objectsGroup.draw(surface)
+        self.playerGroup.draw(surface)
+
+        if not self.player.hasGlasses:
+            self.occlude.draw(surface)
+
+    def removeFromGroup(self, object, groupName):
+
+        if groupName == "objects":
+            self.objectsGroup.remove(object)

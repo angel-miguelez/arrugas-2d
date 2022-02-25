@@ -6,7 +6,7 @@
 
 import pygame, sys, os
 from pygame.locals import *
-from gestorRecursos import *
+from player.gestorRecursos import *
 import math
 import itertools
 
@@ -204,6 +204,13 @@ class Player(Character):
     def __init__(self):
         # called constructor of father class
         Character.__init__(self, 'character.png', 'coordMan.txt', [3,3,3,3],[300, 100], (32,50), 0.3, 1, 0);
+        self.hasGlasses = False
+
+    def addGlasses(self):
+        self.hasGlasses = True
+
+    def increaseSpeed(self):
+        self.playerSpeed *= 1.5
 
         #move function
     def move(self,toggledKeys, upControl, downControl, leftControl, rightControl):

@@ -1,5 +1,4 @@
-from asyncio.windows_events import NULL
-from operator import le
+
 import pygame
 import numpy as np
 from game.tiles import Tile
@@ -128,7 +127,7 @@ class Level:
         #Update method that allows us to move through the map based on the player inputs
         #self.tiles.update(self.world_shift_x, self.world_shift_y)
 
-        if self.display_surface == NULL:
+        if self.display_surface is None:
             print("ERROR: No display surface to draw on.")
             exit(-1)
         else:    

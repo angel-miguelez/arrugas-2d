@@ -10,6 +10,8 @@ class Director:
 
     def __init__(self):
         self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("Arrugas-2D")
+
         self._scenes = []  # list with all the scenes
         self._endScene = False  # if the scene has ended or the user has exited
 
@@ -21,6 +23,7 @@ class Director:
         """
 
         self._endScene = False
+        pygame.event.clear()  # clean the events triggered before the scene loop
 
         # Loop of the scene
         while not self._endScene:
