@@ -244,6 +244,14 @@ class WalkingEnemy(Character):
     def update(self, time):
         # A vector pointing from self to the target.
         heading = self.target - self.pos
+        if(heading[0] > 0):
+            self.movement = left
+            self.looking = left
+            self.positionNum = 0
+        else:
+            self.movement = right
+            self.movement = right
+            self.positionNum = 1
         distance = heading.length()  # Distance to the target.
         heading.normalize_ip()
         if distance <= 2:  # We're closer than 2 pixels.
@@ -272,10 +280,18 @@ class Basic0(Character):
         # called constructor of father class
         Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], coordScreen, (32,32), 0.3, 5, 0.5);
 
+
+# -------------------------------------------------
+# Basic enemy 1 class
+
 class Basic1(WalkingEnemy):
     def __init__(self, coordScreen, waypoints, speed):
         # called constructor of father class
         WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], coordScreen, (32,32), speed, 5, 0.5, waypoints);
+
+
+# -------------------------------------------------
+# Basic enemy 1 class
 
 class Basic2(Character):
     def __init__(self, coordScreen, player):
@@ -304,11 +320,49 @@ class Basic2(Character):
                 if self.imagePositionNum < 0:
                     self.imagePositionNum = len(self.sheetCoord[self.positionNum])-1
                 self.image= pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
+        else:
             # no movement is being done
-                if(self.updateByTime == 0):
-                    if self.movement == stop:
-                        self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][0]), self.scale)
+            if self.movement == stop:
+                self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][0]), self.scale)
             
+
+# -------------------------------------------------
+# Normal enemy 2 
+
+class Normal2(Character):
+    "Normal2 enemy 3"
+    def __init__(self, coordScreen):
+        # called constructor of father class
+        Character.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3],coordScreen, (32,50), 0.1, 5, 0);
+
+        #move function that chase the player
+    def move(self, player, area):
+        # tracked player
+        # area where the player is going to be tracked
+        if (abs(self.positionX - player.positionX) < area) and (abs(self.positionY - player.positionY) < area):
+        # Indicamos la acción a realizar segun la tecla pulsada para el jugador
+            if ((self.positionX - player.positionX) == 0) and ((self.positionY - player.positionY) == 0):
+                 self.movement = stop
+            elif ((self.positionX - player.positionX) == 0) and ((self.positionY - player.positionY) > 0):
+                 self.movement = up
+            elif ((self.positionX - player.positionX) == 0) and ((self.positionY - player.positionY) < 0):
+                 self.movement = down
+            elif ((self.positionX - player.positionX) < 0) and ((self.positionY - player.positionY) == 0):
+                 self.movement = right
+            elif ((self.positionX - player.positionX) > 0) and ((self.positionY - player.positionY) == 0):
+                 self.movement = left
+            elif ((self.positionX - player.positionX) < 0) and ((self.positionY - player.positionY) < 0):
+                 self.movement = down
+            elif ((self.positionX - player.positionX) > 0) and ((self.positionY - player.positionY) > 0):
+                 self.movement = up
+            elif ((self.positionX - player.positionX) < 0) and ((self.positionY - player.positionY) > 0):
+                 self.movement = right
+            elif ((self.positionX - player.positionX) > 0) and ((self.positionY - player.positionY) < 0):
+                 self.movement = left        
+        else:
+             self.movement = stop        
+
+
 
 # -------------------------------------------------
 # Funcion principal del juego
@@ -333,15 +387,17 @@ def main():
     jugador1 = Player()
     basic0 = Basic0([100, 100])
     
-    waypoints=[(360,100),(140,100)]
-    spawn=[140, 100]
+    waypoints=[(360,200),(140,200)]
+    spawn=[140, 200]
 
     basic1=Basic1(spawn, waypoints, 1.5)
 
-    basic2 = Basic2([200, 200], jugador1)
+    basic2 = Basic2([500, 500], jugador1)
+    
+    normal2 = Normal2([500, 100])
     
     # Creamos el grupo de Sprites de jugadores
-    grupoJugadores = pygame.sprite.Group( jugador1, basic0, basic1, basic2 )
+    grupoJugadores = pygame.sprite.Group( jugador1, basic0, basic1, basic2, normal2 )
 
 
     # El bucle de eventos
@@ -369,7 +425,7 @@ def main():
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         jugador1.move(toggledKeys, K_UP, K_DOWN, K_LEFT, K_RIGHT)
-
+        normal2.move(jugador1, 200)
 
         # Actualizamos los jugadores actualizando el grupo
         grupoJugadores.update(time_pasado)
