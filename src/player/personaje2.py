@@ -227,8 +227,8 @@ class Player(Character):
             self.movement = down
         else:
             self.movement = stop
-        
-        
+
+
 
 class WalkingEnemy(Character):
     def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime, waypoints):
@@ -238,6 +238,8 @@ class WalkingEnemy(Character):
         self.target_radius = 20
         self.waypoints = itertools.cycle(waypoints)
         self.target = next(self.waypoints)
+        self.orientationvector=itertools.cycle((right,left))
+        self.orientation=next(self.orientationvector)
 
     def update(self, time):
         # A vector pointing from self to the target.
@@ -248,6 +250,7 @@ class WalkingEnemy(Character):
             # Increment the waypoint index to swtich the target.
             # The modulo sets the index back to 0 if it's equal to the length.
             self.target = next(self.waypoints)
+            self.orientation = next(self.orientationvector)
         if distance <= self.target_radius:
             # If we're approaching the target, we slow down.
             self.vel = heading * (distance / self.target_radius * self.playerSpeed)
@@ -256,6 +259,7 @@ class WalkingEnemy(Character):
 
         self.pos += self.vel
         self.rect.center = self.pos
+        super().updatePosition()
        
 
 
@@ -272,7 +276,39 @@ class Basic1(WalkingEnemy):
     def __init__(self, coordScreen, waypoints, speed):
         # called constructor of father class
         WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], coordScreen, (32,32), speed, 5, 0.5, waypoints);
+
+class Basic2(Character):
+    def __init__(self, coordScreen, player):
+        # called constructor of father class
+        self.radius=200
+        self.enemy=player
+        Character.__init__(self, 'B2.png', 'coordBasic2.txt', [10], coordScreen, (148,120), 0.3, 5, 0.5);
         
+
+    def updatePosition(self):
+        self.movementDelay -= 1
+        # check if time between sprites updates
+
+        self.pos = pygame.math.Vector2((self.positionX, self.positionY))
+        self.target = (self.enemy.positionX, self.enemy.positionY)
+        heading = self.target - self.pos
+        distance = heading.length() 
+        heading.normalize_ip()
+        if distance <= self.radius:   
+            if (self.movementDelay < 0):
+                self.movementDelay = self.animationDelay
+                # update sprite
+                self.imagePositionNum += 1
+                if self.imagePositionNum >= len(self.sheetCoord[self.positionNum]):
+                    self.imagePositionNum = 0;
+                if self.imagePositionNum < 0:
+                    self.imagePositionNum = len(self.sheetCoord[self.positionNum])-1
+                self.image= pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), self.scale)
+            # no movement is being done
+                if(self.updateByTime == 0):
+                    if self.movement == stop:
+                        self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][0]), self.scale)
+            
 
 # -------------------------------------------------
 # Funcion principal del juego
@@ -301,9 +337,11 @@ def main():
     spawn=[140, 100]
 
     basic1=Basic1(spawn, waypoints, 1.5)
+
+    basic2 = Basic2([200, 200], jugador1)
     
     # Creamos el grupo de Sprites de jugadores
-    grupoJugadores = pygame.sprite.Group( jugador1, basic0, basic1 )
+    grupoJugadores = pygame.sprite.Group( jugador1, basic0, basic1, basic2 )
 
 
     # El bucle de eventos
