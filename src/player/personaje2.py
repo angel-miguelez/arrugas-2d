@@ -7,7 +7,8 @@
 import pygame, sys, os
 from pygame.locals import *
 from gestorRecursos import *
-import math 
+import math
+import itertools
 
 # movements
 left = 0
@@ -202,7 +203,7 @@ class Player(Character):
     "Main character"
     def __init__(self):
         # called constructor of father class
-        Character.__init__(self, 'old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], (32,32), 0.3, 1, 0);
+        Character.__init__(self, 'character.png', 'coordMan.txt', [3,3,3,3],[300, 100], (32,50), 0.3, 1, 0);
 
         #move function
     def move(self,toggledKeys, upControl, downControl, leftControl, rightControl):
@@ -228,16 +229,50 @@ class Player(Character):
             self.movement = stop
         
         
+
+class WalkingEnemy(Character):
+    def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime, waypoints):
+        Character.__init__(self,imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime);
+        self.vel = pygame.math.Vector2(0, 0)
+        self.pos = pygame.math.Vector2((self.positionX, self.positionY))
+        self.target_radius = 20
+        self.waypoints = itertools.cycle(waypoints)
+        self.target = next(self.waypoints)
+
+    def update(self, time):
+        # A vector pointing from self to the target.
+        heading = self.target - self.pos
+        distance = heading.length()  # Distance to the target.
+        heading.normalize_ip()
+        if distance <= 2:  # We're closer than 2 pixels.
+            # Increment the waypoint index to swtich the target.
+            # The modulo sets the index back to 0 if it's equal to the length.
+            self.target = next(self.waypoints)
+        if distance <= self.target_radius:
+            # If we're approaching the target, we slow down.
+            self.vel = heading * (distance / self.target_radius * self.playerSpeed)
+        else:  # Otherwise move with max_speed.
+            self.vel = heading * self.playerSpeed
+
+        self.pos += self.vel
+        self.rect.center = self.pos
+       
+
+
 # -------------------------------------------------
 # Basic enemy 0 class
 
 class Basic0(Character):
     "Main character"
-    def __init__(self):
+    def __init__(self,coordScreen):
         # called constructor of father class
-        Character.__init__(self, 'Worm Sprite Sheet.png', 'coordBasic0.txt', [7],[100, 100], (32,32), 0.3, 5, 1);
+        Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], coordScreen, (32,32), 0.3, 5, 0.5);
 
-
+class Basic1(WalkingEnemy):
+    def __init__(self, coordScreen, waypoints, speed):
+        # called constructor of father class
+        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], coordScreen, (32,32), speed, 5, 0.5, waypoints);
+        
 
 # -------------------------------------------------
 # Funcion principal del juego
@@ -260,10 +295,15 @@ def main():
     # Creamos los jugadores
     #jugador1 = Character('old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], 0.3, 0)
     jugador1 = Player()
-    basic0 = Basic0()
+    basic0 = Basic0([100, 100])
+    
+    waypoints=[(360,100),(140,100)]
+    spawn=[140, 100]
+
+    basic1=Basic1(spawn, waypoints, 1.5)
     
     # Creamos el grupo de Sprites de jugadores
-    grupoJugadores = pygame.sprite.Group( jugador1, basic0 )
+    grupoJugadores = pygame.sprite.Group( jugador1, basic0, basic1 )
 
 
     # El bucle de eventos
@@ -291,7 +331,6 @@ def main():
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         jugador1.move(toggledKeys, K_UP, K_DOWN, K_LEFT, K_RIGHT)
-
 
 
         # Actualizamos los jugadores actualizando el grupo
