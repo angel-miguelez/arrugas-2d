@@ -80,11 +80,11 @@ class Character(pygame.sprite.Sprite):
         self.rect.left = self.positionX
         self.rect.bottom = self.positionY
 
-	# player speed and animation delay(smooth the sprite changes)
-	self.animationDelay = animationDelay
-	self.playerSpeed = speed
-	self.updateByTime = updateByTime
-	self.scale = scale
+        # player speed and animation delay(smooth the sprite changes)
+        self.animationDelay = animationDelay
+        self.playerSpeed = speed
+        self.updateByTime = updateByTime
+        self.scale = scale
 
         # update sprites
         self.updatePosition()
