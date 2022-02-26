@@ -5,8 +5,7 @@ from map.tiles import Tile
 from res.levels import *
 
 class Level:
-    def __init__(self, level_data, surface):
-        self.display_surface = surface
+    def __init__(self, level_data):
         self.world_shift_x = 0
         self.world_shift_y = 0
         self.levels = np.zeros((room_num), dtype=bool)
@@ -62,9 +61,6 @@ class Level:
                 start_row -= 1
             else: 
                 start_row += 1
-    
-    def setSurface(self, surface):
-        self.display_surface = surface
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()  #Group of tiles that form the map
@@ -123,9 +119,11 @@ class Level:
                     
 
 
-    def run(self):
+    def run(self, surface):
         #Update method that allows us to move through the map based on the player inputs
         #self.tiles.update(self.world_shift_x, self.world_shift_y)
+
+        self.display_surface = surface;
 
         if self.display_surface is None:
             print("ERROR: No display surface to draw on.")
