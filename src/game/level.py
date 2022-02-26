@@ -121,7 +121,7 @@ class Level:
 
     def run(self, surface):
         #Update method that allows us to move through the map based on the player inputs
-        #self.tiles.update(self.world_shift_x, self.world_shift_y)
+        self.tiles.update(self.world_shift_x, self.world_shift_y)
 
         self.display_surface = surface;
 
