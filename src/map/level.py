@@ -3,8 +3,9 @@ import pygame
 import numpy as np
 from map.tiles import Tile
 from res.levels import *
+from utils.observer import Observer
 
-class Level:
+class Level(Observer):
     def __init__(self, level_data):
         self.world_shift_x = 0
         self.world_shift_y = 0

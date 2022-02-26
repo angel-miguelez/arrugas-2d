@@ -6,6 +6,7 @@
 
 from utils.resourcesmanager import *
 import itertools
+from utils.observer import Subject
 
 # movements
 left = 0
@@ -196,7 +197,7 @@ class Character(pygame.sprite.Sprite):
 # -------------------------------------------------
 # Player class
 
-class Player(Character):
+class Player(Character, Subject):
     "Main character"
     def __init__(self):
         # called constructor of father class
