@@ -1,8 +1,8 @@
-tile_size = 32 #Tile size used as a base to construct the level
+tile_size = 32 #Tile size used as a base to construct the map
 room_num = 3
 
 """
-    The following variable consist of a list of strings that sets the layout for the level
+    The following variable consist of a list of strings that sets the layout for the map
     that we want to draw, 'X' represent the walls and the 'P' represents the player spawn.
 """
 

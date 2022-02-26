@@ -4,10 +4,7 @@
 # Importar las librerías
 # -------------------------------------------------
 
-import pygame, sys, os
-from pygame.locals import *
-from player.gestorRecursos import *
-import math
+from utils.resourcesmanager import *
 import itertools
 
 # movements
@@ -44,7 +41,7 @@ class Character(pygame.sprite.Sprite):
     
         pygame.sprite.Sprite.__init__(self);
         # load sheet
-        self.sheet = GestorRecursos.CargarImagen(imageFile, -1)
+        self.sheet = ResourcesManager.loadImage(imageFile, -1)
         self.sheet = self.sheet.convert_alpha()
         # movement realized
         self.movement = stop
@@ -52,7 +49,7 @@ class Character(pygame.sprite.Sprite):
         self.looking = down
 
         # reading coords from file
-        data = GestorRecursos.CargarArchivoCoordenadas(coordFile)
+        data = ResourcesManager.loadCoordFile(coordFile)
         data = data.split()
         self.positionNum = 1;
         self.imagePositionNum = 0;

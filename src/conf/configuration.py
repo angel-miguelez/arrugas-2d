@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import pygame
-
 import json
 import os
+import pygame
 
-from utils.Singleton import Singleton
+from utils.singleton import Singleton
 
 
 class ConfManager(metaclass=Singleton):
@@ -19,7 +18,7 @@ class ConfManager(metaclass=Singleton):
 
     def getConf(self):
         """
-        Method to load, if not already loaded, and return the configuration from the .JSON configuration file
+        Loads, if not already loaded, and returns the configuration from the .JSON configuration file
         """
 
         # If the data is not loaded
@@ -31,36 +30,41 @@ class ConfManager(metaclass=Singleton):
 
         return self.data
 
-    def getBind(self, key, code=True):
+    def getValue(self, key):
         """
-        Returns the key name or the key code binded to a specific configuration (key)
+        Returns the value of a specific configuration field
         """
 
         self.data = self.getConf()
 
         # Iterate over the hierarchy of the key (e.g. player -> movement -> up)
         levels = key.split('.')
-        field = self.data[levels[0]]  # root level (e.g. player)
-        for level in levels[1:]:  # iterate in depth (player[movement] --> player[movement][up]
+        field = self.data[levels[0]]  # root of the field (e.g. player)
+        for level in levels[1:]:  # iterate in depth over the hierarchy
             field = field[level]
 
-        return pygame.key.key_code(field) if code else field  # return the code or the name of the key
+        return field
+
+
+    def getBind(self, key, code=True):
+        """
+        Returns the key name or the key code binded to a specific configuration (key)
+        """
+
+        value = self.getValue(key)
+        return pygame.key.key_code(value) if code else value  # return the code or the name of the key
 
     def setBind(self, key, code):
         """
         Edits a specific binding of the configuration
         """
 
-        self.data = self.getConf()
+        hierarchy = key.split('.')
+        field = hierarchy[-1]  # the field to modify
+        path = '.'.join(hierarchy[0:-1])  # the configuration path to the parent of that field
+
         name = pygame.key.name(code)  # the configuration file uses the name instead of the code of the keys
-
-        # Iterate over the hierarchy of the key (e.g. player -> movement -> up)
-        levels = key.split('.')
-        field = self.data[levels[0]]  # root level (e.g. player)
-        for level in levels[1:-1]:  # iterate in depth until the last field (the one whose value is edited)
-            field = field[level]
-
-        field[levels[-1]] = name  # edit the value of the field
+        self.getValue(path)[field] = name  # get the pointer to the field and modify its value
 
     def save(self):
         """

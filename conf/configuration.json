@@ -7,5 +7,12 @@
             "left": "a"
         }
     },
-    "sound": {}
+    "sound": {
+        "game_music_volume": 0.6,
+        "menu_music_volume": 0.8,
+        "sound_effects_volume": 0.8
+    },
+    "general": {
+        "fps": 60
+    }
 }

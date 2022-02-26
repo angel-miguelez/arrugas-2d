@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from player.gestorRecursos import GestorRecursos
+from utils.resourcesmanager import ResourcesManager
 
 
 class Occlude:
@@ -9,7 +9,7 @@ class Occlude:
     """
 
     def __init__(self):
-        self.image = GestorRecursos.CargarImagen('occludeVision.png', transparency=True)
+        self.image = ResourcesManager.loadImage('occlude_vision.png', transparency=True)
         self.rect = self.image.get_rect()
 
     def draw(self, screen):
