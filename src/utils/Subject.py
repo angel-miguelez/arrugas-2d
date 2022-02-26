@@ -1,4 +1,4 @@
-from Observer import Observer
+from observer import Observer
 
 class Subject():
     """
