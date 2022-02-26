@@ -3,15 +3,16 @@ import pygame
 import numpy as np
 from map.tiles import Tile
 from res.levels import *
-from utils.observer import Observer
+from player.personaje2 import Player
+from utils.observer import *
 
 class Level(Observer):
-    def __init__(self, level_data):
-        self.world_shift_x = 0
-        self.world_shift_y = 0
+    def __init__(self, level_data, posx, posy):
+        self.world_shift_x = posx
+        self.world_shift_y = posy
         self.levels = np.zeros((room_num), dtype=bool)
 
-        self.setup_level(level_data)
+        self.setupLevel(level_data)
 
     def __addRoom(self, room, layout_door_pos, orientation):
         row_index = layout_door_pos[0]
@@ -63,7 +64,7 @@ class Level(Observer):
             else: 
                 start_row += 1
 
-    def setup_level(self, layout):
+    def setupLevel(self, layout):
         self.tiles = pygame.sprite.Group()  #Group of tiles that form the map
         self.player = pygame.sprite.GroupSingle() #Group to represent the player
         inside = False
@@ -117,12 +118,9 @@ class Level(Observer):
                 
                     inside = not inside  # Complement of current value
 
-                    
-
-
     def run(self, surface):
         #Update method that allows us to move through the map based on the player inputs
-        self.tiles.update(self.world_shift_x, self.world_shift_y)
+        #self.tiles.update(self.world_shift_x, self.world_shift_y)
 
         self.display_surface = surface;
 
@@ -132,3 +130,10 @@ class Level(Observer):
         else:    
             self.tiles.draw(self.display_surface) #Draw the map itself
             self.player.draw(self.display_surface) #Draw the player
+    
+    def update(self, subject: Player):
+        newPos = subject.getPos()
+        difference = (self.world_shift_x - newPos[0], self.world_shift_y - newPos[1])
+        self.tiles.update(difference[0], difference[1])
+        self.world_shift_x = newPos[0]
+        self.world_shift_y = newPos[1]

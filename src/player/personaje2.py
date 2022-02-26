@@ -4,9 +4,11 @@
 # Importar las librerías
 # -------------------------------------------------
 
+from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
+from typing import List
 
 # movements
 left = 0
@@ -198,10 +200,13 @@ class Character(pygame.sprite.Sprite):
 # Player class
 
 class Player(Character, Subject):
+    __observers: List[Observer] = []
+    
     "Main character"
-    def __init__(self):
+    def __init__(self, pos):
         # called constructor of father class
-        Character.__init__(self, 'character.png', 'coordMan.txt', [3,3,3,3],[300, 100], (32,50), 0.3, 1, 0);
+        Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], [
+                           pos[0], pos[1]], (32, 50), 0.3, 1, 0)
         self.hasGlasses = False
 
     def addGlasses(self):
@@ -232,6 +237,21 @@ class Player(Character, Subject):
             self.movement = down
         else:
             self.movement = stop
+        
+        self.notify()
+
+    def getPos(self):
+        return (self.positionX, self.positionY)
+
+    def attach(self, observer: Observer):
+        self.__observers.append(observer)
+    
+    def detach(self, observer: Observer):
+        self.__observers.remove(observer)
+
+    def notify(self):
+        for observer in self.__observers:
+            observer.update(self)
 
 
 

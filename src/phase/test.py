@@ -27,10 +27,11 @@ class PhaseTest(Phase):
         super().__init__(director, "PhaseTest")
 
         # Level
-        self.level = Level(basic_layout)  # Setup map structure
+        self.level = Level(basic_layout, 300, 100)  # Setup map structure
 
         # Player
-        self.player = Player()
+        self.player = Player((300, 100))
+        self.player.attach(self.level)
         self.playerGroup = pygame.sprite.Group(self.player)
 
         # Objects
