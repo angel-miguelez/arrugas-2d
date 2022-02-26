@@ -10,6 +10,7 @@ python -m main  # sin el .py
 Se necesita tener instaladas las siguientes librerías:
 * json
 * pygame
+* numpy
 * pygame_menu
 
 Para este último:
