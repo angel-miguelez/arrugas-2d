@@ -4,41 +4,19 @@ import pygame
 from pygame.locals import *
 import sys
 
-from conf.configuration import ConfManager
-
 from effects.occlusion import Occlude
 
-from game.scene import Scene
-from game.level import Level
+from map.level import Level
+
+from phase.phase import Phase
 
 from player.personaje2 import Player
+from utils.resourcesmanager import ResourcesManager
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
 
 from res.levels import *
-
-
-class Phase(Scene):
-    """
-    Base class to every playable scene
-    """
-
-    def __init__(self, director, name):
-        super().__init__(director, name)
-
-        self._conf = ConfManager()
-
-        self.MOVE_UP = self._conf.getBind("player.movement.up")
-        self.MOVE_DOWN = self._conf.getBind("player.movement.down")
-        self.MOVE_RIGHT = self._conf.getBind("player.movement.right")
-        self.MOVE_LEFT = self._conf.getBind("player.movement.left")
-
-    def onEnter(self):
-        pygame.mouse.set_visible(False)
-
-    def onExit(self):
-        pass
 
 
 class PhaseTest(Phase):
@@ -50,7 +28,7 @@ class PhaseTest(Phase):
         super().__init__(director, "PhaseTest")
 
         # Level
-        self.level = Level(basic_layout)  # Setup level structure
+        self.level = Level(basic_layout)  # Setup map structure
 
         # Player
         # self.x, self.y = (400, 400)
@@ -59,13 +37,12 @@ class PhaseTest(Phase):
         self.playerGroup = pygame.sprite.Group(self.player)
 
         # Objects
-        self.glasses = Glasses(self.playerGroup, self, position=(300, 300))
-        self.labcoat = LabCoat(self.playerGroup, self, position=(400, 400))
+        self.glasses = Glasses(self.playerGroup, position=(300, 300))
+        self.labcoat = LabCoat(self.playerGroup, position=(400, 400))
         self.objectsGroup = pygame.sprite.Group(self.glasses, self.labcoat)
 
         # Effects
         self.occlude = Occlude()
-
 
     def events(self, events):
 
@@ -84,15 +61,25 @@ class PhaseTest(Phase):
         self.objectsGroup.update(time)
 
     def draw(self, surface):
-        surface.fill((0, 0, 0)) #Background color
+        surface.fill((0, 0, 0))  # Background color
 
-        self.level.run(surface)  # Draw the level
+        self.level.run(surface)  # Draw the map
 
         self.objectsGroup.draw(surface)
         self.playerGroup.draw(surface)
 
         if not self.player.hasGlasses:
             self.occlude.draw(surface)
+
+    def onEnterScene(self):
+        super().onEnterScene()
+
+        ResourcesManager.loadMusic("phase1_background.ogg")
+        pygame.mixer.music.play(-1)
+
+    def onExitScene(self):
+        super().onExitScene()
+        pygame.mixer.music.stop()
 
     def removeFromGroup(self, object, groupName):
 
