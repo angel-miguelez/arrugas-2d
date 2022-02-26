@@ -50,7 +50,7 @@ class PhaseTest(Phase):
         super().__init__(director, "PhaseTest")
 
         # Level
-        self.level = Level(basic_layout, None)  # Setup level structure
+        self.level = Level(basic_layout)  # Setup level structure
 
         # Player
         # self.x, self.y = (400, 400)
@@ -86,8 +86,7 @@ class PhaseTest(Phase):
     def draw(self, surface):
         surface.fill((0, 0, 0)) #Background color
 
-        self.level.setSurface(surface)
-        self.level.run() #Draw the level
+        self.level.run(surface)  # Draw the level
 
         self.objectsGroup.draw(surface)
         self.playerGroup.draw(surface)

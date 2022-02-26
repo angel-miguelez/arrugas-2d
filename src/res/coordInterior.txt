@@ -1,0 +1,20 @@
+//Muro izquierda
+160 0 32 32
+
+//Muro derecha
+192 0 32 32
+
+//Interseccion arriba derecha
+369 32 32 32
+
+//Interseccion arriba izquierda
+401 32 32 32
+
+//Interseccion abajo izquierda
+369 96 32 32
+
+//Interseccion abajo derecha
+401 96 32 32
+
+//Muro frontal
+32 160 32 64
