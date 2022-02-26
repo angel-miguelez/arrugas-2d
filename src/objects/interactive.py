@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-from player.gestorRecursos import GestorRecursos
+
+from game.director import Director
+from utils.resourcesmanager import ResourcesManager
+
 
 class Interactive(pygame.sprite.Sprite):
     """
@@ -12,7 +15,7 @@ class Interactive(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         # Load image and rect to detect collisions
-        self.image = GestorRecursos.CargarImagen(image, transparency=True)
+        self.image = ResourcesManager.loadImage(image, transparency=True)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.bottom = position
 
@@ -97,12 +100,13 @@ class InstaUseObject(Interactive):
     Object whose effect is executed exactly when the player picked it up
     """
 
-    def __init__(self, image, playerGroup, callback, phase, position=(0, 0)):
+    def __init__(self, image, playerGroup, callbacks, position=(0, 0)):
         super().__init__(image, [playerGroup], position=position)
-
-        self.phase = phase
-        self.callback = callback  # function executed onCollisionEnter with the player
+        self.callbacks = callbacks  # functions executed onCollisionEnter with the player
 
     def onCollisionEnter(self, collided):
-        self.callback()
-        self.phase.removeFromGroup(self, "objects")
+
+        for callback in self.callbacks:
+            callback()
+
+        Director().getCurrentScene().removeFromGroup(self, "objects")

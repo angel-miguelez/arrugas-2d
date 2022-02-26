@@ -4,14 +4,14 @@
 import pygame
 
 from game.director import Director
-from menu.menu import *
+from menu.main import MainMenu
 
-# Execute it as a module from arrugas-2d/src directory: python -m  main
+
 if __name__ == '__main__':
 
     pygame.init()
 
-    # Create a director and the initial scene
+    # Create a director and the initial scene (main menu)
     director = Director()
     mainMenu = MainMenu(director)
 

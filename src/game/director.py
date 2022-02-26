@@ -2,19 +2,24 @@
 
 import pygame
 
+from conf.configuration import ConfManager
 
-class Director:
+from utils.singleton import Singleton
+
+
+class Director(metaclass=Singleton):
     """
     Class that manages the interaction with the scenes
     """
 
     def __init__(self):
-        self.screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arrugas-2D")
+        self.screen = pygame.display.set_mode((800, 600))
 
         self._scenes = []  # list with all the scenes
         self._endScene = False  # if the scene has ended or the user has exited
 
+        self._fps = int(ConfManager().getValue("general.fps"))
         self._clock = pygame.time.Clock()
 
     def loop(self, scene):
@@ -27,7 +32,7 @@ class Director:
 
         # Loop of the scene
         while not self._endScene:
-            time = self._clock.tick(60)  # 60 FPS
+            time = self._clock.tick(self._fps)
 
             scene.events(pygame.event.get())  # manage the interaction with the user
             scene.update(time)  # update the state
@@ -42,11 +47,10 @@ class Director:
 
         while len(self._scenes) > 0:
             scene = self._scenes[-1]  # get the last scene added
-            print("[Director] Executing scene: " + scene.name)
 
-            scene.onEnter()  # configure some settings before the beginning of the scene
+            scene.onEnterScene()  # configure some settings before the beginning of the scene
             self.loop(scene)  # start the scene
-            scene.onExit()  # configure some settings after the end of the scene
+            scene.onExitScene()  # configure some settings after the end of the scene
 
     def pop(self):
         """
@@ -56,8 +60,7 @@ class Director:
         self._endScene = True  # indicate that the current scene is ended in order to finish the scene loop
 
         if len(self._scenes) > 0:
-            scene = self._scenes.pop()  # remove the current scene from the list of scenes
-            print("[Director] Removing current scene: " + scene.name)
+            self._scenes.pop()  # remove the current scene from the list of scenes
 
     def push(self, scene):
         """
@@ -66,7 +69,6 @@ class Director:
 
         self._endScene = True
         self._scenes.append(scene)
-        print("[Director] Pushing new scene: " + scene.name)
 
     def change(self, scene):
         """
@@ -76,4 +78,9 @@ class Director:
         self.pop()
         self.push(scene)
 
+    def getCurrentScene(self):
+        """
+        Returns the current scene being played
+        """
 
+        return self._scenes[-1]
