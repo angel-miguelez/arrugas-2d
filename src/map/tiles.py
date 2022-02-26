@@ -20,5 +20,5 @@ class Tile(pygame.sprite.Sprite):
         """
             Update method to simulate movement on the map
         """
-        self.rect.x += xshift
-        self.rect.y += yshift
+        self.rect.x += (xshift * 2)
+        self.rect.y += (yshift * 2)
