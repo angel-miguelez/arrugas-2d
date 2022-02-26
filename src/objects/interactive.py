@@ -15,9 +15,7 @@ class Interactive(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         # Load image and rect to detect collisions
-        self.image = ResourcesManager.loadImage(image, transparency=True)
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.bottom = position
+        self._initializeSprite(image, position)
 
         self.objectsEnterCollision = []  # objects that have just collide
         self.objectsExitCollision = []  # objects that have stopped colliding
@@ -27,8 +25,17 @@ class Interactive(pygame.sprite.Sprite):
 
         self.name = self.__class__.__name__ if name is None else name  # identifier for the object in collisions
 
-    def update(self, *args):
+    def update(self, time):
         self._detectCollision()
+
+    def _initializeSprite(self, image, position):
+        """
+        Creates the image and the rect of the sprite, placing it in a specific position
+        """
+
+        self.image = ResourcesManager.loadImage(image, transparency=True)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.bottom = position
 
     def _detectCollision(self):
         """
@@ -109,4 +116,4 @@ class InstaUseObject(Interactive):
         for callback in self.callbacks:
             callback()
 
-        Director().getCurrentScene().removeFromGroup(self, "objects")
+        Director().getCurrentScene().removeFromGroup(self, "objectsGroup")

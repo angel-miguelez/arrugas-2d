@@ -208,6 +208,7 @@ class Player(Character, Subject):
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], [
                            pos[0], pos[1]], (32, 50), 0.3, 1, 0)
         self.hasGlasses = False
+        self.eventsEnabled = True
 
     def addGlasses(self):
         self.hasGlasses = True
@@ -215,8 +216,18 @@ class Player(Character, Subject):
     def increaseSpeed(self):
         self.playerSpeed *= 1.5
 
-        #move function
-    def move(self,toggledKeys, upControl, downControl, leftControl, rightControl):
+    def disableEvents(self):
+        self.eventsEnabled = False
+
+    def enableEvents(self):
+        self.eventsEnabled = True
+
+        # move function
+    def move(self, toggledKeys, upControl, downControl, leftControl, rightControl):
+
+        if not self.eventsEnabled:
+            self.movement = stop
+            return
 
         # Indicamos la acción a realizar segun la tecla pulsada para el jugador
         if (toggledKeys[upControl] and toggledKeys[leftControl]):

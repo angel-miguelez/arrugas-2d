@@ -14,6 +14,7 @@ from player.personaje2 import Player
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
+from objects.letter import Letter
 
 from res.levels import *
 
@@ -37,10 +38,19 @@ class PhaseTest(Phase):
         # Objects
         self.glasses = Glasses(self.playerGroup, position=(300, 300))
         self.labcoat = LabCoat(self.playerGroup, position=(400, 400))
-        self.objectsGroup = pygame.sprite.Group(self.glasses, self.labcoat)
+        self.letter = Letter(self.playerGroup, position=(500, 400))
+        self.objectsGroup = pygame.sprite.Group(self.glasses, self.labcoat, self.letter)
 
-        # Effects
+        # Foreground
         self.occlude = Occlude()
+        self.glasses.attach(self.occlude)
+        self.foregroundGroup = pygame.sprite.Group(self.occlude)
+
+        # GUI elements
+        self.guiGroup = pygame.sprite.Group()
+
+        self.objectsToUpdate = [self.playerGroup, self.objectsGroup]
+        self.objectsToEvent = [self.player, self.letter]
 
     def events(self, events):
 
@@ -54,9 +64,14 @@ class PhaseTest(Phase):
         keys_pressed = pygame.key.get_pressed()
         self.player.move(keys_pressed, self.MOVE_UP, self.MOVE_DOWN, self.MOVE_LEFT, self.MOVE_RIGHT)
 
+        # Cambiar como funciona el player para poder usar esto
+        # for object in self.objectsToEvent:
+        #     object.events(events)
+        self.letter.events(events)
+
     def update(self, time):
-        self.playerGroup.update(time)
-        self.objectsGroup.update(time)
+        for object in self.objectsToUpdate:
+            object.update(time)
 
     def draw(self, surface):
         surface.fill((0, 0, 0))  # Background color
@@ -66,8 +81,9 @@ class PhaseTest(Phase):
         self.objectsGroup.draw(surface)
         self.playerGroup.draw(surface)
 
-        if not self.player.hasGlasses:
-            self.occlude.draw(surface)
+
+
+        self.foregroundGroup.draw(surface)
 
     def onEnterScene(self):
         super().onEnterScene()
@@ -77,7 +93,3 @@ class PhaseTest(Phase):
         super().onExitScene()
         pygame.mixer.music.stop()
 
-    def removeFromGroup(self, object, groupName):
-
-        if groupName == "objects":
-            self.objectsGroup.remove(object)

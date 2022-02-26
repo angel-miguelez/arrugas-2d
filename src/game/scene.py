@@ -51,3 +51,21 @@ class Scene:
 
         ResourcesManager.loadMusic(file, volume)
         pygame.mixer.music.play(-1)
+
+    def addToGroup(self, object, groupName):
+        """
+        Adds an object to a specific group, if it exists
+        """
+
+        group = getattr(self, groupName, None)
+        if group is not None:
+            group.add(object)
+
+    def removeFromGroup(self, object, groupName):
+        """
+        Removes an object from a specific group, if it exists
+        """
+
+        group = getattr(self, groupName, None)
+        if group is not None:
+            group.remove(object)
