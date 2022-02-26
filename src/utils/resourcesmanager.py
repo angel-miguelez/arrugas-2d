@@ -4,6 +4,8 @@ import pygame
 from pygame.locals import *
 import os
 
+from conf.configuration import ConfManager
+
 
 class ResourcesManager(object):
     """
@@ -76,7 +78,7 @@ class ResourcesManager(object):
     @classmethod
     def loadSound(cls, name):
         """
-        Loads a sound
+        Loads a sound effect
         """
 
         # If the sound has been already loaded, return it directly
@@ -87,6 +89,7 @@ class ResourcesManager(object):
         fullname = os.path.join(cls.ROOT_PATH, "sound", name)
         try:
             sound = pygame.mixer.Sound(fullname)
+            sound.set_volume(ConfManager.getValue("sound.sound_effects_volume"))
             cls.resources[name] = sound
             return sound
         except pygame.error:
@@ -94,17 +97,24 @@ class ResourcesManager(object):
             raise SystemExit
 
     @classmethod
-    def loadMusic(cls, name):
+    def loadMusic(cls, filename, volume=None):
         """
         Loads a music file. This is diferent to loadSound because pygame does not return an object with the music so
         it cannot be saved to reuse.
         """
 
-        fullname = os.path.join(cls.ROOT_PATH, "sound", name)
+        fullname = os.path.join(cls.ROOT_PATH, "sound", filename)
         try:
-            # Since mixer.music.load does not return anyting, we cannot save it in the map or resources
+            # Since mixer.music.load does not return anything, we cannot save it in the map or resources
             pygame.mixer.music.load(fullname)
+
+            # If a non-numerical volume value was given, read it from the configuration file
+            if not isinstance(volume, float):
+                volume = float(ConfManager.getValue(volume))
+            pygame.mixer.music.set_volume(volume)
+
             return True
+
         except pygame.error:
-            print('Cannot load sound:', fullname)
+            print('Cannot load music:', fullname)
             raise SystemExit

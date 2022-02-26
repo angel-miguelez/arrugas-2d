@@ -11,7 +11,6 @@ from map.level import Level
 from phase.phase import Phase
 
 from player.personaje2 import Player
-from utils.resourcesmanager import ResourcesManager
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
@@ -31,8 +30,6 @@ class PhaseTest(Phase):
         self.level = Level(basic_layout)  # Setup map structure
 
         # Player
-        # self.x, self.y = (400, 400)
-        # self.speedX, self.speedY = 5, 5
         self.player = Player()
         self.playerGroup = pygame.sprite.Group(self.player)
 
@@ -73,9 +70,7 @@ class PhaseTest(Phase):
 
     def onEnterScene(self):
         super().onEnterScene()
-
-        ResourcesManager.loadMusic("phase1_background.ogg")
-        pygame.mixer.music.play(-1)
+        self.playMusic("phase1_background.ogg", "sound.game_music_volume")
 
     def onExitScene(self):
         super().onExitScene()

@@ -13,14 +13,21 @@ class Director(metaclass=Singleton):
     """
 
     def __init__(self):
+
+        # Init the window
         pygame.display.set_caption("Arrugas-2D")
         self.screen = pygame.display.set_mode((800, 600))
 
-        self._scenes = []  # list with all the scenes
-        self._endScene = False  # if the scene has ended or the user has exited
+        # Init the sound system
+        pygame.mixer.pre_init(44100, 16, 2, 4096)
+        pygame.init()
 
+        # Configure the fps
         self._fps = int(ConfManager().getValue("general.fps"))
         self._clock = pygame.time.Clock()
+
+        self._scenes = []  # list with all the scenes
+        self._endScene = False  # if the scene has ended or the user has exited
 
     def loop(self, scene):
         """

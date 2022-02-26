@@ -3,12 +3,10 @@
 import pygame.mouse
 import pygame_menu
 
+from menu.settings import SettingsMenu
 from menu.menu import Menu
-from menu.conf import ConfMenu
 
 from phase.test import PhaseTest
-
-from utils.resourcesmanager import ResourcesManager
 
 
 class MainMenu(Menu):
@@ -24,16 +22,15 @@ class MainMenu(Menu):
         self._menu.add.button('Quit', pygame_menu.events.EXIT)  # button to exit the game
 
         self._startGame = False  # flag to know when to stop the main menu music
-        ResourcesManager.loadMusic("main_menu.mp3")
-        pygame.mixer.music.play()
+        self.playMusic("main_menu.mp3", "sound.menu_music_volume")
 
     def onEnterScene(self):
         super().onEnterScene()
 
+        # If the player returns from the game, instead from a submenu, set again the menu music
         if self._startGame:
             self._startGame = False
-            ResourcesManager.loadMusic("main_menu.mp3")
-            pygame.mixer.music.play(-1)
+            self.playMusic("main_menu.mp3", "sound.menu_music_volume")
 
     def onExitScene(self):
         super().onExitScene()
@@ -55,5 +52,5 @@ class MainMenu(Menu):
         Edit the configuration of the game
         """
 
-        confMenu = ConfMenu(self._director)
+        confMenu = SettingsMenu(self._director)
         self._director.push(confMenu)

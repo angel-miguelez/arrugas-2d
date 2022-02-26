@@ -1,5 +1,9 @@
 # -*- encoding: utf-8 -*-
 
+import pygame
+
+from utils.resourcesmanager import ResourcesManager
+
 
 class Scene:
     """
@@ -39,3 +43,11 @@ class Scene:
         Method called right after the scene loop is finished by the director
         """
         raise NotImplemented("onExit method not implemented.")
+
+    def playMusic(self, file, volume=1):
+        """
+        Plays the music file given with a given volume (float or field of configuration file)
+        """
+
+        ResourcesManager.loadMusic(file, volume)
+        pygame.mixer.music.play(-1)

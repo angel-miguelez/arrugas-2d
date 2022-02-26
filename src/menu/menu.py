@@ -17,7 +17,7 @@ class Menu(Scene):
         super().__init__(director, title)
 
         # Every menu has a pygame_menu object
-        self._menu = pygame_menu.Menu(title, 400, 300, theme=pygame_menu.themes.THEME_BLUE, **kwargs)
+        self._menu = pygame_menu.Menu(title, 800, 600, theme=pygame_menu.themes.THEME_BLUE, **kwargs)
 
     def events(self, events):
 

@@ -9,13 +9,13 @@ from conf.configuration import ConfManager
 from menu.menu import Menu
 
 
-class ConfMenu(Menu):
+class SettingsMenu(Menu):
     """
     Class which holds the configuration menu and allows the user to edit it
     """
 
     def __init__(self, director):
-        super().__init__(director, "Configuration menu")
+        super().__init__(director, "Settings")
 
         self._conf = ConfManager()  # get the instance of the ConfManager
 
@@ -24,8 +24,11 @@ class ConfMenu(Menu):
         self._dynamicButtonsTitle = {}  # mapping from the configuration field name to the button title
 
         self._loadPlayerMovementBindings()  # load the player movement bindings and create buttons to edit them
+        self._menu.add.vertical_margin(30)
+        self._loadVolumeSettings()  # load the music and sound effects volumes and create buttons to edit them
+        self._menu.add.vertical_margin(30)
+        self.returnButton = self._menu.add.button('return', self._director.pop)  # button to return to the main menu
 
-        self._menu.add.button('return', self._director.pop)  # button to return to the main menu
 
     def onExitScene(self):
         super().onExitScene()
@@ -79,6 +82,35 @@ class ConfMenu(Menu):
             keyName = self._conf.getBind(fieldName, code=False)
 
             self._bindings[f"{fieldName}"] = keyName
-            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding,
-                                                                         fieldName)
+            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding, fieldName)
             self._dynamicButtonsTitle[fieldName] = f"Move {bind}: "
+
+    def _editVolume(self, value, field):
+        """
+        Updates the configuration value of the volume field given
+        """
+        value = round(float(value) / 100, 2)
+        ConfManager.setValue(field, value)
+
+        if field == "sound.menu_music_volume":
+            pygame.mixer.music.set_volume(value)
+
+    def _loadVolumeSettings(self):
+        """
+        Loads the volume settings and creates a button to edit each of them
+        """
+
+        menuVolume = int(float(ConfManager.getValue("sound.menu_music_volume") * 100))
+        self._menu.add.range_slider('Menu volume', menuVolume, (0, 100), 1,
+                                    value_format=lambda x: str(int(x)),
+                                    onchange=self._editVolume, field="sound.menu_music_volume")
+
+        gameVolume = int(float(ConfManager.getValue("sound.game_music_volume") * 100))
+        self._menu.add.range_slider('Game volume', gameVolume, (0, 100), 1,
+                                    value_format=lambda x: str(int(x)),
+                                    onchange=self._editVolume, field="sound.game_music_volume")
+
+        soundEffectsVolume = int(float(ConfManager.getValue("sound.sound_effects_volume") * 100))
+        self._menu.add.range_slider('Sound effects volume', soundEffectsVolume, (0, 100), 1,
+                                    value_format=lambda x: str(int(x)),
+                                    onchange=self._editVolume, field="sound.sound_effects_volume")
