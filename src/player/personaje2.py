@@ -4,9 +4,11 @@
 # Importar las librerías
 # -------------------------------------------------
 
+from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
+from typing import List
 
 # movements
 left = 0
@@ -131,8 +133,7 @@ class Character(pygame.sprite.Sprite):
         The way to fix it would be commenting or eliminating the lines were we update
         the 'self.rect' position.
         """
-        
-        
+
         # moving left
         if self.movement == left:
             # looking left
@@ -210,17 +211,14 @@ class Character(pygame.sprite.Sprite):
 # Player class
 
 class Player(Character, Subject):
-    
     "Main character"
     def __init__(self, pos):
+        Subject.__init__(self)
+
         # called constructor of father class
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], [
                            pos[0], pos[1]], (32, 50), 0.3, 1, 0)
-        self.hasGlasses = False
         self.eventsEnabled = True
-
-    def addGlasses(self):
-        self.hasGlasses = True
 
     def increaseSpeed(self):
         self.playerSpeed *= 1.5

@@ -1,0 +1,10 @@
+@avatar.png
+Hola, este es un texto que se crea dinámicamente
+Segunda línea
+Fin
+#
+Esto es otro párrafo, que se carga
+independientemente
+.
+@character_avatar.png
+Ahora interactúo yo

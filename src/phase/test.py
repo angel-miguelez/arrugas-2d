@@ -5,11 +5,14 @@ from pygame.locals import *
 import sys
 
 from effects.occlusion import Occlude
+# from game.dialogue import DialogueUI, DynamicDialogueUI
+from game.dialogue import Dialogue
 
 from map.level import Level
 
 from phase.phase import Phase
 
+from player.dialogue_character import DialogueCharacter
 from player.personaje2 import Player
 
 from objects.glasses import Glasses
@@ -17,6 +20,7 @@ from objects.labcoat import LabCoat
 from objects.letter import Letter
 
 from res.levels import *
+from utils.resourcesmanager import ResourcesManager
 
 
 class PhaseTest(Phase):
@@ -35,11 +39,15 @@ class PhaseTest(Phase):
         self.player.attach(self.level)
         self.playerGroup = pygame.sprite.Group(self.player)
 
+        # NPC
+        self.speaker = DialogueCharacter("character2.png", (400,200), self.playerGroup, "avatar.png", "dialg01.txt")
+        self.npcGroup = pygame.sprite.Group(self.speaker)
+
         # Objects
         self.glasses = Glasses(self.playerGroup, position=(300, 300))
         self.labcoat = LabCoat(self.playerGroup, position=(600, 400))
         self.letter = Letter(self.playerGroup, position=(500, 400))
-        self.objectsGroup = pygame.sprite.Group(self.glasses, self.labcoat, self.letter)
+        self.objectsGroup = pygame.sprite.Group(self.labcoat, self.letter)
 
         # Foreground
         self.occlude = Occlude()
@@ -47,10 +55,13 @@ class PhaseTest(Phase):
         self.foregroundGroup = pygame.sprite.Group(self.occlude)
 
         # GUI elements
-        self.guiGroup = pygame.sprite.Group()
+        self.dialogue = Dialogue()
 
-        self.objectsToUpdate = [self.playerGroup, self.objectsGroup]
-        self.objectsToEvent = [self.player, self.letter]
+        self.uiGroup = [self.dialogue]
+
+        self.objectsToUpdate = [self.player, self.objectsGroup, self.npcGroup, self.dialogue]
+        self.objectsToEvent = [self.letter, self.dialogue]
+
 
     def events(self, events):
 
@@ -65,9 +76,8 @@ class PhaseTest(Phase):
         self.player.move(keys_pressed, self.MOVE_UP, self.MOVE_DOWN, self.MOVE_LEFT, self.MOVE_RIGHT)
 
         # Cambiar como funciona el player para poder usar esto
-        # for object in self.objectsToEvent:
-        #     object.events(events)
-        self.letter.events(events)
+        for object in self.objectsToEvent:
+            object.events(events)
 
     def update(self, time):
         for object in self.objectsToUpdate:
@@ -80,10 +90,12 @@ class PhaseTest(Phase):
 
         self.objectsGroup.draw(surface)
         self.playerGroup.draw(surface)
-
-
+        self.npcGroup.draw(surface)
 
         self.foregroundGroup.draw(surface)
+
+        for ui in self.uiGroup:
+            ui.draw(surface)
 
     def onEnterScene(self):
         super().onEnterScene()

@@ -118,3 +118,59 @@ class ResourcesManager(object):
         except pygame.error:
             print('Cannot load music:', fullname)
             raise SystemExit
+
+    @classmethod
+    def loadFont(cls, name, size=0):
+        """
+        Loads a font
+        """
+
+        id = name + str(size)  # since the same family font with different sizes are different objects
+
+        # If the font has been already loaded, return it directly
+        if id in cls.resources:
+            return cls.resources[id]
+
+        # Otherwise, load it, and save it in the map of resources
+        fullname = os.path.join(cls.ROOT_PATH, "font", name)
+        try:
+            font = pygame.font.SysFont(fullname, size)
+            cls.resources[id] = font
+            return font
+        except pygame.error:
+            print('Cannot load font:', fullname)
+            raise SystemExit
+
+    @classmethod
+    def loadDialogue(cls, name):
+        """
+        Loads the text of a dialogue
+        """
+
+        # If the dialogue has been already loaded, return it directly
+        if id in cls.resources:
+            return cls.resources[id]
+
+        # Otherwise, load it, and save it in the map of resources
+        fullname = os.path.join(cls.ROOT_PATH, "dialogue", name)
+        try:
+            pfile = open(fullname, 'r', encoding='utf-8')
+            data = pfile.read()
+            pfile.close()
+
+            out = []
+            interventions = data.split('@')[1:]
+
+            for intervention in interventions:
+                tmp = intervention.split('\n')
+                avatar = tmp[0]
+                text = '\n'.join(tmp[1:])
+                lines = [paragraph.strip('\n').split('\n') for paragraph in text.split('#')]
+                out.append((avatar, lines))
+
+            cls.resources[id] = out
+            return out
+
+        except pygame.error:
+            print('Cannot load font:', fullname)
+            raise SystemExit

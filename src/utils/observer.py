@@ -6,7 +6,8 @@ class Subject:
     The Subject interface declares a set of methods for managing subscribers.
     """
 
-    __observers: List[Observer] = [] #List of observers
+    def __init__(self):
+        self.__observers: List[Observer] = []  # List of observers
 
     def attach(self, observer: Observer) -> None:
         """
