@@ -57,9 +57,18 @@ class Scene:
         Adds an object to a specific group, if it exists
         """
 
-        group = getattr(self, groupName, None)
-        if group is not None:
-            group.add(object)
+        # If the parameter is a list, iterate over it adding each element
+        if isinstance(object, list):
+            for element in object:
+                self.addToGroup(element, groupName)
+
+        # Otherwise, add the element to the list directly
+        else:
+            group = getattr(self, groupName, None)
+            if isinstance(group, list):  # simple lists
+                group.append(object)
+            elif isinstance(group, pygame.sprite.Group):  # pygame groups
+                group.add(object)
 
     def removeFromGroup(self, object, groupName):
         """

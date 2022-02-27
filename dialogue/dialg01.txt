@@ -8,3 +8,5 @@ independientemente
 .
 @character_avatar.png
 Ahora interactúo yo
+@avatar.png
+Pues que bien

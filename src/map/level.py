@@ -233,7 +233,7 @@ class Level(Observer):
                     self.__setSprite(_FLOOR, (x, y))
 
 
-    def run(self, surface):
+    def draw(self, surface):
         self.display_surface = surface;
 
         if self.display_surface is None:

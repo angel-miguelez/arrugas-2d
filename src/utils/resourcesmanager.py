@@ -144,7 +144,7 @@ class ResourcesManager(object):
     @classmethod
     def loadDialogue(cls, name):
         """
-        Loads the text of a dialogue
+        Loads the avatar and text of each player in a dialogue
         """
 
         # If the dialogue has been already loaded, return it directly
@@ -159,14 +159,18 @@ class ResourcesManager(object):
             pfile.close()
 
             out = []
-            interventions = data.split('@')[1:]
+            interventions = data.split('@')[1:]  # each character interventions starts with @<avatar_file>.png
 
             for intervention in interventions:
                 tmp = intervention.split('\n')
-                avatar = tmp[0]
+
+                avatar = tmp[0]  # the avatar is the first line of the intervention
                 text = '\n'.join(tmp[1:])
-                lines = [paragraph.strip('\n').split('\n') for paragraph in text.split('#')]
-                out.append((avatar, lines))
+
+                # paragraphs are separate by a '#', and each line by a '\n'
+                # so we create a list (paragraphs) of lists (lines)
+                paragraphs = [paragraph.strip('\n').split('\n') for paragraph in text.split('#')]
+                out.append((avatar, paragraphs))
 
             cls.resources[id] = out
             return out

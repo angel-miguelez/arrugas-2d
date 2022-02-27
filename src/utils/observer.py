@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List
 
+
 class Subject:
     """
     The Subject interface declares a set of methods for managing subscribers.
@@ -28,6 +29,7 @@ class Subject:
         """
         for observer in self.__observers:
             observer.update(self)
+
 
 class Observer:
     """

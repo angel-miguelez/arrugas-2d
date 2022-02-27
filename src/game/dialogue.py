@@ -12,59 +12,68 @@ from utils.resourcesmanager import ResourcesManager
 class Dialogue(Observer):
 
     def __init__(self):
-        self.interventions = []
-        self.currentIntervention = 0
-        self.active = False
+        self.interventions = []  # list of all the interventions in the dialogue
+        self.currentIntervention = 0  # the current intervention being player
 
-    # def update(self, subject: Subject) -> None:
-    #     self.next()
+        self.scene = None
 
     def add(self, intervention):
+        """
+        Adds a new interventions to the tail of the interventions. If a dialogue was played before,
+        we must call clear() before adding the new interventions to clean the state.
+        """
+
         self.interventions.append(intervention)
-        intervention.attach(self)
+        intervention.attach(self)  # so we know when the intervention has finished (it notifies)
 
     def next(self):
+        """
+        Plays the next intervention in the list, if there is any, otherwise the dialogue is closed
+        """
 
         self.currentIntervention += 1
-        if self.currentIntervention == len(self.interventions):
-            Director().getCurrentScene().player.enableEvents()
-            self.active = False
+        if self.currentIntervention == len(self.interventions):  # the dialogue has finished, closed it
+            self.scene.player.enableEvents()
+            self.scene.removeFromGroup(self, "uiGroup")
+            self.scene.removeFromGroup(self, "objectsToEvent")
+            self.scene.removeFromGroup(self, "objectsToUpdate")
         else:
-            self.interventions[self.currentIntervention].start()
+            self.interventions[self.currentIntervention].start()  # start the next intervention
 
     def clear(self):
+        """
+        Sets the state of the dialogue to the initial state (no interventions)
+        """
+
         self.interventions.clear()
         self.currentIntervention = 0
 
     def start(self):
-        self.active = True
-        self.currentIntervention = 0
-        Director().getCurrentScene().player.disableEvents()
-        self.interventions[0].start()
+        """
+        Starts the dialogue, playing the first intervention.
+        """
+
+        self.scene = Director().getCurrentScene()  # the scene where the dialogue is going to be played
+        self.scene.addToGroup(self, "uiGroup")
+        self.scene.addToGroup(self, "objectsToEvent")
+        self.scene.addToGroup(self, "objectsToUpdate")
+
+        self.scene.player.disableEvents()
+        self.interventions[0].start()  # start the first intervention
 
     def events(self, events):
-
-        if not self.active:
-            return
-
         self.interventions[self.currentIntervention].events(events)
 
     def update(self, *args):
 
-        if isinstance(args[0], DialogueIntervention):
+        # The methods overload the update from observer, so we check manually if the parameter is a Subject
+        if isinstance(args[0], Subject):
             self.next()
-            return
-
-        if not self.active:
             return
 
         self.interventions[self.currentIntervention].update(*args)
 
     def draw(self, surface):
-
-        if not self.active:
-            return
-
         self.interventions[self.currentIntervention].draw(surface)
 
 
@@ -92,23 +101,10 @@ class TextUI:
         self.text = self.font.render(text, self.antialiasing, self.color)
 
     def draw(self, surface):
-        if self.active:
-            surface.blit(self.text, self.position)
-
-    def activate(self):
-        """
-        Sets the text to activated, so it is rendered on the screen
-        """
-        self.active = True
-
-    def deactivate(self):
-        """
-        Sets the object to desactivated, so it is not rendered on the screen
-        """
-        self.active = False
+        surface.blit(self.text, self.position)
 
 
-class DialogueIntervention(TextUI, Subject):
+class SimpleDialogueIntervention(TextUI, Subject):
     """
     Class to draw some text on a dialogue box, with an avatar of the character who is speaking
     """
@@ -116,42 +112,53 @@ class DialogueIntervention(TextUI, Subject):
     def __init__(self):
         Subject.__init__(self)
 
-        self.done = False
-
+        # Font properties
         font = ConfManager.getValue("dialogue.font")
         size = int(ConfManager.getValue("dialogue.font_size"))
         color = eval(ConfManager.getValue("dialogue.color"))
         antialiasing = ConfManager.getValue("dialogue.antialiasing") == "True"
         super().__init__(font, size, color=color, antialiasing=antialiasing)
 
+        # Avatar
         self.avatar = None
         self.avatarPosition = (110, 480)
 
+        # Dialogue box
         self.box = ResourcesManager.loadImage("paper-dialog.png", transparency=True)
         self.boxPosition = (140, 500)
 
-        self.lines = []  # lines are elements of the text separated by '\n'
+        # The text whole text
+        self.done = False
+        self.text = None  # the whole text, a list of paragraphs
+        self.currentParagraph = 0  # position of the current paragraph in the text
+        self.lines = []  # lines are elements of the paragraph separated by '\n'
         self.linesPosition = (212, 510)  # where the first char is drawn
         self.linesSpacing = size * 0.8  # space between lines
 
     def start(self):
-        pass
+        self.currentParagraph = -1
+        self.nextParagraph()
 
     def events(self, events):
 
         for event in events:
-            if event.type == KEYDOWN and event.key == K_SPACE and self.done:
-                self.notify()
+
+            if event.type == KEYDOWN and event.key == K_SPACE:
+
+                if self.done:
+                    self.notify()  # notify when all the text has been rendered
+                else:
+                    self.nextParagraph()  # render the next paragraph
 
     def update(self, *args):
-        self.done = True
+        pass
 
     def draw(self, surface):
 
         surface.blit(self.box, self.boxPosition)
         surface.blit(self.avatar, self.avatarPosition)
 
-        for idx, line in enumerate(self.lines):
+        for idx, line in enumerate(self.lines):  # iterate over the lines, rendering each of them
             surface.blit(line, (self.linesPosition[0], self.linesPosition[1] + idx * self.linesSpacing))
 
     def clear(self):
@@ -174,14 +181,28 @@ class DialogueIntervention(TextUI, Subject):
         """
         Updates the text of the dialogue
         """
-        for idx, line in enumerate(text):
-            self.setLine(line, idx)
+        self.text = text
 
     def setAvatar(self, avatar):
         self.avatar = ResourcesManager.loadImage(avatar, transparency=True)
 
+    def nextParagraph(self):
+        """
+        Sets the text of the next paragraph
+        """
 
-class DynamicDialogueIntervention(DialogueIntervention):
+        self.clear()  # clear the previous lines
+
+        self.currentParagraph += 1
+
+        for idx, line in enumerate(self.text[self.currentParagraph]):  # render the next paragraph
+            self.setLine(line, idx)
+
+        if self.currentParagraph == len(self.text) - 1:  # all the paragraphs has been rendered
+            self.done = True
+
+
+class DynamicDialogueIntervention(SimpleDialogueIntervention):
     """
     Dialogue whose text is rendered progessively
     """
@@ -190,46 +211,31 @@ class DynamicDialogueIntervention(DialogueIntervention):
         super().__init__()
 
         self._gen = None  # generator that returns the line updated with the new char
-        self.text = ""  # all the paragraphs of the dialogue, each paragraph is rendered separated
-        self.done = True  # True if the last paragraph has been rendered
-
-        self.currentParagraphText = ""  # the current paragraph being rendered
-        self.currentParagraph = 0  # position of the current paragraph in the text
-        self.paragraphDone = True  # True if the paragraph has been rendered completly
+        self.currentParagraphText = ""  # list of lines of the current paragraph
+        self.paragraphDone = False
 
         self.currentLine = 0  # current line of the paragraph being rendered
 
         self.nextCharTime = ConfManager.getValue("dialogue.delay_between_chars")  # ms to wait to render the next char
         self.timeSinceLastChar = 0  # ms passed since the last char rendered
 
-    def start(self):
-        """
-        Sets the object activated, and load the first line of the first paragraph into the generator
-        """
-        super().activate()
-
-        self.reset()
-
-        self.currentParagraphText = self.text[0]
-        self._gen = self._textGenerator(self.currentParagraphText[0])  # pass the first line of the first paragraph to the generator
-
     def events(self, events):
 
         for event in events:
             if event.type == KEYDOWN and event.key == K_SPACE:
 
-                if self.done:
+                if self.done:  # all paragraphs rendered
                     self.notify()
 
-                elif self.paragraphDone:
+                elif self.paragraphDone:  # the current paragraph rendered completely
                     self.nextParagraph()
 
                 else:
-                    self.completeParagraph()
+                    self.completeParagraph()  # complete the paragraph without delay
 
     def update(self, time):
 
-        if self.done or self.paragraphDone:
+        if self.paragraphDone:
             return
 
         try:
@@ -252,8 +258,17 @@ class DynamicDialogueIntervention(DialogueIntervention):
             else:
                 self._createGeneratorNextLine()  # add the next line to the generator
 
-    def setText(self, text):
-        self.text = text
+    def clear(self):
+        super().clear()
+        self.currentLine = 0
+
+    def nextParagraph(self):
+        self.clear()  # clear the previous lines
+
+        self.currentParagraph += 1
+        self.currentParagraphText = self.text[self.currentParagraph]
+        self._gen = self._textGenerator(self.currentParagraphText[0])  # add the first line of the paragraph
+        self.paragraphDone = False
 
     # Based on https://stackoverflow.com/questions/31381169/pygame-scrolling-dialogue-text
     # It returns the next character of the phrase in every call
@@ -280,37 +295,6 @@ class DynamicDialogueIntervention(DialogueIntervention):
 
         self.currentLine += 1
         self._gen = self._textGenerator(self.currentParagraphText[self.currentLine])
-
-    def clear(self):
-        """
-        Removes the content of the current lines being rendered
-        """
-
-        super().clear()
-        self.currentLine = 0
-
-    def reset(self):
-        """
-        Sets all the variables to their initial state
-        """
-
-        self.clear()
-
-        self.currentParagraph = 0
-        self.paragraphDone = False
-        self.done = False
-
-    def nextParagraph(self):
-        """
-        Adds the next paragraph to the generator, removing the current one
-        """
-
-        self.clear()
-
-        self.currentParagraph += 1
-        self.currentParagraphText = self.text[self.currentParagraph]
-        self._gen = self._textGenerator(self.currentParagraphText[0])  # add the first line of the paragraph
-        self.paragraphDone = False
 
     def completeParagraph(self):
         """

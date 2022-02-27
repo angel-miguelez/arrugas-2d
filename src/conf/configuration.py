@@ -16,6 +16,19 @@ class ConfManager(object):
     data = None
 
     @classmethod
+    def save(cls):
+        """
+        Saves the content of self.data into the .JSON file
+        """
+
+        if cls.data is None:
+            return
+
+        with open(cls.CONF_FILE, 'w') as file:
+            json.dump(cls.data, file, indent=4)
+            print("[Configuration] Changes on the configuration file saved")
+
+    @classmethod
     def getConf(cls):
         """
         Loads, if not already loaded, and returns the configuration from the .JSON configuration file
@@ -77,14 +90,13 @@ class ConfManager(object):
         cls.setValue(key, name)
 
     @classmethod
-    def save(cls):
+    def getPlayerMovementBinds(cls):
         """
-        Saves the content of self.data into the .JSON file
+        Wrapper to obtain all the bindings of the player movement
         """
 
-        if cls.data is None:
-            return
+        binds = []
+        for bind in ["player.movement.up", "player.movement.down", "player.movement.right", "player.movement.left"]:
+            binds.append(cls.getBind(bind))
 
-        with open(cls.CONF_FILE, 'w') as file:
-            json.dump(cls.data, file, indent=4)
-            print("[Configuration] Changes on the configuration file saved")
+        return binds
