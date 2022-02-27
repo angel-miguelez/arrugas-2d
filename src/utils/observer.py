@@ -1,27 +1,32 @@
 from __future__ import annotations
+from typing import List
 
 class Subject:
     """
     The Subject interface declares a set of methods for managing subscribers.
     """
 
+    __observers: List[Observer] = [] #List of observers
+
     def attach(self, observer: Observer) -> None:
         """
         Attach an observer to the subject.
         """
-        pass
+        self.__observers.append(observer)
 
     def detach(self, observer: Observer) -> None:
         """
         Detach an observer from the subject.
         """
-        pass
+
+        self.__observers.remove(observer)
 
     def notify(self) -> None:
         """
         Notify all observers about an event.
         """
-        pass
+        for observer in self.__observers:
+            observer.update(self)
 
 class Observer:
     """

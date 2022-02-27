@@ -134,6 +134,6 @@ class Level(Observer):
     def update(self, subject: Player):
         newPos = subject.getPos()
         difference = (self.world_shift_x - newPos[0], self.world_shift_y - newPos[1])
-        self.tiles.update(difference[0], difference[1])
         self.world_shift_x = newPos[0]
         self.world_shift_y = newPos[1]
+        self.tiles.update(difference[0], difference[1])

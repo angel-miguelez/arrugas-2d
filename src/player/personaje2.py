@@ -8,7 +8,6 @@ from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
-from typing import List
 
 # movements
 left = 0
@@ -123,6 +122,18 @@ class Character(pygame.sprite.Sprite):
 
 
     def update(self, time):
+        """
+        For now i'll leave uncomentted, but i've discovered why the movement
+        was so scuffed, we were updating both the player position and map position
+        depending on the player input wich resulted in some strange interaction.
+        When the player was moving downwards, the player sprite moved faster than
+        the map which created an offset between the map and the player position, this
+        resulted in the map and player going off-screen.
+        The way to fix it would be commenting or eliminating the lines were we update
+        the 'self.rect' position.
+        """
+        
+        
         # moving left
         if self.movement == left:
             # looking left
@@ -200,7 +211,6 @@ class Character(pygame.sprite.Sprite):
 # Player class
 
 class Player(Character, Subject):
-    __observers: List[Observer] = []
     
     "Main character"
     def __init__(self, pos):
@@ -253,16 +263,6 @@ class Player(Character, Subject):
 
     def getPos(self):
         return (self.positionX, self.positionY)
-
-    def attach(self, observer: Observer):
-        self.__observers.append(observer)
-    
-    def detach(self, observer: Observer):
-        self.__observers.remove(observer)
-
-    def notify(self):
-        for observer in self.__observers:
-            observer.update(self)
 
 
 

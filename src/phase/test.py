@@ -28,16 +28,16 @@ class PhaseTest(Phase):
         super().__init__(director, "PhaseTest")
 
         # Level
-        self.level = Level(basic_layout, 300, 100)  # Setup map structure
+        self.level = Level(basic_layout, 400, 300)  # Setup map structure
 
         # Player
-        self.player = Player((300, 100))
+        self.player = Player((400, 300))
         self.player.attach(self.level)
         self.playerGroup = pygame.sprite.Group(self.player)
 
         # Objects
         self.glasses = Glasses(self.playerGroup, position=(300, 300))
-        self.labcoat = LabCoat(self.playerGroup, position=(400, 400))
+        self.labcoat = LabCoat(self.playerGroup, position=(600, 400))
         self.letter = Letter(self.playerGroup, position=(500, 400))
         self.objectsGroup = pygame.sprite.Group(self.glasses, self.labcoat, self.letter)
 
