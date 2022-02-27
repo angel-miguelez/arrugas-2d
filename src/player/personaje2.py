@@ -4,7 +4,6 @@
 # Importar las librerías
 # -------------------------------------------------
 
-from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
@@ -263,8 +262,6 @@ class Player(Character, Subject):
 
     def getPos(self):
         return (self.positionX, self.positionY)
-
-
 
 class WalkingEnemy(Character):
     def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime, waypoints):
