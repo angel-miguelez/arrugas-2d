@@ -2,8 +2,8 @@
 
 Ejecutar el archivo _main.py_ como un módulo con el siguiente código:
 ```
-ls src 
-python -m main  # sin el .py
+cd src 
+python main.py
 ``` 
 
 # Dependencias
