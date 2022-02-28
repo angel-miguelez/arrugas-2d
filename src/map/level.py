@@ -1,3 +1,4 @@
+from turtle import pos
 import pygame
 import numpy as np
 from map.tiles import Tile
@@ -26,6 +27,12 @@ class Level(Observer):
         self.sheet = ResourcesManager.loadImage("Room_Builder_free_32x32.png", -1)
         self.sheet = self.sheet.convert_alpha()
 
+        #Player spawn coords
+        self._playerSpawnX = posx
+        self._playerSpawnY = posy
+        self._playerPosX = posx
+        self._playerPosY = posy
+
         #Load coordinates
         data = ResourcesManager.loadCoordFile("coordInterior.txt")
         data = data.split()
@@ -45,8 +52,8 @@ class Level(Observer):
 
             tmp.append(int(data[n]))
 
-        self.world_shift_x = posx
-        self.world_shift_y = posy
+        self.worldShiftX = posx
+        self.worldShiftY = posy
         self.levels = np.zeros((room_num), dtype=bool)
 
         self.setupLevel(level_data)
@@ -64,6 +71,18 @@ class Level(Observer):
         tile = Tile((pos[0], pos[1]), image)
         tileGroup.add(tile)
 
+    def __calculatePos(self, x, y):
+        if x == 0:
+            x = x + tile_size
+        else:
+            x = x * tile_size
+
+        if y == 0:
+            y = y + tile_size
+        else:
+            y = y * tile_size
+
+        return (x, y)
 
     def __addRoom(self, room, layout_door_pos, orientation):
         row_index = layout_door_pos[0]
@@ -90,48 +109,27 @@ class Level(Observer):
             for room_col_index, room_cell in enumerate(room_row):
                 #Check to see if there is a wall on the room layout
                 if room_cell == 'X':
-
-                    if aux_x == 0:
-                        x = aux_x + tile_size
-                    else:
-                        x = aux_x * tile_size
-
-                    if start_row == 0:
-                        y = start_row + tile_size
-                    else:
-                        y = start_row * tile_size
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'F':
-
-                    if aux_x == 0:
-                        x = aux_x + tile_size
-                    else:
-                        x = aux_x * tile_size
-
-                    if start_row == 0:
-                        y = start_row + tile_size
-                    else:
-                        y = start_row * tile_size
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
                 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
-
-                    if aux_x == 0:
-                        x = aux_x + tile_size
-                    else:
-                        x = aux_x * tile_size
-
-                    if start_row == 0:
-                        y = start_row + tile_size
-                    else:
-                        y = start_row * tile_size
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
@@ -145,6 +143,16 @@ class Level(Observer):
                 start_row -= 1
             else: 
                 start_row += 1
+
+    def __setupPlayerSpawn(self):
+        difference = (self._playerPosX -
+                      self._playerSpawnX, self._playerPosY - self._playerSpawnY)
+
+        self.walls.update(difference[0], difference[1], "playerSpawn")
+        self.floor.update(difference[0], difference[1], "playerSpawn")
+        #The player won't be needing this kind of updates later on
+        self.player.update(difference[0], difference[1], "playerSpawn")
+
 
     def setupLevel(self, layout):
         self.walls = pygame.sprite.Group()  #Group of tiles that form the walls of the map
@@ -171,38 +179,46 @@ class Level(Observer):
                 
                 #Check to see if we have to add a left wall tile
                 if cell == 'L':
+                    inside = not inside  # Complement of current value
 
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a right wall tile
                 if cell == 'R':
+                    inside = not inside  # Complement of current value
 
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a top right intersection tile
                 if cell == 'K':
+                    inside = not inside  # Complement of current value
 
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a top left intersection tile
                 if cell == 'J':
+                    inside = not inside  # Complement of current value
 
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a bottom left intersection tile
                 if cell == 'H':
+                    inside = not inside  # Complement of current value
 
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a bottom right intersection tile
                 if cell == 'G':
+                    inside = not inside  # Complement of current value
 
                     self.__setSprite(_FRONTWALL, (x, y), self.walls)
 
                 #Check to see if we have to add a player tile
                 if cell == 'P':
-                    #Later on this will draw a floor tile and we'll be calculating
-                    #the offset to center the map on the player spawn position
+                    #Later on this will draw a floor tile
+
+                    self._playerSpawnX = x
+                    self._playerSpawnY = y
 
                     self.__setSprite(_LEFTWALL, (x, y), self.player)
                 
@@ -238,10 +254,15 @@ class Level(Observer):
                     inside = not inside  # Complement of current value
                     
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
+            
+        #print(str(self._playerPosX) + ", " + str(self._playerPosY))
+        #print(str(self._playerSpawnX) + ", " + str(self._playerSpawnY))
+        self.__setupPlayerSpawn()
+        
 
 
     def draw(self, surface):
-        self.display_surface = surface;
+        self.display_surface = surface
 
         if self.display_surface is None:
             print("ERROR: No display surface to draw on.")
@@ -253,12 +274,13 @@ class Level(Observer):
     
     def update(self, subject: Player):
         newPos = subject.getPos()
-        difference = (self.world_shift_x - newPos[0], self.world_shift_y - newPos[1])
+        difference = (self.worldShiftX -
+                      newPos[0], self.worldShiftY - newPos[1])
 
-        self.world_shift_x = newPos[0]
-        self.world_shift_y = newPos[1]
+        self.worldShiftX = newPos[0]
+        self.worldShiftY = newPos[1]
 
-        self.walls.update(difference[0], difference[1])
-        self.floor.update(difference[0], difference[1])
+        self.walls.update(difference[0], difference[1], "")
+        self.floor.update(difference[0], difference[1], "")
         #The player won't be needing this kind of updates later on
-        self.player.update(difference[0], difference[1])
+        self.player.update(difference[0], difference[1], "")

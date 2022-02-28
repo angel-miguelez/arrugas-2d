@@ -13,11 +13,15 @@ class Tile(pygame.sprite.Sprite):
         #Set the position of the Tile
         self.rect = self.image.get_rect(topleft = pos)
 
-    def update(self, xshift, yshift):
+    def update(self, xshift, yshift, updateType):
 
         """
             Update method to simulate movement on the map
         """
 
-        self.rect.x += (xshift * 3)
-        self.rect.y += (yshift * 3)
+        if updateType == "playerSpawn":
+            self.rect.x += (xshift)
+            self.rect.y += (yshift)
+        else:
+            self.rect.x += (xshift * 3)
+            self.rect.y += (yshift * 3)
