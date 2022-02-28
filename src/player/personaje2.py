@@ -206,6 +206,9 @@ class Character(pygame.sprite.Sprite):
         # update
         self.updatePosition()
         return
+
+    def pillEffect(self):
+        self.playerSpeed=self.playerSpeed*0.5
         
 # -------------------------------------------------
 # Player class
@@ -219,6 +222,7 @@ class Player(Character, Subject):
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], [
                            pos[0], pos[1]], (32, 50), 0.3, 1, 0)
         self.eventsEnabled = True
+        self.hasPills=0
 
     def increaseSpeed(self):
         self.playerSpeed *= 1.5
@@ -260,6 +264,18 @@ class Player(Character, Subject):
 
     def getPos(self):
         return (self.positionX, self.positionY)
+
+    def getPill(self):
+        self.hasPills=self.hasPills+1
+
+    def usePill(self, grupo):
+        #if self.hasPills==0:
+            #Sonido incorrecto
+        #else:
+        if self.hasPills>0:
+            self.hasPills=self.hasPills-1
+            grupo.pillEffect()
+
 
 class WalkingEnemy(Character):
     def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime, waypoints):
@@ -306,7 +322,6 @@ class WalkingEnemy(Character):
 # Basic enemy 0 class
 
 class Basic0(Character):
-    "Main character"
     def __init__(self,coordScreen):
         # called constructor of father class
         Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], coordScreen, (32,32), 0.3, 5, 0.5);
@@ -453,6 +468,10 @@ def main():
             pygame.quit()
             sys.exit()
 
+        # Si la tecla es X
+        if toggledKeys[K_x]:
+            # Se ejecuta mecánica pastillas
+            jugador1.hasPills()
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         jugador1.move(toggledKeys, K_UP, K_DOWN, K_LEFT, K_RIGHT)
