@@ -15,6 +15,10 @@ _INTERSECTION_BOTTOMRIGHT = 5
 #This is changed as a test the cords of the coordInterior.txt should be 32 160 32 64
 _FRONTWALL = 6
 _FLOOR_1 = 7
+_FLOOR_2 = 8
+_FLOOR_3 = 9
+_FLOOR_4 = 10
+_FLOOR_5 = 11
 
 class Level(Observer):
     def __init__(self, level_data, posx, posy):
@@ -114,7 +118,7 @@ class Level(Observer):
                         y = start_row * tile_size
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
                 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
@@ -130,7 +134,7 @@ class Level(Observer):
                         y = start_row * tile_size
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
 
                 if orientation:
                     aux_x -= 1
@@ -163,7 +167,7 @@ class Level(Observer):
                 #Check to see if we have to add a floor tile
                 if cell == 'F':
 
-                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
                 
                 #Check to see if we have to add a left wall tile
                 if cell == 'L':
@@ -233,7 +237,7 @@ class Level(Observer):
                 
                     inside = not inside  # Complement of current value
                     
-                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
 
 
     def draw(self, surface):
