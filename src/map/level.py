@@ -14,7 +14,7 @@ _INTERSECTION_BOTTOMLEFT = 4
 _INTERSECTION_BOTTOMRIGHT = 5
 #This is changed as a test the cords of the coordInterior.txt should be 32 160 32 64
 _FRONTWALL = 6
-_FLOOR = 7
+_FLOOR_1 = 7
 
 class Level(Observer):
     def __init__(self, level_data, posx, posy):
@@ -47,7 +47,7 @@ class Level(Observer):
 
         self.setupLevel(level_data)
 
-    def __setSprite(self, spriteType, pos):
+    def __setSprite(self, spriteType, pos, tileGroup):
         #Get coordinates and size for the type of sprite requested
         spriteCoords = self.sheetCoord[spriteType]
         
@@ -58,7 +58,7 @@ class Level(Observer):
 
         #Create the tile and add it to the corresponding group
         tile = Tile((pos[0], pos[1]), image)
-        self.tiles.add(tile)
+        tileGroup.add(tile)
 
 
     def __addRoom(self, room, layout_door_pos, orientation):
@@ -98,7 +98,7 @@ class Level(Observer):
                         y = start_row * tile_size
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'F':
@@ -114,7 +114,7 @@ class Level(Observer):
                         y = start_row * tile_size
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR, (x, y))
+                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
                 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
@@ -130,7 +130,7 @@ class Level(Observer):
                         y = start_row * tile_size
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR, (x, y))
+                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
 
                 if orientation:
                     aux_x -= 1
@@ -143,7 +143,8 @@ class Level(Observer):
                 start_row += 1
 
     def setupLevel(self, layout):
-        self.tiles = pygame.sprite.Group()  #Group of tiles that form the map
+        self.walls = pygame.sprite.Group()  #Group of tiles that form the walls of the map
+        self.floor = pygame.sprite.Group()  # Group of tiles that form the floor of the map
         self.player = pygame.sprite.GroupSingle() #Group to represent the player
         inside = False
         
@@ -157,47 +158,49 @@ class Level(Observer):
                 if cell == 'X':
                     inside = not inside #Complement of current value
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
 
                 #Check to see if we have to add a floor tile
                 if cell == 'F':
 
-                    self.__setSprite(_FLOOR, (x, y))
+                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
                 
                 #Check to see if we have to add a left wall tile
                 if cell == 'L':
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a right wall tile
                 if cell == 'R':
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a top right intersection tile
                 if cell == 'K':
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a top left intersection tile
                 if cell == 'J':
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a bottom left intersection tile
                 if cell == 'H':
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
                 
                 #Check to see if we have to add a bottom right intersection tile
                 if cell == 'G':
 
-                    self.__setSprite(_FRONTWALL, (x, y))
+                    self.__setSprite(_FRONTWALL, (x, y), self.walls)
 
                 #Check to see if we have to add a player tile
                 if cell == 'P':
+                    #Later on this will draw a floor tile and we'll be calculating
+                    #the offset to center the map on the player spawn position
 
-                    self.__setSprite(_LEFTWALL, (x, y))
+                    self.__setSprite(_LEFTWALL, (x, y), self.player)
                 
                 #Check to see if we have a door
                 if cell == 'D':
@@ -230,7 +233,7 @@ class Level(Observer):
                 
                     inside = not inside  # Complement of current value
                     
-                    self.__setSprite(_FLOOR, (x, y))
+                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
 
 
     def draw(self, surface):
@@ -240,8 +243,9 @@ class Level(Observer):
             print("ERROR: No display surface to draw on.")
             exit(-1)
         else:    
-            self.tiles.draw(self.display_surface) #Draw the map itself
-            self.player.draw(self.display_surface) #Draw the player
+            self.walls.draw(self.display_surface) #Draw the walls of the map itself
+            self.floor.draw(self.display_surface) #Draw the floor of the map itself
+            self.player.draw(self.display_surface) #Draw spawn of the player
     
     def update(self, subject: Player):
         newPos = subject.getPos()
@@ -250,4 +254,7 @@ class Level(Observer):
         self.world_shift_x = newPos[0]
         self.world_shift_y = newPos[1]
 
-        self.tiles.update(difference[0], difference[1])
+        self.walls.update(difference[0], difference[1])
+        self.floor.update(difference[0], difference[1])
+        #The player won't be needing this kind of updates later on
+        self.player.update(difference[0], difference[1])
