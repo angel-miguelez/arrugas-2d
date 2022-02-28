@@ -21,12 +21,6 @@ _FLOOR_3 = 9
 _FLOOR_4 = 10
 _FLOOR_5 = 11
 
-# player -> p
-# enemy basic0 -> w (worm)
-# enemy basic1 -> r (rabbit)
-# enemy basic2 -> m (magic range)
-# enemy normal2 -> t (tracked)
-
 class Level(Observer):
     def __init__(self, level_data, posx, posy):
         #Load the image

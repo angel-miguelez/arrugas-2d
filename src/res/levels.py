@@ -18,6 +18,12 @@ room_num = 5
     For now we're using the same sprite for each type of wall
 """
 
+# player -> p
+# enemy basic0 -> w (worm)
+# enemy basic1 -> r (rabbit)
+# enemy basic2 -> m (magic range)
+# enemy normal2 -> t (tracked)
+
 basic_layout = [
     '                                                                      ',
     '           JXXXXXXXXK                                                 ',
