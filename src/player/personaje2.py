@@ -3,7 +3,7 @@
 # -------------------------------------------------
 # Importar las librerías
 # -------------------------------------------------
-
+from objects.interactive import Interactive
 from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
@@ -140,7 +140,7 @@ class Character(pygame.sprite.Sprite):
             self.looking = left
             # update screen coordinates
             self.positionX -= (int)(self.playerSpeed * time)
-            self.rect.left = self.positionX
+            # self.rect.left = self.positionX
             self.positionNum = 0
         # moving right
         elif self.movement == right:
@@ -148,7 +148,7 @@ class Character(pygame.sprite.Sprite):
             self.looking = right
             # update screen coordinates
             self.positionX += (int)(self.playerSpeed * time)
-            self.rect.left = self.positionX
+            # self.rect.left = self.positionX
             self.positionNum = 1
         # moving up
         elif self.movement == up:
@@ -156,7 +156,7 @@ class Character(pygame.sprite.Sprite):
             self.looking = up
             # update screen coordinates
             self.positionY -= (int)(self.playerSpeed * time)
-            self.rect.bottom = self.positionY
+            # self.rect.bottom = self.positionY
             self.positionNum = 2
         # moving down
         elif self.movement == down:
@@ -164,7 +164,7 @@ class Character(pygame.sprite.Sprite):
             self.looking = down
             # update screen coordinates
             self.positionY += (int)(self.playerSpeed * time)
-            self.rect.bottom = self.positionY
+            # self.rect.bottom = self.positionY
             self.positionNum = 3
         elif self.movement == diagUpLeft:
             # looking down
@@ -172,8 +172,8 @@ class Character(pygame.sprite.Sprite):
             # update screen coordinates
             self.positionY -= (int)(diag * self.playerSpeed * time)
             self.positionX -= (int)(diag * self.playerSpeed * time)
-            self.rect.bottom = self.positionY
-            self.rect.left = self.positionX
+            # self.rect.bottom = self.positionY
+            # self.rect.left = self.positionX
             self.positionNum = 2
         elif self.movement == diagUpRight:
             # looking down
@@ -181,8 +181,8 @@ class Character(pygame.sprite.Sprite):
             # update screen coordinates
             self.positionY -= (int)(diag * self.playerSpeed * time)
             self.positionX += (int)(diag * self.playerSpeed * time)
-            self.rect.bottom = self.positionY
-            self.rect.left = self.positionX
+            # self.rect.bottom = self.positionY
+            # self.rect.left = self.positionX
             self.positionNum = 2
         elif self.movement == diagDownLeft:
             # looking down
@@ -190,8 +190,8 @@ class Character(pygame.sprite.Sprite):
             # update screen coordinates
             self.positionY += (int)(diag * self.playerSpeed * time)
             self.positionX -= (int)(diag * self.playerSpeed * time)
-            self.rect.bottom = self.positionY
-            self.rect.left = self.positionX
+            # self.rect.bottom = self.positionY
+            # self.rect.left = self.positionX
             self.positionNum = 3
         elif self.movement == diagDownRight:
             # looking down
@@ -199,26 +199,30 @@ class Character(pygame.sprite.Sprite):
             # update screen coordinates
             self.positionY += (int)(diag * self.playerSpeed * time)
             self.positionX += (int)(diag * self.playerSpeed * time)
-            self.rect.bottom = self.positionY
-            self.rect.left = self.positionX
+            # self.rect.bottom = self.positionY
+            # self.rect.left = self.positionX
             self.positionNum = 3
         # while stopped not changes are done
         # update
         self.updatePosition()
         return
+
+    def pillEffect(self):
+        self.playerSpeed=self.playerSpeed*0.5
         
 # -------------------------------------------------
 # Player class
 
-class Player(Character, Subject):
+class Player(Character, Interactive, Subject):
     "Main character"
     def __init__(self, pos):
         Subject.__init__(self)
 
         # called constructor of father class
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], [
-                           pos[0], pos[1]], (32, 50), 0.3, 1, 0)
+                           pos[0], pos[1]], (32, 50), 0.1, 1, 0)
         self.eventsEnabled = True
+        self.hasPills=0
 
     def increaseSpeed(self):
         self.playerSpeed *= 1.5
@@ -261,7 +265,26 @@ class Player(Character, Subject):
     def getPos(self):
         return (self.positionX, self.positionY)
 
-class WalkingEnemy(Character):
+    def getPill(self):
+        self.hasPills=self.hasPills+1
+
+    def usePill(self, grupo):
+        #if self.hasPills==0:
+            #Sonido incorrecto
+        #else:
+        if self.hasPills>0:
+            self.hasPills=self.hasPills-1
+            grupo.pillEffect()
+
+
+class Enemy(Character):
+
+    def update(self, time):
+        super().update(time)
+        self.rect.bottom = self.positionY
+        self.rect.left = self.positionX
+
+class WalkingEnemy(Enemy):
     def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime, waypoints):
         Character.__init__(self,imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime);
         self.vel = pygame.math.Vector2(0, 0)
@@ -301,12 +324,10 @@ class WalkingEnemy(Character):
         super().updatePosition()
        
 
-
 # -------------------------------------------------
 # Basic enemy 0 class
 
-class Basic0(Character):
-    "Main character"
+class Basic0(Enemy):
     def __init__(self,coordScreen):
         # called constructor of father class
         Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], coordScreen, (32,32), 0.3, 5, 0.5);
@@ -324,7 +345,7 @@ class Basic1(WalkingEnemy):
 # -------------------------------------------------
 # Basic enemy 1 class
 
-class Basic2(Character):
+class Basic2(Enemy):
     def __init__(self, coordScreen, player):
         # called constructor of father class
         self.radius=200
@@ -360,7 +381,7 @@ class Basic2(Character):
 # -------------------------------------------------
 # Normal enemy 2 
 
-class Normal2(Character):
+class Normal2(Enemy):
     "Normal2 enemy 3"
     def __init__(self, coordScreen):
         # called constructor of father class
@@ -453,6 +474,10 @@ def main():
             pygame.quit()
             sys.exit()
 
+        # Si la tecla es X
+        if toggledKeys[K_x]:
+            # Se ejecuta mecánica pastillas
+            jugador1.hasPills()
 
         # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
         jugador1.move(toggledKeys, K_UP, K_DOWN, K_LEFT, K_RIGHT)
