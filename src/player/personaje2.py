@@ -3,12 +3,15 @@
 # -------------------------------------------------
 # Importar las librerías
 # -------------------------------------------------
+from game.director import Director
+from map.tiles import Tile
 from objects.interactive import Interactive
 from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
 from typing import List
+import utils.math as math
 
 # movements
 left = 0
@@ -31,7 +34,7 @@ diag = 0.707
 class Character(pygame.sprite.Sprite):
     "Character"
 
-    def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime):
+    def __init__(self, imageFile, coordFile, imageNum, coordScreen, scale, speed, animationDelay, updateByTime, walls=None):
     # imageFile -> file with image data
     # coordFile -> File with all the coordinades of the sprites from imageFile
     # imageNUm -> array with the number of diferent sprites. ex: [4, 4] 2 positions with 4 different sprites each position
@@ -41,8 +44,10 @@ class Character(pygame.sprite.Sprite):
     # animationDelay -> delay on each movement of the characters
     # updateByTime -> if sprite is updated every moment(basic0) or updated while moving(player) 
     
-    
-        pygame.sprite.Sprite.__init__(self);
+
+        pygame.sprite.Sprite.__init__(self)
+        self.walls = walls
+
         # load sheet
         self.sheet = ResourcesManager.loadImage(imageFile, -1)
         self.sheet = self.sheet.convert_alpha()
@@ -54,10 +59,10 @@ class Character(pygame.sprite.Sprite):
         # reading coords from file
         data = ResourcesManager.loadCoordFile(coordFile)
         data = data.split()
-        self.positionNum = 1;
-        self.imagePositionNum = 0;
-        cont = 0;
-        self.sheetCoord = [];
+        self.positionNum = 1
+        self.imagePositionNum = 0
+        cont = 0
+        self.sheetCoord = []
         numLines = len(imageNum)
         for line in range(0, numLines):
             self.sheetCoord.append([])
@@ -73,7 +78,8 @@ class Character(pygame.sprite.Sprite):
         self.positionNum = left
 
         # rectangle tam
-        self.rect = pygame.Rect(100,100,self.sheetCoord[self.positionNum][self.imagePositionNum][2],self.sheetCoord[self.positionNum][self.imagePositionNum][3])
+        self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.positionNum][self.imagePositionNum]), scale)
+        self.rect = self.image.get_rect()
 
         # X and Y coordinates on screen
         self.positionX = coordScreen[0]
@@ -89,6 +95,9 @@ class Character(pygame.sprite.Sprite):
 
         # update sprites
         self.updatePosition()
+
+        self.lastHor = 0
+        self.lastVer = 0
 
 
 
@@ -134,95 +143,87 @@ class Character(pygame.sprite.Sprite):
         the 'self.rect' position.
         """
 
+        self.lastHor = 0
+        self.lastVer = 0
+
         # moving left
         if self.movement == left:
             # looking left
             self.looking = left
-            # update screen coordinates
-            self.positionX -= (int)(self.playerSpeed * time)
-            # self.rect.left = self.positionX
             self.positionNum = 0
+            self.lastHor = - int(self.playerSpeed * time)
         # moving right
         elif self.movement == right:
             # looking right
             self.looking = right
-            # update screen coordinates
-            self.positionX += (int)(self.playerSpeed * time)
-            # self.rect.left = self.positionX
             self.positionNum = 1
+            self.lastHor = int(self.playerSpeed * time)
         # moving up
         elif self.movement == up:
             # looking up
             self.looking = up
-            # update screen coordinates
-            self.positionY -= (int)(self.playerSpeed * time)
-            # self.rect.bottom = self.positionY
             self.positionNum = 2
+            self.lastVer = - int(self.playerSpeed * time)
         # moving down
         elif self.movement == down:
             # looking down
             self.looking = down
-            # update screen coordinates
-            self.positionY += (int)(self.playerSpeed * time)
-            # self.rect.bottom = self.positionY
             self.positionNum = 3
+            self.lastVer = int(self.playerSpeed * time)
         elif self.movement == diagUpLeft:
             # looking down
             self.looking = up
-            # update screen coordinates
-            self.positionY -= (int)(diag * self.playerSpeed * time)
-            self.positionX -= (int)(diag * self.playerSpeed * time)
-            # self.rect.bottom = self.positionY
-            # self.rect.left = self.positionX
+            self.lastVer = - int(diag * self.playerSpeed * time)
+            self.lastHor = -int(diag * self.playerSpeed * time)
             self.positionNum = 2
         elif self.movement == diagUpRight:
             # looking down
             self.looking = up
-            # update screen coordinates
-            self.positionY -= (int)(diag * self.playerSpeed * time)
-            self.positionX += (int)(diag * self.playerSpeed * time)
-            # self.rect.bottom = self.positionY
-            # self.rect.left = self.positionX
+            self.lastVer = - int(diag * self.playerSpeed * time)
+            self.lastHor = int(diag * self.playerSpeed * time)
             self.positionNum = 2
         elif self.movement == diagDownLeft:
             # looking down
             self.looking = down
-            # update screen coordinates
-            self.positionY += (int)(diag * self.playerSpeed * time)
-            self.positionX -= (int)(diag * self.playerSpeed * time)
-            # self.rect.bottom = self.positionY
-            # self.rect.left = self.positionX
+            self.lastVer = int(diag * self.playerSpeed * time)
+            self.lastHor = - int(diag * self.playerSpeed * time)
             self.positionNum = 3
         elif self.movement == diagDownRight:
             # looking down
             self.looking = down
-            # update screen coordinates
-            self.positionY += (int)(diag * self.playerSpeed * time)
-            self.positionX += (int)(diag * self.playerSpeed * time)
-            # self.rect.bottom = self.positionY
-            # self.rect.left = self.positionX
+            self.lastVer = int(diag * self.playerSpeed * time)
+            self.lastHor = int(diag * self.playerSpeed * time)
             self.positionNum = 3
         # while stopped not changes are done
+
         # update
         self.updatePosition()
-        return
+        self.positionX += self.lastHor
+        self.positionY += self.lastVer
 
     def pillEffect(self):
         self.playerSpeed=self.playerSpeed*0.5
         
 # -------------------------------------------------
 # Player class
+def _collideCollisionRect(left, right):
+    return left.legsRect.colliderect(right.rect)
 
-class Player(Character, Interactive, Subject):
+class Player(Character, Subject):
     "Main character"
-    def __init__(self, pos):
+    def __init__(self, pos, walls):
         Subject.__init__(self)
 
         # called constructor of father class
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], [
-                           pos[0], pos[1]], (32, 50), 0.1, 1, 0)
+                           pos[0], pos[1]], (30, 30), 0.1, 4, 0, walls)
         self.eventsEnabled = True
-        self.hasPills=0
+        self.hasPills = 0
+
+        self.legsRect = self.rect.copy()
+        self.legsRect.inflate_ip(-5, -15)
+        self.legsRect.bottom = self.rect.bottom
+        self.legsRect.left = self.rect.left + (self.rect.width - self.legsRect.width) / 2
 
     def increaseSpeed(self):
         self.playerSpeed *= 1.5
@@ -259,8 +260,31 @@ class Player(Character, Interactive, Subject):
             self.movement = down
         else:
             self.movement = stop
-        
+
         self.notify()
+
+    def update(self, time):
+        collidedHor, collidedVer = (False, False)
+        collided = pygame.sprite.spritecollide(self, self.walls, False, _collideCollisionRect)
+        if len(collided) > 0:
+            for sprite in collided:
+
+                difference = abs(self.rect.center[1] - sprite.rect.center[1])
+                maxDifference = self.rect.height / 2 + sprite.rect.height / 2
+                if maxDifference - difference < 30:
+                    collidedVer = True
+
+                difference = abs(self.rect.center[0] - sprite.rect.center[0])
+                maxDifference = self.rect.width / 2 + sprite.rect.width / 2
+                if maxDifference - difference < 30:
+                    collidedHor = True
+
+        if collidedHor:
+            self.positionX -= self.lastHor
+        if collidedVer:
+            self.positionY -= self.lastVer
+
+        super().update(time)
 
     def getPos(self):
         return (self.positionX, self.positionY)

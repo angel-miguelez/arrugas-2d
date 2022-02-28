@@ -29,6 +29,8 @@ class Director(metaclass=Singleton):
         self._scenes = []  # list with all the scenes
         self._endScene = False  # if the scene has ended or the user has exited
 
+        self.time = 0  # time since last update, public variable
+
     def loop(self, scene):
         """
         Loop of the current scene
@@ -39,10 +41,10 @@ class Director(metaclass=Singleton):
 
         # Loop of the scene
         while not self._endScene:
-            time = self._clock.tick(self._fps)
+            self.time = self._clock.tick(self._fps)
 
             scene.events(pygame.event.get())  # manage the interaction with the user
-            scene.update(time)  # update the state
+            scene.update(self.time)  # update the state
             scene.draw(self.screen)  # draw on the screen
 
             pygame.display.flip()

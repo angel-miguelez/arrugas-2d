@@ -32,7 +32,7 @@ class PhaseTest(Phase):
         self.level = Level(basic_layout, 400, 300)  # Setup map structure
 
         # Player
-        self.player = Player((400, 300))
+        self.player = Player((400, 300), self.level.walls)
         self.player.attach(self.level)
         self.addToGroup(self.player, "playerGroup")
 
