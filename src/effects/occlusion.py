@@ -3,9 +3,6 @@
 import pygame
 
 from game.director import Director
-
-from objects.glasses import Glasses
-
 from utils.observer import Observer, Subject
 from utils.resourcesmanager import ResourcesManager
 
@@ -20,7 +17,5 @@ class Occlude(pygame.sprite.Sprite, Observer):
         self.image = ResourcesManager.loadImage('occlude_vision.png', transparency=True)
         self.rect = self.image.get_rect()
 
-    def update(self, subject: Subject) -> None:
-
-        if isinstance(subject, Glasses):
-            Director().getCurrentScene().removeFromGroup(self, "foregroundGroup")
+    def updateObserver(self, subject: Subject) -> None:
+        Director().getCurrentScene().removeFromGroup(self, "foregroundGroup")

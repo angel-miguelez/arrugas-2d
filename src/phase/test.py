@@ -4,7 +4,6 @@ import pygame
 from pygame.locals import *
 
 from effects.occlusion import Occlude
-from game.dialogue import Dialogue
 
 from map.level import Level
 
@@ -32,18 +31,18 @@ class PhaseTest(Phase):
         self.level = Level(basic_layout, 400, 300)  # Setup map structure
 
         # Player
-        self.player = Player((400, 300), self.level.walls)
+        self.player = Player((400, 300), 0.2, walls=self.level.walls)
         self.player.attach(self.level)
         self.addToGroup(self.player, "playerGroup")
 
         # NPC
-        speaker = DialogueCharacter("character2.png", (400, 200), self.playerGroup, "avatar.png", "dialg01.txt")
+        speaker = DialogueCharacter("character2.png", (800, 800), self.playerGroup, "avatar.png", "dialg01.txt")
         self.addToGroup(speaker, "npcGroup")
 
         # Objects
-        glasses = Glasses(self.playerGroup, position=(300, 300))
-        labcoat = LabCoat(self.playerGroup, position=(600, 400))
-        letter = Letter(self.playerGroup, position=(500, 400))
+        glasses = Glasses(self.playerGroup, (400, 300))
+        labcoat = LabCoat(self.playerGroup, (600, 500))
+        letter = Letter(self.playerGroup, (500, 400), (400, 300))
         self.addToGroup([glasses, labcoat, letter], "objectsGroup")
 
         # Foreground

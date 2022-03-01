@@ -19,9 +19,5 @@ class Tile(pygame.sprite.Sprite):
             Update method to simulate movement on the map
         """
 
-        if updateType == "playerSpawn":
-            self.rect.x += (xshift)
-            self.rect.y += (yshift)
-        else:
-            self.rect.x += (xshift * 3)
-            self.rect.y += (yshift * 3)
+        self.rect.x += xshift
+        self.rect.y += yshift

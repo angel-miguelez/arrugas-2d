@@ -19,7 +19,7 @@ class Character(pygame.sprite.Sprite):
     Class that represents every character in the game
     """
 
-    def __init__(self, imageFile, coordFile, sheetDimension, coordScreen, scale, speed, animationDelay, updateByTime, walls=None):
+    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime, walls=None):
         """
         imageFile -> file with image data
         coordFile -> File with all the coordinades of the sprites from imageFile
@@ -54,7 +54,7 @@ class Character(pygame.sprite.Sprite):
         self.scale = scale  # size of the image
 
         # Initial position on the screen
-        self.x, self.y = (coordScreen[0], coordScreen[1])
+        self.x, self.y = (position[0], position[1])
         self.lastPos = (self.x, self.y)  # used to revert the last movement if it collided with a wall
         self.rect.left = self.x
         self.rect.bottom = self.y
@@ -168,9 +168,10 @@ class Player(Character, Subject):
     Class that represents the playable character
     """""
 
-    def __init__(self, pos, walls):
+    def __init__(self, position, speed=1, animationDelay=4, walls=None):
         Subject.__init__(self)
-        Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], pos, (30, 30), 0.1, 4, 0, walls)
+        Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], position, (30, 30),
+                           speed, animationDelay, 0, walls)
 
         # We use a new rect that is placed at the bottom body-upper legs of the sprite to detect collisions
         self.legsRect = self.rect.copy()
@@ -188,9 +189,14 @@ class Player(Character, Subject):
 
     def increaseSpeed(self):
         self.speed *= 1.5
+        self.animationDelay /= 1.5
 
     def disableEvents(self):
         self.eventsEnabled = False
+
+        # Stop the player
+        self.lastMovements = [IDLE]
+        self.movement = IDLE
 
     def enableEvents(self):
         self.eventsEnabled = True
@@ -246,19 +252,17 @@ class Player(Character, Subject):
                 self.movement = DOWN
                 self.lastMovements.append(DOWN)
 
-        # Remove from the list the key
+        # Remove from the list the key, we have to check if it is there in case another object got control of the events
+        # and we did not capture the realising
         elif event.type == KEYUP:
 
-            if event.key == self.MOVE_LEFT:
+            if event.key == self.MOVE_LEFT and LEFT in self.lastMovements:
                 self.lastMovements.remove(LEFT)
-            elif event.key == self.MOVE_RIGHT:
-                self.movement = RIGHT
+            elif event.key == self.MOVE_RIGHT and RIGHT in self.lastMovements:
                 self.lastMovements.remove(RIGHT)
-            elif event.key == self.MOVE_UP:
-                self.movement = UP
+            elif event.key == self.MOVE_UP and UP in self.lastMovements:
                 self.lastMovements.remove(UP)
-            elif event.key == self.MOVE_DOWN:
-                self.movement = DOWN
+            elif event.key == self.MOVE_DOWN and DOWN in self.lastMovements:
                 self.lastMovements.remove(DOWN)
 
     def events(self, events):
@@ -271,7 +275,6 @@ class Player(Character, Subject):
         for event in events:
             self.move(event)
 
-
     def update(self, time):
 
         self.movement = self.lastMovements[-1]  # the last key pressed by the user
@@ -281,34 +284,9 @@ class Player(Character, Subject):
         self.notify()
 
         # Check if there was a collision
-        collidedHor, collidedVer = (False, False)
         collided = pygame.sprite.spritecollide(self, self.walls, False, _collideCollisionRect)
-
-        if len(collided) > 0:
-
-            for sprite in collided:
-
-                # Distinguish between a horizontal and vertical collision, based on the relative position of the centers
-                # and the maximum distance it can be between them in the vertical and horizontal collision respectively
-
-                difference = abs(self.legsRect.center[1] - sprite.rect.center[1])  # distance between centers.y
-                maxDifference = self.legsRect.height / 2 + sprite.rect.height / 2
-
-                # If the difference is almost the maximum difference in vertical, then they collided vertically
-                if maxDifference - difference < 10:
-                    collidedVer = True
-
-                difference = abs(self.legsRect.center[0] - sprite.rect.center[0])  # distance between centers.x
-                maxDifference = self.legsRect.width / 2 + sprite.rect.width / 2
-
-                # If the difference is almost the maximum difference in horizontal, then they collided horizontally
-                if maxDifference - difference < 10:
-                    collidedHor = True
-
-        if collidedHor:
-            self.x = self.lastPos[0]  # undo the horizontal movement
-        if collidedVer:
-            self.y = self.lastPos[1]  # undo the vertical movement
+        if len(collided) > 0:  # if there was, recover to the last position
+            self.x, self.y = self.lastPos
 
         self.lastPos = (self.x, self.y)
         self.notify()  # notify again to draw the level properly
@@ -336,8 +314,8 @@ class Enemy(Character):
         self.rect.left = self.x
 
 class WalkingEnemy(Enemy):
-    def __init__(self, imageFile, coordFile, sheetDimension, coordScreen, scale, speed, animationDelay, updateByTime, waypoints):
-        Character.__init__(self, imageFile, coordFile, sheetDimension, coordScreen, scale, speed, animationDelay, updateByTime);
+    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime, waypoints):
+        Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime);
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2((self.x, self.y))
         self.target_radius = 20
@@ -379,29 +357,29 @@ class WalkingEnemy(Enemy):
 # Basic enemy 0 class
 
 class Basic0(Enemy):
-    def __init__(self,coordScreen):
+    def __init__(self, position):
         # called constructor of father class
-        Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], coordScreen, (32,32), 0.3, 5, 0.5);
+        Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, (32, 32), 0.3, 5, 0.5);
 
 
 # -------------------------------------------------
 # Basic enemy 1 class
 
 class Basic1(WalkingEnemy):
-    def __init__(self, coordScreen, waypoints, speed):
+    def __init__(self, position, waypoints, speed):
         # called constructor of father class
-        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], coordScreen, (32,32), speed, 5, 0.5, waypoints);
+        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, (32, 32), speed, 5, 0.5, waypoints);
 
 
 # -------------------------------------------------
 # Basic enemy 1 class
 
 class Basic2(Enemy):
-    def __init__(self, coordScreen, player):
+    def __init__(self, position, player):
         # called constructor of father class
         self.radius=200
         self.enemy=player
-        Character.__init__(self, 'B2.png', 'coordBasic2.txt', [10], coordScreen, (148,120), 0.3, 5, 0.5);
+        Character.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, (148, 120), 0.3, 5, 0.5);
         
 
     def updateImage(self):
@@ -434,9 +412,9 @@ class Basic2(Enemy):
 
 class Normal2(Enemy):
     "Normal2 enemy 3"
-    def __init__(self, coordScreen):
+    def __init__(self, position):
         # called constructor of father class
-        Character.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3],coordScreen, (32,50), 0.1, 5, 0);
+        Character.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, (32, 50), 0.1, 5, 0);
 
         #move function that chase the player
     def move(self, player, area):

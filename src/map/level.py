@@ -272,7 +272,7 @@ class Level(Observer):
             self.floor.draw(self.display_surface) #Draw the floor of the map itself
             self.player.draw(self.display_surface) #Draw spawn of the player
     
-    def update(self, subject: Player):
+    def updateObserver(self, subject: Player):
         newPos = subject.getPos()
         difference = (self.worldShiftX -
                       newPos[0], self.worldShiftY - newPos[1])

@@ -2,7 +2,6 @@
 
 import pygame
 
-from game.director import Director
 from utils.resourcesmanager import ResourcesManager
 
 
@@ -20,7 +19,6 @@ class Interactive(pygame.sprite.Sprite):
         self.objectsEnterCollision = []  # objects that have just collide
         self.objectsExitCollision = []  # objects that have stopped colliding
         self.objectsStayCollision = []  # objects that have been colliding for more than one frame
-
         self.collisionGroups = collisionGroups  # groups to which detect collisions
 
         self.name = self.__class__.__name__ if name is None else name  # identifier for the object in collisions
@@ -35,7 +33,7 @@ class Interactive(pygame.sprite.Sprite):
 
         self.image = ResourcesManager.loadImage(image, transparency=True)
         self.rect = self.image.get_rect()
-        self.rect.left, self.rect.bottom = position
+        self.rect.center = position
 
     def _detectCollision(self):
         """
@@ -100,20 +98,3 @@ class Interactive(pygame.sprite.Sprite):
 
     def onCollisionStay(self, collided):
         pass
-
-
-class InstaUseObject(Interactive):
-    """
-    Object whose effect is executed exactly when the player picked it up
-    """
-
-    def __init__(self, image, playerGroup, callbacks, position=(0, 0)):
-        super().__init__(image, [playerGroup], position=position)
-        self.callbacks = callbacks  # functions executed onCollisionEnter with the player
-
-    def onCollisionEnter(self, collided):
-
-        for callback in self.callbacks:
-            callback()
-
-        Director().getCurrentScene().removeFromGroup(self, "objectsGroup")

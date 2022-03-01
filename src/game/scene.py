@@ -65,9 +65,9 @@ class Scene:
         # Otherwise, add the element to the list directly
         else:
             group = getattr(self, groupName, None)
-            if isinstance(group, list):  # simple lists
+            if isinstance(group, list) and object not in group:  # simple lists
                 group.append(object)
-            elif isinstance(group, pygame.sprite.Group):  # pygame groups
+            elif isinstance(group, pygame.sprite.Group) and object not in group:  # pygame groups
                 group.add(object)
 
     def removeFromGroup(self, object, groupName):
@@ -76,5 +76,5 @@ class Scene:
         """
 
         group = getattr(self, groupName, None)
-        if group is not None:
+        if group is not None and object in group:
             group.remove(object)

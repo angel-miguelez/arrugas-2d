@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from game.dialogue import DynamicDialogueIntervention, SimpleDialogueIntervention, Dialogue
-from game.director import Director
 
-from objects.interactive import Interactive
+from objects.object import Interactive
+from player.entity import Entity
 from utils.resourcesmanager import ResourcesManager
 
 
-class DialogueCharacter(Interactive):
+class DialogueCharacter(Entity, Interactive):
     """
     Character whose only behaviour is to speak when the player collides with it
     """
 
     def __init__(self, image, position, playerGroup, avatar, text):
+        Entity.__init__(self, playerGroup.sprites()[0], position)
         Interactive.__init__(self, image, [playerGroup], position=position)
 
         self.avatar = avatar  # image of the character to display in the dialogue box

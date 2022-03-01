@@ -17,6 +17,9 @@ class Dialogue(Observer):
 
         self.scene = None
 
+    def updateObserver(self, subject):
+        self.next()
+
     def add(self, intervention):
         """
         Adds a new interventions to the tail of the interventions. If a dialogue was played before,
@@ -65,12 +68,6 @@ class Dialogue(Observer):
         self.interventions[self.currentIntervention].events(events)
 
     def update(self, *args):
-
-        # The methods overload the update from observer, so we check manually if the parameter is a Subject
-        if isinstance(args[0], Subject):
-            self.next()
-            return
-
         self.interventions[self.currentIntervention].update(*args)
 
     def draw(self, surface):

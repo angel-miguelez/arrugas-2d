@@ -28,7 +28,7 @@ class Subject:
         Notify all observers about an event.
         """
         for observer in self.__observers:
-            observer.update(self)
+            observer.updateObserver(self)
 
 
 class Observer:
@@ -36,7 +36,7 @@ class Observer:
     The Observer interface declares the update method, used by subjects.
     """
 
-    def update(self, subject: Subject) -> None:
+    def updateObserver(self, subject: Subject) -> None:
         """
         Receive update from subject.
         """
