@@ -3,15 +3,9 @@
 # -------------------------------------------------
 # Importar las librerías
 # -------------------------------------------------
-from game.director import Director
-from map.tiles import Tile
-from objects.interactive import Interactive
-from utils.observer import Observer
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
-from typing import List
-import utils.math as math
 
 # movements
 left = 0
@@ -98,6 +92,7 @@ class Character(pygame.sprite.Sprite):
 
         self.lastHor = 0
         self.lastVer = 0
+        self.lastPos = (self.positionX, self.positionY)
 
 
 
@@ -198,6 +193,7 @@ class Character(pygame.sprite.Sprite):
 
         # update
         self.updatePosition()
+        self.lastPos = (self.positionX, self.positionY)
         self.positionX += self.lastHor
         self.positionY += self.lastVer
 
@@ -221,8 +217,8 @@ class Player(Character, Subject):
         self.hasPills = 0
 
         self.legsRect = self.rect.copy()
-        self.legsRect.inflate_ip(-5, -15)
-        self.legsRect.bottom = self.rect.bottom
+        self.legsRect.inflate_ip(-5, -13)
+        self.legsRect.bottom = self.rect.bottom - 2
         self.legsRect.left = self.rect.left + (self.rect.width - self.legsRect.width) / 2
 
     def increaseSpeed(self):
@@ -261,30 +257,34 @@ class Player(Character, Subject):
         else:
             self.movement = stop
 
-        self.notify()
+        # self.notify()
 
     def update(self, time):
+        super().update(time)
+        self.notify()
+
         collidedHor, collidedVer = (False, False)
         collided = pygame.sprite.spritecollide(self, self.walls, False, _collideCollisionRect)
         if len(collided) > 0:
-            for sprite in collided:
 
-                difference = abs(self.rect.center[1] - sprite.rect.center[1])
-                maxDifference = self.rect.height / 2 + sprite.rect.height / 2
-                if maxDifference - difference < 30:
+            for sprite in collided:
+                difference = abs(self.legsRect.center[1] - sprite.rect.center[1])
+                maxDifference = self.legsRect.height / 2 + sprite.rect.height / 2
+                if maxDifference - difference < 10:
                     collidedVer = True
 
-                difference = abs(self.rect.center[0] - sprite.rect.center[0])
-                maxDifference = self.rect.width / 2 + sprite.rect.width / 2
-                if maxDifference - difference < 30:
+                difference = abs(self.legsRect.center[0] - sprite.rect.center[0])
+                maxDifference = self.legsRect.width / 2 + sprite.rect.width / 2
+                if maxDifference - difference < 10:
                     collidedHor = True
 
         if collidedHor:
-            self.positionX -= self.lastHor
+            self.positionX = self.lastPos[0]
         if collidedVer:
-            self.positionY -= self.lastVer
+            self.positionY = self.lastPos[1]
 
-        super().update(time)
+        self.lastPos = (self.positionX, self.positionY)
+        self.notify()
 
     def getPos(self):
         return (self.positionX, self.positionY)
