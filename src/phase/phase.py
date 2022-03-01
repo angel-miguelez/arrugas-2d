@@ -18,11 +18,6 @@ class Phase(Scene):
     def __init__(self, director, name):
         super().__init__(director, name)
 
-        self._conf = ConfManager()
-
-        # Load the player bindings
-        self.MOVE_UP, self.MOVE_DOWN, self.MOVE_RIGHT, self.MOVE_LEFT = self._conf.getPlayerMovementBinds()
-
         self.level = None  # zone where the player can move
         self.player = None
 
@@ -56,11 +51,6 @@ class Phase(Scene):
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 Director().pop()
 
-        # Update the player movement
-        keys_pressed = pygame.key.get_pressed()
-        self.player.move(keys_pressed, self.MOVE_UP, self.MOVE_DOWN, self.MOVE_LEFT, self.MOVE_RIGHT)
-
-        # Update every object that need to catch events
         for object in self.objectsToEvent:
             object.events(events)
 

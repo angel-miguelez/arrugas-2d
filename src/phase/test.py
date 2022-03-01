@@ -37,7 +37,7 @@ class PhaseTest(Phase):
         self.addToGroup(self.player, "playerGroup")
 
         # NPC
-        speaker = DialogueCharacter("character2.png", (400,200), self.playerGroup, "avatar.png", "dialg01.txt")
+        speaker = DialogueCharacter("character2.png", (400, 200), self.playerGroup, "avatar.png", "dialg01.txt")
         self.addToGroup(speaker, "npcGroup")
 
         # Objects
@@ -52,11 +52,10 @@ class PhaseTest(Phase):
         self.addToGroup(occlude, "foregroundGroup")
 
         # GUI elements
-        self.dialogue = Dialogue()
 
         # Register objects to update and event methods
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
-        self.addToGroup([letter], "objectsToEvent")
+        self.addToGroup([self.player, letter], "objectsToEvent")
 
     def onEnterScene(self):
         super().onEnterScene()

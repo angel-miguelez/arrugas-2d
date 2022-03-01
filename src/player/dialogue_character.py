@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from game.dialogue import DynamicDialogueIntervention, SimpleDialogueIntervention
+from game.dialogue import DynamicDialogueIntervention, SimpleDialogueIntervention, Dialogue
 from game.director import Director
 
 from objects.interactive import Interactive
@@ -21,8 +21,7 @@ class DialogueCharacter(Interactive):
     def onCollisionEnter(self, collided):
         Interactive.onCollisionEnter(self, collided)
 
-        dialogue = Director().getCurrentScene().dialogue
-        dialogue.clear()  # clean previous state of dialogue
+        dialogue = Dialogue()
 
         # Parse the dialogue file and create as many interventions as needed
         interventions = ResourcesManager.loadDialogue(self.text)
