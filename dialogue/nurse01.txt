@@ -1,0 +1,8 @@
+@nurse.png
+You seem a little bit tired. Have you been
+resting well these days?
+@character_avatar.png
+...
+@nurse.png
+I may reduce the dosis of pills, they cannot
+be that healthy...

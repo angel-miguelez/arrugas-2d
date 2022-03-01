@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from player.personaje2 import Player
+from characters.personaje2 import Player
 from utils.observer import Observer
 
 

@@ -2,7 +2,7 @@
 
 from game.director import Director
 from game.interactive import Interactive
-from player.entity import Entity
+from characters.entity import Entity
 
 
 class Object(Interactive, Entity):

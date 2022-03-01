@@ -170,7 +170,7 @@ class Player(Character, Subject):
 
     def __init__(self, position, speed=1, animationDelay=4, walls=None):
         Subject.__init__(self)
-        Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], position, (30, 30),
+        Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], position, (25, 29),
                            speed, animationDelay, 0, walls)
 
         # We use a new rect that is placed at the bottom body-upper legs of the sprite to detect collisions

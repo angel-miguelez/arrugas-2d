@@ -1,0 +1,7 @@
+@elder.png
+I heard you tried to slipped away from the residence again.
+@character_avatar.png
+Shut up!
+@elder.png
+Ha, ha, ha!
+Seems like someone got up on the wrong foot.

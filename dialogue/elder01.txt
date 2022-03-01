@@ -1,0 +1,6 @@
+@elder.png
+Do you have some pills?
+@character_avatar.png
+No.
+@elder.png
+Then out of my sight!

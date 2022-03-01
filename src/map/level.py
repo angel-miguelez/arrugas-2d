@@ -3,7 +3,7 @@ import pygame
 import numpy as np
 from map.tiles import Tile
 from res.levels import *
-from player.personaje2 import Player
+from characters.personaje2 import Player
 from utils.observer import *
 from utils.resourcesmanager import *
 

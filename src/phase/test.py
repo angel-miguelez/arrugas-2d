@@ -9,8 +9,8 @@ from map.level import Level
 
 from phase.phase import Phase
 
-from player.dialogue_character import DialogueCharacter
-from player.personaje2 import Player
+from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
+from characters.personaje2 import Player
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
@@ -36,8 +36,9 @@ class PhaseTest(Phase):
         self.addToGroup(self.player, "playerGroup")
 
         # NPC
-        speaker = DialogueCharacter("character2.png", (800, 800), self.playerGroup, "avatar.png", "dialg01.txt")
-        self.addToGroup(speaker, "npcGroup")
+        speaker = ElderCharacter((800, 400), self.playerGroup)
+        nurse = NurseCharacter((800, 600), self.playerGroup)
+        self.addToGroup([speaker, nurse], "npcGroup")
 
         # Objects
         glasses = Glasses(self.playerGroup, (400, 300))

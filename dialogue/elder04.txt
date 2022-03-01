@@ -1,0 +1,5 @@
+@elder.png
+Have you seen my glasses? I need to them to see
+properly.
+@character_avatar.png
+Ask someone else.

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 import pygame
 from pygame.locals import *
@@ -13,7 +14,7 @@ class Dialogue(Observer):
 
     def __init__(self):
         self.interventions = []  # list of all the interventions in the dialogue
-        self.currentIntervention = 0  # the current intervention being player
+        self.currentIntervention = 0  # the current intervention being played
 
         self.scene = None
 
@@ -55,7 +56,6 @@ class Dialogue(Observer):
         """
         Starts the dialogue, playing the first intervention.
         """
-
         self.scene = Director().getCurrentScene()  # the scene where the dialogue is going to be played
         self.scene.addToGroup(self, "uiGroup")
         self.scene.addToGroup(self, "objectsToEvent")
@@ -118,7 +118,7 @@ class SimpleDialogueIntervention(TextUI, Subject):
 
         # Avatar
         self.avatar = None
-        self.avatarPosition = (110, 480)
+        self.avatarPosition = (110, 483)
 
         # Dialogue box
         self.box = ResourcesManager.loadImage("paper-dialog.png", transparency=True)
@@ -181,7 +181,7 @@ class SimpleDialogueIntervention(TextUI, Subject):
         self.text = text
 
     def setAvatar(self, avatar):
-        self.avatar = ResourcesManager.loadImage(avatar, transparency=True)
+        self.avatar = ResourcesManager.loadImage(os.path.join("avatar", avatar), transparency=True)
 
     def nextParagraph(self):
         """

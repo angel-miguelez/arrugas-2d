@@ -144,12 +144,12 @@ class ResourcesManager(object):
     @classmethod
     def loadDialogue(cls, name):
         """
-        Loads the avatar and text of each player in a dialogue
+        Loads the avatar and text of each characters in a dialogue
         """
 
         # If the dialogue has been already loaded, return it directly
-        if id in cls.resources:
-            return cls.resources[id]
+        if name in cls.resources:
+            return cls.resources[name]
 
         # Otherwise, load it, and save it in the map of resources
         fullname = os.path.join(cls.ROOT_PATH, "dialogue", name)
@@ -172,7 +172,7 @@ class ResourcesManager(object):
                 paragraphs = [paragraph.strip('\n').split('\n') for paragraph in text.split('#')]
                 out.append((avatar, paragraphs))
 
-            cls.resources[id] = out
+            cls.resources[name] = out
             return out
 
         except pygame.error:
