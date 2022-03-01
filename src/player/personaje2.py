@@ -6,7 +6,7 @@ import itertools
 from utils.observer import Subject
 import math
 
-# movement direction constants
+# Movement direction constants
 LEFT, RIGHT, UP, DOWN = 0, 1, 2, 3
 IDLE = 4
 UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT = 5, 6, 7, 8
@@ -99,10 +99,6 @@ class Character(pygame.sprite.Sprite):
         if self.subPosture >= len(self.sheetCoord[self.posture]):
             self.subPosture = 0
 
-        # If we are going backwards and we have reached the initial posture, return the last one
-        if self.subPosture < 0:
-            self.subPosture = len(self.sheetCoord[self.posture]) - 1
-
         # Update the image
         image = self.sheet.subsurface(self.sheetCoord[self.posture][self.subPosture])
         self.image = pygame.transform.scale(image, self.scale)
@@ -111,7 +107,6 @@ class Character(pygame.sprite.Sprite):
         if self.updateByTime == 0 and self.movement == IDLE:
             self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.posture][0]), self.scale)
 
-
     def update(self, time):
 
         # Reset previous movement shift
@@ -119,46 +114,49 @@ class Character(pygame.sprite.Sprite):
         self.yShift = 0
 
         # Calculate the shift in x and y direction and set the corresponding posture depending on the movement
+        shift = int(self.speed * time)
         if self.movement == LEFT:
             self.posture = LEFT
-            self.xShift = - int(self.speed * time)
+            self.xShift = - shift
         elif self.movement == RIGHT:
             self.posture = RIGHT
-            self.xShift = int(self.speed * time)
+            self.xShift = shift
         elif self.movement == UP:
             self.posture = UP
-            self.yShift = - int(self.speed * time)
+            self.yShift = - shift
         elif self.movement == DOWN:
             self.posture = DOWN
-            self.yShift = int(self.speed * time)
-        elif self.movement == UP_LEFT:
-            self.posture = UP
-            self.yShift = - int(DIAG_FACTOR * self.speed * time)
-            self.xShift = -int(DIAG_FACTOR * self.speed * time)
-        elif self.movement == UP_RIGHT:
-            self.posture = UP
-            self.yShift = - int(DIAG_FACTOR * self.speed * time)
-            self.xShift = int(DIAG_FACTOR * self.speed * time)
-        elif self.movement == DOWN_LEFT:
-            self.posture = DOWN
-            self.yShift = int(DIAG_FACTOR * self.speed * time)
-            self.xShift = - int(DIAG_FACTOR * self.speed * time)
-        elif self.movement == DOWN_RIGHT:
-            self.posture = DOWN
-            self.yShift = int(DIAG_FACTOR * self.speed * time)
-            self.xShift = int(DIAG_FACTOR * self.speed * time)
-            self.posture = 3
+            self.yShift = shift
+        # elif self.movement == UP_LEFT:
+        #     self.posture = UP
+        #     self.yShift = - int(DIAG_FACTOR * self.speed * time)
+        #     self.xShift = -int(DIAG_FACTOR * self.speed * time)
+        # elif self.movement == UP_RIGHT:
+        #     self.posture = UP
+        #     self.yShift = - int(DIAG_FACTOR * self.speed * time)
+        #     self.xShift = int(DIAG_FACTOR * self.speed * time)
+        # elif self.movement == DOWN_LEFT:
+        #     self.posture = DOWN
+        #     self.yShift = int(DIAG_FACTOR * self.speed * time)
+        #     self.xShift = - int(DIAG_FACTOR * self.speed * time)
+        # elif self.movement == DOWN_RIGHT and self.lastMovement == DOWN:
+        #     self.posture = RIGHT
+        #     self.movement = RIGHT
+        #     self.xShift = shift
+        # elif self.movement == DOWN_RIGHT and self.lastMovement == RIGHT:
+        #     self.posture = DOWN
+        #     self.movement = DOWN
+        #     self.yShift = shift
         elif self.movement == IDLE:  # no movement updates in IDLE state
             pass
 
         self.updateImage()
-
         self.lastPos = (self.x, self.y)
         self.x += self.xShift
         self.y += self.yShift
 
     def pillEffect(self):
-        self.speed= self.speed * 0.5
+        self.speed = self.speed * 0.5
         
 
 def _collideCollisionRect(left, right):
@@ -182,6 +180,7 @@ class Player(Character, Subject):
 
         # Load the movement bindings from the configuration file
         self.MOVE_UP, self.MOVE_DOWN, self.MOVE_RIGHT, self.MOVE_LEFT = ConfManager().getPlayerMovementBinds()
+        self.lastMovements = [IDLE]  # ordered sequence of movement keys pressed by the user (more info in move method)
 
         self.eventsEnabled = True
 
@@ -220,15 +219,62 @@ class Player(Character, Subject):
         else:
             self.movement = IDLE
 
+    def move(self, event):
+        """
+        The player can press multiple keys in a row, but the current movement will correspond only to the last key
+        pressed. We save the order in which these keys were pressed, so if the last one (current movement) is released
+        we recover the previous movement.
+
+        For example, if the player is going to the left and presses the MOVE_RIGHT button (without releasing MOVE_LEFT),
+        the movement will be to the right. Now, if it releases MOVE_RIGHT, the movement will back to be to the left.
+        This way, when a key is pressed we append it to the list, and if is released the key is removed from it.
+        """
+
+        # Update the current movement to the current key pressed
+        if event.type == KEYDOWN:
+
+            if event.key == self.MOVE_LEFT:
+                self.movement = LEFT
+                self.lastMovements.append(LEFT)
+            elif event.key == self.MOVE_RIGHT:
+                self.movement = RIGHT
+                self.lastMovements.append(RIGHT)
+            elif event.key == self.MOVE_UP:
+                self.movement = UP
+                self.lastMovements.append(UP)
+            elif event.key == self.MOVE_DOWN:
+                self.movement = DOWN
+                self.lastMovements.append(DOWN)
+
+        # Remove from the list the key
+        elif event.type == KEYUP:
+
+            if event.key == self.MOVE_LEFT:
+                self.lastMovements.remove(LEFT)
+            elif event.key == self.MOVE_RIGHT:
+                self.movement = RIGHT
+                self.lastMovements.remove(RIGHT)
+            elif event.key == self.MOVE_UP:
+                self.movement = UP
+                self.lastMovements.remove(UP)
+            elif event.key == self.MOVE_DOWN:
+                self.movement = DOWN
+                self.lastMovements.remove(DOWN)
+
     def events(self, events):
 
         if not self.eventsEnabled:
             self.movement = IDLE
             return
 
-        self.move(pygame.key.get_pressed())  # update the movement state
+        # self.move(pygame.key.get_pressed())  # update the movement state
+        for event in events:
+            self.move(event)
+
 
     def update(self, time):
+
+        self.movement = self.lastMovements[-1]  # the last key pressed by the user
 
         # Update the position and notify observers (walls)
         super().update(time)
