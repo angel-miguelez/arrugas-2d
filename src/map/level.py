@@ -125,6 +125,56 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
                 
+                """
+                    For the automatic enemy generation we should take into account the orientation
+                    that the room is generated in, if originally the enemies were on the top-right corner
+                    if the room is generated on the right side of the corridor then the enemy would be on
+                    the bottom left corner, so depending on the value of the already calculated orientation
+                    variable there should be different behaviours
+                    
+                    Also we have to create a group only for enemies
+                """
+
+                #Check to see if we have to add a Basic0 enemy
+                #For now it's adding a random tile
+                if room_cell == 'R':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+
+                #Check to see if we have to add a Basic1 enemy
+                #For now it's adding a random tile
+                if room_cell == 'W':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_3, (x, y), self.floor)
+                
+                #Check to see if we have to add a Basic2 enemy
+                #For now it's adding a random tile
+                if room_cell == 'M':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_4, (x, y), self.floor)
+                
+                #Check to see if we have to add a Basic3 enemy
+                #For now it's adding a random tile
+                if room_cell == 'T':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_5, (x, y), self.floor)
+                
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
                     
