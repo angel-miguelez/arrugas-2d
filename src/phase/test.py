@@ -10,7 +10,7 @@ from map.level import Level
 from phase.phase import Phase
 
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
-from characters.personaje2 import Player
+from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
@@ -39,6 +39,20 @@ class PhaseTest(Phase):
         speaker = ElderCharacter((800, 400), self.playerGroup)
         nurse = NurseCharacter((800, 600), self.playerGroup)
         self.addToGroup([speaker, nurse], "npcGroup")
+
+        basic0 = Basic0([300, 300])
+        self.addToGroup(basic0, "npcGroup")
+
+        waypoints = [(360, 200), (140, 200)]
+        spawn = [140, 200]
+        basic1 = Basic1(spawn, waypoints, 1.5)
+        self.addToGroup(basic1, "npcGroup")
+
+        basic2 = Basic2([500, 500], self.player, 500)
+        self.addToGroup(basic2, "npcGroup")
+
+        normal2 = Normal2([500, 300], self.player)
+        self.addToGroup(normal2, "npcGroup")
 
         # Objects
         glasses = Glasses(self.playerGroup, (400, 300))

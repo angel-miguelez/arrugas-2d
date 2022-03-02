@@ -41,10 +41,10 @@ class Character(pygame.sprite.Sprite):
         self.sheetCoord = self._processSpriteSheet(data, sheetDimension)
 
         # Sprite posture
-        self.posture = DOWN
+        self.posture = LEFT
         self.subPosture = 0  # column position in the posture (row)
         self.animationDelay = animationDelay  # time to wait to update the next image
-        self.timeToUpdateSprite = 0
+        self.timeToUpdateSprite = 0  # counter
 
         self.updateByTime = updateByTime
 
@@ -315,7 +315,7 @@ class Enemy(Character):
 
 class WalkingEnemy(Enemy):
     def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime, waypoints):
-        Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime);
+        Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2((self.x, self.y))
         self.target_radius = 20
@@ -329,12 +329,10 @@ class WalkingEnemy(Enemy):
         heading = self.target - self.pos
         if(heading[0] > 0):
             self.movement = LEFT
-            self.looking = LEFT
-            self.positionNum = 0
+            self.posture = 0
         else:
             self.movement = RIGHT
-            self.movement = RIGHT
-            self.positionNum = 1
+            self.posture = 1
         distance = heading.length()  # Distance to the target.
         heading.normalize_ip()
         if distance <= 2:  # We're closer than 2 pixels.
@@ -368,22 +366,23 @@ class Basic0(Enemy):
 class Basic1(WalkingEnemy):
     def __init__(self, position, waypoints, speed):
         # called constructor of father class
-        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, (32, 32), speed, 5, 0.5, waypoints);
+        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, (32, 32), speed, 5, 0.5, waypoints)
 
 
 # -------------------------------------------------
 # Basic enemy 1 class
 
 class Basic2(Enemy):
-    def __init__(self, position, player):
+    def __init__(self, position, player, radius):
         # called constructor of father class
-        self.radius=200
+        self.radius=radius
         self.enemy=player
-        Character.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, (148, 120), 0.3, 5, 0.5);
+        Character.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, (148, 120), 0.3, 15, 0.5);
         
 
     def updateImage(self):
         self.timeToUpdateSprite -= 1
+
         # check if time between sprites updates
 
         self.pos = pygame.math.Vector2((self.x, self.y))
@@ -392,15 +391,15 @@ class Basic2(Enemy):
         distance = heading.length() 
         heading.normalize_ip()
         if distance <= self.radius:   
-            if (self.timeToUpdateSprite < 0):
-                self.movementDelay = self.animationDelay
+            if self.timeToUpdateSprite < 0:
+                self.timeToUpdateSprite = self.animationDelay
                 # update sprite
                 self.subPosture += 1
                 if self.subPosture >= len(self.sheetCoord[self.posture]):
-                    self.imagePositionNum = 0;
-                if self.imagePositionNum < 0:
-                    self.imagePositionNum = len(self.sheetCoord[self.posture]) - 1
-                self.image= pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.posture][self.imagePositionNum]), self.scale)
+                    self.subPosture = 0
+                if self.subPosture < 0:
+                    self.subPosture = len(self.sheetCoord[self.posture]) - 1
+                self.image= pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.posture][self.subPosture]), self.scale)
         else:
             # no movement is being done
             if self.movement == IDLE:
@@ -412,9 +411,14 @@ class Basic2(Enemy):
 
 class Normal2(Enemy):
     "Normal2 enemy 3"
-    def __init__(self, position):
+    def __init__(self, position, player):
         # called constructor of father class
-        Character.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, (32, 50), 0.1, 5, 0);
+        Character.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, (32, 50), 0.1, 5, 0)
+        self.player = player
+
+    def update(self, *args):
+        super().update(*args)
+        self.move(self.player, 300)
 
         #move function that chase the player
     def move(self, player, area):
@@ -423,23 +427,23 @@ class Normal2(Enemy):
         if (abs(self.x - player.x) < area) and (abs(self.y - player.y) < area):
         # Indicamos la acción a realizar segun la tecla pulsada para el jugador
             if ((self.x - player.x) == 0) and ((self.y - player.y) == 0):
-                 self.movement = IDLE
+                self.movement = IDLE
             elif ((self.x - player.x) == 0) and ((self.y - player.y) > 0):
-                 self.movement = UP
+                self.movement = UP
             elif ((self.x - player.x) == 0) and ((self.y - player.y) < 0):
-                 self.movement = DOWN
+                self.movement = DOWN
             elif ((self.x - player.x) < 0) and ((self.y - player.y) == 0):
-                 self.movement = RIGHT
+                self.movement = RIGHT
             elif ((self.x - player.x) > 0) and ((self.y - player.y) == 0):
-                 self.movement = LEFT
+                self.movement = LEFT
             elif ((self.x - player.x) < 0) and ((self.y - player.y) < 0):
-                 self.movement = DOWN
+                self.movement = DOWN
             elif ((self.x - player.x) > 0) and ((self.y - player.y) > 0):
-                 self.movement = UP
+                self.movement = UP
             elif ((self.x - player.x) < 0) and ((self.y - player.y) > 0):
-                 self.movement = RIGHT
+                self.movement = RIGHT
             elif ((self.x - player.x) > 0) and ((self.y - player.y) < 0):
-                 self.movement = LEFT
+                self.movement = LEFT
         else:
              self.movement = IDLE
 
