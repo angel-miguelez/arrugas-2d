@@ -369,6 +369,14 @@ class Basic1(WalkingEnemy):
         # called constructor of father class
         WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, (32, 32), speed, 5, 0.5, waypoints)
 
+# -------------------------------------------------
+# Basic enemy 1.2 class
+
+class Basic12(WalkingEnemy):
+    def __init__(self, position, waypoints, speed):
+        # called constructor of father class
+        WalkingEnemy.__init__(self, 'N2.2.png', 'coordBasic1.2.txt', [3,3,3,3], position, (32, 32), speed, 5, 0.5, waypoints)
+
 
 # -------------------------------------------------
 # Basic enemy 2 class
@@ -458,9 +466,44 @@ class Advanced2(WalkingEnemy):
         self.enemy=player
         self.looking=orientation
         self.activation=False
+        self.destruction= False
         Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5);
 
+    def updateImage(self):
+
+        self.timeToUpdateSprite -= 1
+        if self.timeToUpdateSprite > 0:  # we have to wait more time to update the image
+            return
+
+        self.timeToUpdateSprite = self.animationDelay  # reset the counter
+        self.subPosture += 1  # go to the next subposture in the row
+
+        # If we have reached the last subposture, return to the initial one
+        if self.subPosture >= len(self.sheetCoord[self.posture]):
+            self.subPosture = 0
+        
+        if self.activation == False: # No movement is being done
+            if self.looking == RIGHT: 
+                self.posture=0
+            if self.looking == LEFT: 
+                self.posture=3
+        else: # Update the image
+            if self.looking == RIGHT:
+                if self.destruction==False: 
+                    self.posture=1
+                else:
+                    self.posture=2
+            if self.looking == LEFT: 
+                if self.destruction==False: 
+                    self.posture=4
+                else:
+                    self.posture=5
+        self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.posture][self.subPosture]), self.scale)
+            
+
     def update(self, time): #FALTA HACER LA COLISIÓN
+        #if colision
+            #self.destruction=True
         if self.enemy.y == self.y or self.activation == True: #Player cross
             self.activation= True
             if self.enemy.x > self.x:
@@ -468,14 +511,17 @@ class Advanced2(WalkingEnemy):
                 self.looking=RIGHT
                 self.x += self.speed
                 self.rect.left = self.x
-                super().updateImage()
+
             else:
                 self.looking=LEFT
                 self.movement=LEFT 
                 self.x -= self.speed
                 self.rect.left = self.x
-                super().updateImage()
-        else: super().updateImage() #Movimiento estático
+        else: 
+            self.movement=IDLE  #Movimiento estático
+        self.updateImage()
+
+
 
 
 # -------------------------------------------------
