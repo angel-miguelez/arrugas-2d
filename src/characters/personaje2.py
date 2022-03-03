@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pickle import TRUE
 import pygame.key
 
 from utils.resourcesmanager import *
@@ -370,7 +371,7 @@ class Basic1(WalkingEnemy):
 
 
 # -------------------------------------------------
-# Basic enemy 1 class
+# Basic enemy 2 class
 
 class Basic2(Enemy):
     def __init__(self, position, player, radius):
@@ -447,6 +448,34 @@ class Normal2(Enemy):
         else:
              self.movement = IDLE
 
+
+# -------------------------------------------------
+# Advanced enemy 2
+
+class Advanced2(WalkingEnemy):
+    def __init__(self, position, speed, player, orientation):
+        # called constructor of father class
+        self.enemy=player
+        self.looking=orientation
+        self.activation=False
+        Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5);
+
+    def update(self, time): #FALTA HACER LA COLISIÓN
+        if self.enemy.y == self.y or self.activation == True: #Player cross
+            self.activation= True
+            if self.enemy.x > self.x:
+                self.movement=RIGHT
+                self.looking=RIGHT
+                self.x += self.speed
+                self.rect.left = self.x
+                super().updateImage()
+            else:
+                self.looking=LEFT
+                self.movement=LEFT 
+                self.x -= self.speed
+                self.rect.left = self.x
+                super().updateImage()
+        else: super().updateImage() #Movimiento estático
 
 
 # -------------------------------------------------
