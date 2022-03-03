@@ -1,0 +1,10 @@
+@elder.png
+¡Hombre! Por fin despiertas. No hubo suerte esta vez tampoco. ¿Qué tal la cabeza?
+@character_avatar.png
+¿Quién eres? ¿Qué..? Espera... ¿Asel?
+@elder.png
+¡Qué sorpresa! Te acuerdas de mi nombre, algo es algo. Esta vez la has liado tanto que nos han subido al piso 3, ya puedes estar contento.
+@character_avatar.png
+Sinceramente tener que bajar dos pisos más de escaleras no me va a detener.
+@elder.png
+Si... ya lo suponía, pero puede que las puertas con cierre de seguridad si lo hagan.
