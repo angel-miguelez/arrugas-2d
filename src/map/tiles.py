@@ -13,7 +13,7 @@ class Tile(pygame.sprite.Sprite):
         #Set the position of the Tile
         self.rect = self.image.get_rect(topleft = pos)
 
-    def update(self, xshift, yshift, updateType):
+    def update(self, xshift, yshift):
 
         """
             Update method to simulate movement on the map

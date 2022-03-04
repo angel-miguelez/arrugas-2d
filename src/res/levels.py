@@ -1,5 +1,5 @@
 tile_size = 32 #Tile size used as a base to construct the map
-room_num = 5
+room_num = 5 #Number of rooms to pick from
 
 """
     The following variable consist of a list of strings that sets the layout for the map

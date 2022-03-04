@@ -3,7 +3,7 @@ import pygame
 import numpy as np
 from map.tiles import Tile
 from res.levels import *
-from characters.personaje2 import Player
+from characters.personaje2 import *
 from utils.observer import *
 from utils.resourcesmanager import *
 
@@ -56,6 +56,9 @@ class Level(Observer):
         self.worldShiftY = posy
         self.levels = np.zeros((room_num), dtype=bool)
 
+        #Enemy array for room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
+        self.enemies = []
+
         self.setupLevel(level_data)
 
     def __setSprite(self, spriteType, pos, tileGroup):
@@ -87,6 +90,8 @@ class Level(Observer):
     def __addRoom(self, room, layout_door_pos, orientation):
         row_index = layout_door_pos[0]
         col = layout_door_pos[1]
+
+        enemyGroup = pygame.sprite.Group() #We're generating a group of enemies for each room
 
         #Get the door position in the room
         for room_row_index, room_row in enumerate(room):
@@ -145,6 +150,12 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_1, (x, y), self.floor)
 
+                    #Create the enemy and add it to the group of enemies of that room
+                    waypoints = [(360, 200), (140, 200)]
+                    spawn = [x, y]
+                    basic1 = Basic1(spawn, waypoints, 1.5)
+                    enemyGroup.add(basic1)
+
                 #Check to see if we have to add a Basic1 enemy
                 #For now it's adding a random tile
                 if room_cell == 'W':
@@ -154,6 +165,10 @@ class Level(Observer):
 
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_3, (x, y), self.floor)
+
+                    #Create the enemy and add it to the group of enemies of that room
+                    basic0 = Basic0([x, y])
+                    enemyGroup.add(basic0)
                 
                 #Check to see if we have to add a Basic2 enemy
                 #For now it's adding a random tile
@@ -161,9 +176,13 @@ class Level(Observer):
                     
                     #Calculate position for the tile
                     (x, y) = self.__calculatePos(aux_x, start_row)
-
+                    
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_4, (x, y), self.floor)
+
+                    #Create the enemy and add it to the group of enemies of that room
+                    basic2 = Basic2([x, y], self.player, 500)
+                    enemyGroup.add(basic2)
                 
                 #Check to see if we have to add a Basic3 enemy
                 #For now it's adding a random tile
@@ -171,9 +190,13 @@ class Level(Observer):
                     
                     #Calculate position for the tile
                     (x, y) = self.__calculatePos(aux_x, start_row)
-
+                    
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_5, (x, y), self.floor)
+
+                    #Create the enemy and add it to the group of enemies of that room
+                    #normal2 = Normal2([x, y], self.player)
+                    #enemyGroup.add(normal2)
                 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
@@ -194,14 +217,21 @@ class Level(Observer):
             else: 
                 start_row += 1
 
+        print(enemyGroup)
+        self.enemies.append(enemyGroup)
+
     def __setupPlayerSpawn(self):
         difference = (self._playerPosX -
                       self._playerSpawnX, self._playerPosY - self._playerSpawnY)
 
-        self.walls.update(difference[0], difference[1], "playerSpawn")
-        self.floor.update(difference[0], difference[1], "playerSpawn")
+        self.walls.update(difference[0], difference[1])
+        self.floor.update(difference[0], difference[1])
         #The player won't be needing this kind of updates later on
-        self.player.update(difference[0], difference[1], "playerSpawn")
+        self.player.update(difference[0], difference[1])
+        
+        #Updating enemies position based on the player spawn
+        for enemyGroup in self.enemies:
+            enemyGroup.update(difference[0], difference[1])
 
 
     def setupLevel(self, layout):
@@ -274,7 +304,7 @@ class Level(Observer):
                 
                 #Check to see if we have a door
                 if cell == 'D':
-
+                    
                     #Get the room we want to add
                     while True:
                         num = np.random.randint(0, room_num)
@@ -305,8 +335,6 @@ class Level(Observer):
                     
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
             
-        #print(str(self._playerPosX) + ", " + str(self._playerPosY))
-        #print(str(self._playerSpawnX) + ", " + str(self._playerSpawnY))
         self.__setupPlayerSpawn()
         
 
@@ -321,6 +349,8 @@ class Level(Observer):
             self.walls.draw(self.display_surface) #Draw the walls of the map itself
             self.floor.draw(self.display_surface) #Draw the floor of the map itself
             self.player.draw(self.display_surface) #Draw spawn of the player
+            for enemyGroup in self.enemies:
+                enemyGroup.draw(self.display_surface)  # Draw the enemies
     
     def updateObserver(self, subject: Player):
         newPos = subject.getPos()
@@ -330,7 +360,10 @@ class Level(Observer):
         self.worldShiftX = newPos[0]
         self.worldShiftY = newPos[1]
 
-        self.walls.update(difference[0], difference[1], "")
-        self.floor.update(difference[0], difference[1], "")
+        self.walls.update(difference[0], difference[1])
+        self.floor.update(difference[0], difference[1])
         #The player won't be needing this kind of updates later on
-        self.player.update(difference[0], difference[1], "")
+        self.player.update(difference[0], difference[1])
+        
+        for enemyGroup in self.enemies:
+            enemyGroup.update(difference[0], difference[1])

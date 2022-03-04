@@ -40,19 +40,19 @@ class PhaseTest(Phase):
         nurse = NurseCharacter((800, 600), self.playerGroup)
         self.addToGroup([speaker, nurse], "npcGroup")
 
-        basic0 = Basic0([300, 300])
-        self.addToGroup(basic0, "npcGroup")
+        #basic0 = Basic0([300, 300])
+        #self.addToGroup(basic0, "npcGroup")
 
-        waypoints = [(360, 200), (140, 200)]
-        spawn = [140, 200]
-        basic1 = Basic1(spawn, waypoints, 1.5)
-        self.addToGroup(basic1, "npcGroup")
+        #waypoints = [(360, 200), (140, 200)]
+        #spawn = [140, 200]
+        #basic1 = Basic1(spawn, waypoints, 1.5)
+        #self.addToGroup(basic1, "npcGroup")
 
-        basic2 = Basic2([500, 500], self.player, 500)
-        self.addToGroup(basic2, "npcGroup")
+        #basic2 = Basic2([500, 500], self.player, 500)
+        #self.addToGroup(basic2, "npcGroup")
 
-        normal2 = Normal2([500, 300], self.player)
-        self.addToGroup(normal2, "npcGroup")
+        #normal2 = Normal2([500, 300], self.player)
+        #self.addToGroup(normal2, "npcGroup")
 
         # Objects
         glasses = Glasses(self.playerGroup, (400, 300))
