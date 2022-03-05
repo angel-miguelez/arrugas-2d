@@ -5,6 +5,7 @@ from characters.entity import Entity
 
 from characters.entity import Entity
 from game.interactive import Interactive
+from game.director import Director
 from map.tiles import Tile
 from utils.resourcesmanager import *
 import itertools
@@ -269,23 +270,35 @@ class Player(Character, Subject):
         if self.hasPills>0:
             self.hasPills=self.hasPills-1
             grupo.pillEffect()
+     
 
 
 class Enemy(Character, Entity):
 
-    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime):
+    def __init__(self, imageFile, coordFile, sheetDimension, position, playerGroup, scale, speed, animationDelay, updateByTime):
         Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
         Entity.__init__(self)
+        Entity.setPlayer(self, playerGroup.sprites()[0], position)
         self.extrax, self.extray = (0, 0)
+        
+        self.addCollisionGroup(playerGroup)
 
     def updateObserver(self, subject):
         Entity.updateObserver(self, subject)
         self.rect.left += self.extrax
         self.rect.bottom += self.extray
+    
+    def onCollisionEnter(self, collided):
+
+        if isinstance(collided, Tile):
+            self.x, self.y = self.lastPos
+            self.objectsEnterCollision.remove(collided)
+        if isinstance(collided, Player):
+            Director().pop()
 
 class WalkingEnemy(Enemy):
-    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime, waypoints):
-        Enemy.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
+    def __init__(self, imageFile, coordFile, sheetDimension, position, playerGroup, scale, speed, animationDelay, updateByTime, waypoints):
+        Enemy.__init__(self, imageFile, coordFile, sheetDimension, position, playerGroup, scale, speed, animationDelay, updateByTime)
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2((self.x, self.y))
         self.target_radius = 20
@@ -327,29 +340,29 @@ class WalkingEnemy(Enemy):
 # Basic enemy 0 class
 
 class Basic0(Enemy, Entity):
-    def __init__(self, position):
+    def __init__(self, position, playerGroup):
         # called constructor of father class
-        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, (32, 32), 0.3, 5, 0.5)
+        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, playerGroup, (32, 32), 0.3, 5, 0.5)
 
 
 # -------------------------------------------------
 # Basic enemy 1 class
 
 class Basic1(WalkingEnemy, Entity):
-    def __init__(self, position, waypoints, speed):
+    def __init__(self, position, waypoints, speed, playerGroup):
         # called constructor of father class
-        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, (32, 32), speed, 5, 0.5, waypoints)
+        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, (32, 32), speed, 5, 0.5, waypoints)
 
 
 # -------------------------------------------------
 # Basic enemy 2 class
 
 class Basic2(Enemy, Entity):
-    def __init__(self, position, player, radius):
+    def __init__(self, position, player, radius, playerGroup):
         # called constructor of father class
         self.radius=radius
         self.enemy=player
-        Enemy.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, (148, 120), 0.3, 15, 0.5)
+        Enemy.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, playerGroup, (148, 120), 0.3, 15, 0.5)
 
         
 
@@ -384,9 +397,9 @@ class Basic2(Enemy, Entity):
 
 class Normal2(Enemy):
     "Normal2 enemy 3"
-    def __init__(self, position, player):
+    def __init__(self, position, player, playerGroup):
         # called constructor of father class
-        Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, (32, 50), 0.1, 5, 0)
+        Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, (32, 50), 0.1, 5, 0)
         self.player = player
 
     def update(self, *args):
@@ -425,12 +438,12 @@ class Normal2(Enemy):
 # Advanced enemy 2
 
 class Advanced2(WalkingEnemy):
-    def __init__(self, position, speed, player, orientation):
+    def __init__(self, position, speed, player, orientation, playerGroup):
         # called constructor of father class
         self.enemy=player
         self.looking=orientation
         self.activation=False
-        Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5)
+        Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, playerGroup, (32, 32), speed, 5, 0.5)
 
     def update(self, time): #FALTA HACER LA COLISIÓN
         if self.enemy.y == self.y or self.activation == True: #Player cross
