@@ -7,6 +7,7 @@ from conf.configuration import ConfManager
 from utils.singleton import Singleton
 
 
+
 class Director(metaclass=Singleton):
     """
     Class that manages the interaction with the scenes

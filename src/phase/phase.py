@@ -26,6 +26,7 @@ class Phase(Scene):
         self.playerGroup = pygame.sprite.Group()
         self.npcGroup = pygame.sprite.Group()
         self.objectsGroup = pygame.sprite.Group()
+        self.enemyGroup = pygame.sprite.Group()
         self.foregroundGroup = pygame.sprite.Group()  # e.g. visual effects (occlusion)
         self.uiGroup = []  # UI elements do not need to be sprites, they can be simple images or text
 
@@ -58,6 +59,9 @@ class Phase(Scene):
 
         for object in self.objectsToUpdate:
             object.update(*args)
+        
+        if pygame.sprite.groupcollide(self.playerGroup, self.enemyGroup, False, False)!={}:
+            Director().pop()
 
     def draw(self, surface):
         surface.fill((0, 0, 0))
@@ -68,6 +72,7 @@ class Phase(Scene):
         self.objectsGroup.draw(surface)
 
         self.npcGroup.draw(surface)
+        self.enemyGroup.draw(surface)
         self.playerGroup.draw(surface)
 
         self.foregroundGroup.draw(surface)

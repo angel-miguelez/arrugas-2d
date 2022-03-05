@@ -44,7 +44,7 @@ class ElderCharacter(DialogueCharacter):
     def __init__(self, position, playerGroup):
 
         r = random.randint(1, 8)
-        image = f"npc\\elder0{r}.png"  # get a random image
+        image = f"npc/elder0{r}.png"  # get a random image
 
         r = random.randint(1, 4)
         dialg = f"elder0{r}.txt"  # get a random dialogue
@@ -57,6 +57,6 @@ class NurseCharacter(DialogueCharacter):
     """
 
     def __init__(self, position, playerGroup):
-        image = "npc\\nurse.png"
+        image = "npc/nurse.png"
         dialg = "nurse01.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
