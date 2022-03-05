@@ -28,8 +28,8 @@ class PhaseTest(Phase):
         super().__init__(director, "PhaseTest")
 
         # Level
-        #self.level = Level(basic_layout, 400, 300)  # Setup map structure
-        self.level = Level(basic_layout_2, 400, 300)  # Setup map structure
+        self.level = Level(basic_layout, 400, 300)  # Setup map structure
+        #self.level = Level(basic_layout_2, 400, 300)  # Setup map structure
 
         # Player
         self.player = Player((400, 300), 0.2, walls=self.level.walls)
