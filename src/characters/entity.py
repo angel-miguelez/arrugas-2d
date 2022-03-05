@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-from characters.personaje2 import Player
+#from characters.personaje2 import Player
 from utils.observer import Observer
 
 
@@ -21,8 +21,8 @@ class Entity(Observer):
 
     def updateObserver(self, subject):
 
-        if not isinstance(subject, Player):
-            return
+        #if not isinstance(subject, Player):
+        #    return
 
         playerPos = self._player.getPos()
         offset = playerPos[0] - self._lastPlayerPos[0], playerPos[1] - self._lastPlayerPos[1]

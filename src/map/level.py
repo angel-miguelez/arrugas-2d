@@ -27,6 +27,14 @@ class Level(Observer):
         self.sheet = ResourcesManager.loadImage("Room_Builder_free_32x32.png", -1)
         self.sheet = self.sheet.convert_alpha()
 
+        # Group of tiles that form the walls of the map
+        self.walls = pygame.sprite.Group()
+        # Group of tiles that form the floor of the map
+        self.floor = pygame.sprite.Group()
+
+        #self._player = Player((400, 300))
+        self._player = Player((400, 300), 0.2, walls=self.walls)
+
         #Player spawn coords
         self._playerSpawnX = posx
         self._playerSpawnY = posy
@@ -60,6 +68,9 @@ class Level(Observer):
         self.enemies = []
 
         self.setupLevel(level_data)
+
+    def setPlayer(self, player):
+        self._player = player
 
     def __setSprite(self, spriteType, pos, tileGroup):
         #Get coordinates and size for the type of sprite requested
@@ -181,7 +192,7 @@ class Level(Observer):
                     self.__setSprite(_FLOOR_4, (x, y), self.floor)
 
                     #Create the enemy and add it to the group of enemies of that room
-                    basic2 = Basic2([x, y], self.player, 500)
+                    basic2 = Basic2([x, y], self._player, 500)
                     enemyGroup.add(basic2)
                 
                 #Check to see if we have to add a Basic3 enemy
@@ -226,8 +237,6 @@ class Level(Observer):
 
         self.walls.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
-        #The player won't be needing this kind of updates later on
-        self.player.update(difference[0], difference[1])
         
         #Updating enemies position based on the player spawn
         #for enemyGroup in self.enemies:
@@ -235,9 +244,6 @@ class Level(Observer):
 
 
     def setupLevel(self, layout):
-        self.walls = pygame.sprite.Group()  #Group of tiles that form the walls of the map
-        self.floor = pygame.sprite.Group()  # Group of tiles that form the floor of the map
-        self.player = pygame.sprite.GroupSingle() #Group to represent the player
         inside = False
         
         #Iterate through the map layout in order to build it
@@ -300,7 +306,7 @@ class Level(Observer):
                     self._playerSpawnX = x
                     self._playerSpawnY = y
 
-                    self.__setSprite(_LEFTWALL, (x, y), self.player)
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
                 
                 #Check to see if we have a door
                 if cell == 'D':
@@ -348,7 +354,6 @@ class Level(Observer):
         else:    
             self.walls.draw(self.display_surface) #Draw the walls of the map itself
             self.floor.draw(self.display_surface) #Draw the floor of the map itself
-            self.player.draw(self.display_surface) #Draw spawn of the player
             for enemyGroup in self.enemies:
                 enemyGroup.draw(self.display_surface)  # Draw the enemies
     
@@ -362,8 +367,6 @@ class Level(Observer):
 
         self.walls.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
-        #The player won't be needing this kind of updates later on
-        self.player.update(difference[0], difference[1])
         
         #for enemyGroup in self.enemies:
         #    enemyGroup.update(difference[0], difference[1])

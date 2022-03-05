@@ -35,11 +35,16 @@ class PhaseTest(Phase):
         self.player = Player((400, 300), 0.2, walls=self.level.walls)
         self.player.attach(self.level)
         self.addToGroup(self.player, "playerGroup")
+        self.level.setPlayer(self.player)
 
         # NPC
         speaker = ElderCharacter((800, 400), self.playerGroup)
         nurse = NurseCharacter((800, 600), self.playerGroup)
         self.addToGroup([speaker, nurse], "npcGroup")
+
+        # Enemies
+        for enemyGroup in self.level.enemies:
+            self.addToGroup(enemyGroup, "npcGroup")
 
         #basic0 = Basic0([300, 300])
         #self.addToGroup(basic0, "npcGroup")

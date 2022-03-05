@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from pickle import TRUE
 import pygame.key
+from characters.entity import Entity
 
 from utils.resourcesmanager import *
 import itertools
@@ -355,7 +356,7 @@ class WalkingEnemy(Enemy):
 # -------------------------------------------------
 # Basic enemy 0 class
 
-class Basic0(Enemy):
+class Basic0(Enemy, Entity):
     def __init__(self, position):
         # called constructor of father class
         Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, (32, 32), 0.3, 5, 0.5);
@@ -364,7 +365,7 @@ class Basic0(Enemy):
 # -------------------------------------------------
 # Basic enemy 1 class
 
-class Basic1(WalkingEnemy):
+class Basic1(WalkingEnemy, Entity):
     def __init__(self, position, waypoints, speed):
         # called constructor of father class
         WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, (32, 32), speed, 5, 0.5, waypoints)
@@ -373,7 +374,7 @@ class Basic1(WalkingEnemy):
 # -------------------------------------------------
 # Basic enemy 2 class
 
-class Basic2(Enemy):
+class Basic2(Enemy, Entity):
     def __init__(self, position, player, radius):
         # called constructor of father class
         self.radius=radius
