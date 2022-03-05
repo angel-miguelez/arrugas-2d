@@ -150,8 +150,6 @@ class Character(pygame.sprite.Sprite, Interactive):
         self.collisionRect.left -= self.xShift  # return the collision rect to the current position
         self.collisionRect.bottom -= self.yShift
 
-        self.lastPos = (self.x, self.y)
-
     def onCollisionEnter(self, collided):
 
         if isinstance(collided, Tile):

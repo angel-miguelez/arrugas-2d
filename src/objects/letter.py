@@ -5,16 +5,19 @@ from pygame.locals import *
 from game.director import Director
 
 from objects.object import Object
+from utils.observer import Subject
 
 from utils.resourcesmanager import ResourcesManager
 
 
-class Letter(Object):
+class Letter(Object, Subject):
     """
     Object with a message to the player
     """
 
     def __init__(self, playerGroup, position, screenPosition, id="01"):
+        Subject.__init__(self)
+
         self._player = playerGroup.sprites()[0]  # since playerGroup is a group with just the player
         super().__init__("closed_letter.png", position, playerGroup)
 
@@ -53,6 +56,7 @@ class Letter(Object):
 
         self._opened = False
         self.remove()
+        self.notify()
 
     def events(self, events):
 

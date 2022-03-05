@@ -10,6 +10,7 @@ from map.level import Level
 
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
 from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2
+from objects.door import Door, Switch
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
@@ -50,7 +51,8 @@ class PhaseTest(PlayablePhase):
                 pass
             else:
                 for enemy in enemyGroup:
-                    self.createEnemy(enemy)
+                    pass
+                    # self.createEnemy(enemy)
                     #self.addToGroup(enemy, "npcGroup")
                     #self.player.attach(enemy)
 
@@ -73,10 +75,14 @@ class PhaseTest(PlayablePhase):
         #self.addToGroup(normal2, "npcGroup")
 
         # Objects
-        glasses = Glasses(self.playerGroup, (400, 300))
+        glasses = Glasses(self.playerGroup, (500, 300))
         labcoat = LabCoat(self.playerGroup, (600, 500))
-        letter = Letter(self.playerGroup, (500, 400), (400, 300))
-        self.addToGroup([glasses, labcoat, letter], "objectsGroup")
+        letter = Letter(self.playerGroup, (1100, 412), (400, 300))
+        door = Door((953, 412), self.playerGroup)
+        switch = Switch((1003, 412), self.playerGroup)
+        switch.attach(door)
+        letter.attach(door)
+        self.addToGroup([glasses, labcoat, letter, door, switch], "objectsGroup")
 
         # Foreground
         occlude = Occlude()
@@ -122,4 +128,3 @@ class PhaseTest(PlayablePhase):
     def onExitScene(self):
         super().onExitScene()
         pygame.mixer.music.stop()
-
