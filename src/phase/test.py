@@ -56,9 +56,9 @@ class PhaseTest(PlayablePhase):
 
         #basic0 = Basic0([300, 300])
         #self.addToGroup(basic0, "npcGroup")
-        basic0 = Basic0([300, 300])
+        basic0 = Basic0([450, 300], self.playerGroup)
         self.addToGroup(basic0, "npcGroup")
-        basic0.setPlayer(self.player, (300, 300))
+        basic0.setPlayer(self.player, (450, 300))
         self.player.attach(basic0)
 
         #waypoints = [(360, 200), (140, 200)]
@@ -93,7 +93,7 @@ class PhaseTest(PlayablePhase):
         data = enemy.split()
 
         if data[2] == "Basic0":
-            basic0 = Basic0([int(data[0]), int(data[1])])
+            basic0 = Basic0([int(data[0]), int(data[1])], self.playerGroup)
             self.addToGroup(basic0, "npcGroup")
             basic0.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic0)
@@ -102,14 +102,14 @@ class PhaseTest(PlayablePhase):
             waypoints = [(360, 200), (140, 200)]
             #spawn = [int(data[0]), int(data[1])]
             spawn = [500, 500]
-            basic1 = Basic1(spawn, waypoints, 1.5)
+            basic1 = Basic1(spawn, waypoints, 1.5, self.playerGroup)
             self.addToGroup(basic1, "npcGroup")
             basic1.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic1)
 
         elif data[2] == "Basic2":
             #basic2 = Basic2([int(data[1]), int(data[0])], self.player, 500)
-            basic2 = Basic2([400, 400], self.player, 500)
+            basic2 = Basic2([400, 400], self.player, 500, self.playerGroup)
             self.addToGroup(basic2, "npcGroup")
             basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic2)
