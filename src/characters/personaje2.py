@@ -3,6 +3,9 @@ from pickle import TRUE
 import pygame.key
 from characters.entity import Entity
 
+from characters.entity import Entity
+from game.interactive import Interactive
+from map.tiles import Tile
 from utils.resourcesmanager import *
 import itertools
 from utils.observer import Subject
@@ -16,12 +19,12 @@ UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT = 5, 6, 7, 8
 DIAG_FACTOR = math.sqrt(2) / 2  # avoid diagonal movements been faster than the others
 
 
-class Character(pygame.sprite.Sprite):
+class Character(pygame.sprite.Sprite, Interactive):
     """
     Class that represents every character in the game
     """
 
-    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime, walls=None):
+    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime):
         """
         imageFile -> file with image data
         coordFile -> File with all the coordinades of the sprites from imageFile
@@ -55,6 +58,9 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.scale = scale  # size of the image
 
+        # Initialize collision system to collide with the walls
+        Interactive.__init__(self, self.rect)
+
         # Initial position on the screen
         self.x, self.y = (position[0], position[1])
         self.lastPos = (self.x, self.y)  # used to revert the last movement if it collided with a wall
@@ -65,7 +71,6 @@ class Character(pygame.sprite.Sprite):
         self.movement = IDLE
         self.xShift, self.yShift = (0, 0)
         self.speed = speed
-        self.walls = walls  # to check movement collisions
 
     def _processSpriteSheet(self, sheet, sheetDimension):
         """
@@ -129,26 +134,6 @@ class Character(pygame.sprite.Sprite):
         elif self.movement == DOWN:
             self.posture = DOWN
             self.yShift = shift
-        # elif self.movement == UP_LEFT:
-        #     self.posture = UP
-        #     self.yShift = - int(DIAG_FACTOR * self.speed * time)
-        #     self.xShift = -int(DIAG_FACTOR * self.speed * time)
-        # elif self.movement == UP_RIGHT:
-        #     self.posture = UP
-        #     self.yShift = - int(DIAG_FACTOR * self.speed * time)
-        #     self.xShift = int(DIAG_FACTOR * self.speed * time)
-        # elif self.movement == DOWN_LEFT:
-        #     self.posture = DOWN
-        #     self.yShift = int(DIAG_FACTOR * self.speed * time)
-        #     self.xShift = - int(DIAG_FACTOR * self.speed * time)
-        # elif self.movement == DOWN_RIGHT and self.lastMovement == DOWN:
-        #     self.posture = RIGHT
-        #     self.movement = RIGHT
-        #     self.xShift = shift
-        # elif self.movement == DOWN_RIGHT and self.lastMovement == RIGHT:
-        #     self.posture = DOWN
-        #     self.movement = DOWN
-        #     self.yShift = shift
         elif self.movement == IDLE:  # no movement updates in IDLE state
             pass
 
@@ -157,12 +142,23 @@ class Character(pygame.sprite.Sprite):
         self.x += self.xShift
         self.y += self.yShift
 
+        # "Pre-move" to check if it is colliding with a wall, so we should undo the movement
+        self.collisionRect.left += self.xShift  # move the collision rect to the future position
+        self.collisionRect.bottom += self.yShift
+        Interactive.update(self)  # check collisions
+        self.collisionRect.left -= self.xShift  # return the collision rect to the current position
+        self.collisionRect.bottom -= self.yShift
+
+        self.lastPos = (self.x, self.y)
+
+    def onCollisionEnter(self, collided):
+
+        if isinstance(collided, Tile):
+            self.x, self.y = self.lastPos
+            self.objectsEnterCollision.remove(collided)
+
     def pillEffect(self):
         self.speed = self.speed * 0.5
-        
-
-def _collideCollisionRect(left, right):
-    return left.legsRect.colliderect(right.rect)
 
 
 class Player(Character, Subject):
@@ -170,16 +166,17 @@ class Player(Character, Subject):
     Class that represents the playable character
     """""
 
-    def __init__(self, position, speed=1, animationDelay=4, walls=None):
+    def __init__(self, position, speed=1, animationDelay=4):
         Subject.__init__(self)
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], position, (25, 29),
-                           speed, animationDelay, 0, walls)
+                           speed, animationDelay, 0)
 
         # We use a new rect that is placed at the bottom body-upper legs of the sprite to detect collisions
-        self.legsRect = self.rect.copy()
-        self.legsRect.inflate_ip(-5, -13)
-        self.legsRect.bottom = self.rect.bottom - 2
-        self.legsRect.left = self.rect.left + (self.rect.width - self.legsRect.width) / 2
+        legsRect = self.rect.copy()
+        legsRect.inflate_ip(-5, -13)
+        legsRect.bottom = self.rect.bottom - 2
+        legsRect.left = self.rect.left + (self.rect.width - legsRect.width) / 2
+        self.changeCollisionRect(legsRect)
 
         # Load the movement bindings from the configuration file
         self.MOVE_UP, self.MOVE_DOWN, self.MOVE_RIGHT, self.MOVE_LEFT = ConfManager().getPlayerMovementBinds()
@@ -202,30 +199,6 @@ class Player(Character, Subject):
 
     def enableEvents(self):
         self.eventsEnabled = True
-
-    def move(self, toggledKeys):
-        """
-        Updates the movement state, depending on the keys being pressed
-        """
-
-        if toggledKeys[self.MOVE_UP] and toggledKeys[self.MOVE_LEFT]:
-            self.movement = UP_LEFT
-        elif toggledKeys[self.MOVE_UP] and toggledKeys[self.MOVE_RIGHT]:
-            self.movement = UP_RIGHT
-        elif toggledKeys[self.MOVE_DOWN] and toggledKeys[self.MOVE_LEFT]:
-            self.movement = DOWN_LEFT
-        elif toggledKeys[self.MOVE_DOWN] and toggledKeys[self.MOVE_RIGHT]:
-            self.movement = DOWN_RIGHT
-        elif toggledKeys[self.MOVE_UP]:
-            self.movement = UP
-        elif toggledKeys[self.MOVE_LEFT]:
-            self.movement = LEFT
-        elif toggledKeys[self.MOVE_RIGHT]:
-            self.movement = RIGHT
-        elif toggledKeys[self.MOVE_DOWN]:
-            self.movement = DOWN
-        else:
-            self.movement = IDLE
 
     def move(self, event):
         """
@@ -273,25 +246,15 @@ class Player(Character, Subject):
             self.movement = IDLE
             return
 
-        # self.move(pygame.key.get_pressed())  # update the movement state
         for event in events:
             self.move(event)
 
     def update(self, time):
 
         self.movement = self.lastMovements[-1]  # the last key pressed by the user
+        Character.update(self, time)
 
-        # Update the position and notify observers (walls)
-        super().update(time)
-        self.notify()
-
-        # Check if there was a collision
-        collided = pygame.sprite.spritecollide(self, self.walls, False, _collideCollisionRect)
-        if len(collided) > 0:  # if there was, recover to the last position
-            self.x, self.y = self.lastPos
-
-        self.lastPos = (self.x, self.y)
-        self.notify()  # notify again to draw the level properly
+        self.notify()  # notify to draw the level properly
 
     def getPos(self):
         return self.x, self.y
@@ -308,16 +271,21 @@ class Player(Character, Subject):
             grupo.pillEffect()
 
 
-class Enemy(Character):
+class Enemy(Character, Entity):
 
-    def update(self, time):
-        super().update(time)
-        self.rect.bottom = self.y
-        self.rect.left = self.x
+    def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime):
+        Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
+        Entity.__init__(self)
+        self.extrax, self.extray = (0, 0)
+
+    def updateObserver(self, subject):
+        Entity.updateObserver(self, subject)
+        self.rect.left += self.extrax
+        self.rect.bottom += self.extray
 
 class WalkingEnemy(Enemy):
     def __init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime, waypoints):
-        Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
+        Enemy.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2((self.x, self.y))
         self.target_radius = 20
@@ -349,7 +317,9 @@ class WalkingEnemy(Enemy):
             self.vel = heading * self.speed
 
         self.pos += self.vel
-        self.rect.center = self.pos
+        self.extrax += self.vel[0]
+        self.extray += self.vel[1]
+        # self.rect.center = self.pos
         super().updateImage()
        
 
@@ -359,7 +329,7 @@ class WalkingEnemy(Enemy):
 class Basic0(Enemy, Entity):
     def __init__(self, position):
         # called constructor of father class
-        Character.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, (32, 32), 0.3, 5, 0.5);
+        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, (32, 32), 0.3, 5, 0.5)
 
 
 # -------------------------------------------------
@@ -379,7 +349,8 @@ class Basic2(Enemy, Entity):
         # called constructor of father class
         self.radius=radius
         self.enemy=player
-        Character.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, (148, 120), 0.3, 15, 0.5);
+        Enemy.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, (148, 120), 0.3, 15, 0.5)
+
         
 
     def updateImage(self):
@@ -415,7 +386,7 @@ class Normal2(Enemy):
     "Normal2 enemy 3"
     def __init__(self, position, player):
         # called constructor of father class
-        Character.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, (32, 50), 0.1, 5, 0)
+        Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, (32, 50), 0.1, 5, 0)
         self.player = player
 
     def update(self, *args):
@@ -459,7 +430,7 @@ class Advanced2(WalkingEnemy):
         self.enemy=player
         self.looking=orientation
         self.activation=False
-        Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5);
+        Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5)
 
     def update(self, time): #FALTA HACER LA COLISIÓN
         if self.enemy.y == self.y or self.activation == True: #Player cross

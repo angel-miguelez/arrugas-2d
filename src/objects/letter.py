@@ -16,7 +16,7 @@ class Letter(Object):
 
     def __init__(self, playerGroup, position, screenPosition, id="01"):
         self._player = playerGroup.sprites()[0]  # since playerGroup is a group with just the player
-        super().__init__("closed_letter.png", [playerGroup], position, self._player)
+        super().__init__("closed_letter.png", position, playerGroup)
 
         self._screenPosition = screenPosition  # position of the letter on the screen when it is opened
         self._opened = False  # if the player has collided with it
@@ -34,7 +34,11 @@ class Letter(Object):
         """
 
         self.position = self._screenPosition
-        self._initializeSprite(f"letter{self.id}.png", self._screenPosition)
+
+        self.image = ResourcesManager.loadImage(f"letter{self.id}.png", transparency=True)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.position
+
         self._opened = True
 
         # Change group to the foreground one, so it is always visible

@@ -33,7 +33,7 @@ class Level(Observer):
         self.floor = pygame.sprite.Group()
 
         #self._player = Player((400, 300))
-        self._player = Player((400, 300), 0.2, walls=self.walls)
+        self._player = Player((400, 300), 0.2)
 
         #Player spawn coords
         self._playerSpawnX = posx
@@ -165,6 +165,7 @@ class Level(Observer):
                     waypoints = [(360, 200), (140, 200)]
                     spawn = [x, y]
                     basic1 = Basic1(spawn, waypoints, 1.5)
+                    basic1.addCollisionGroup(self.walls)
                     enemyGroup.add(basic1)
 
                 #Check to see if we have to add a Basic1 enemy
@@ -179,6 +180,8 @@ class Level(Observer):
 
                     #Create the enemy and add it to the group of enemies of that room
                     basic0 = Basic0([x, y])
+                    basic0.addCollisionGroup(self.walls)
+                    basic0.setPlayer(self._player, (x, y))
                     enemyGroup.add(basic0)
                 
                 #Check to see if we have to add a Basic2 enemy
@@ -193,6 +196,7 @@ class Level(Observer):
 
                     #Create the enemy and add it to the group of enemies of that room
                     basic2 = Basic2([x, y], self._player, 500)
+                    basic2.addCollisionGroup(self.walls)
                     enemyGroup.add(basic2)
                 
                 #Check to see if we have to add a Basic3 enemy
@@ -207,6 +211,7 @@ class Level(Observer):
 
                     #Create the enemy and add it to the group of enemies of that room
                     #normal2 = Normal2([x, y], self.player)
+                    # normal2.addCollisionGroup(self.walls)
                     #enemyGroup.add(normal2)
                 
                 #Check to see if we have to add a floor tile
@@ -228,7 +233,6 @@ class Level(Observer):
             else: 
                 start_row += 1
 
-        print(enemyGroup)
         self.enemies.append(enemyGroup)
 
     def __setupPlayerSpawn(self):

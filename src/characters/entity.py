@@ -10,7 +10,12 @@ class Entity(Observer):
     the player position, since the camera is frozen and it is the world who moves
     """
 
-    def __init__(self, player, position):
+    def __init__(self):
+        self._player = None
+        self._lastPlayerPos = None
+        self.position = None
+
+    def setPlayer(self, player, position):
         Observer.__init__(self)
 
         self._player = player
@@ -21,8 +26,8 @@ class Entity(Observer):
 
     def updateObserver(self, subject):
 
-        #if not isinstance(subject, Player):
-        #    return
+        if self._player is None:
+            return
 
         playerPos = self._player.getPos()
         offset = playerPos[0] - self._lastPlayerPos[0], playerPos[1] - self._lastPlayerPos[1]

@@ -2,38 +2,24 @@
 
 import pygame
 
-from utils.resourcesmanager import ResourcesManager
+
+def _collideCollisionRect(left, right):
+    return left.collisionRect.colliderect(right.rect)
 
 
-class Interactive(pygame.sprite.Sprite):
+class Interactive:
     """
     Base class to implement a simple collision system based on sprite.rect
     """
 
-    def __init__(self, image, collisionGroups, position=(0, 0), name=None):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, rect):
 
-        # Load image and rect to detect collisions
-        self._initializeSprite(image, position)
+        self.collisionRect = rect  # rect used to detect the collisions
 
         self.objectsEnterCollision = []  # objects that have just collide
         self.objectsExitCollision = []  # objects that have stopped colliding
         self.objectsStayCollision = []  # objects that have been colliding for more than one frame
-        self.collisionGroups = collisionGroups  # groups to which detect collisions
-
-        self.name = self.__class__.__name__ if name is None else name  # identifier for the object in collisions
-
-    def update(self, time):
-        self._detectCollision()
-
-    def _initializeSprite(self, image, position):
-        """
-        Creates the image and the rect of the sprite, placing it in a specific position
-        """
-
-        self.image = ResourcesManager.loadImage(image, transparency=True)
-        self.rect = self.image.get_rect()
-        self.rect.center = position
+        self.collisionGroups = []  # groups to which detect collisions
 
     def _detectCollision(self):
         """
@@ -47,7 +33,7 @@ class Interactive(pygame.sprite.Sprite):
 
         # Register all the objects that are colliding, and we are interested in
         for group in self.collisionGroups:
-            colliding = colliding + pygame.sprite.spritecollide(self, group, dokill=False)
+            colliding = colliding + pygame.sprite.spritecollide(self, group, dokill=False, collided=_collideCollisionRect)
 
         # If an object is no longer colliding, it has exited the collision
         for collided in (self.objectsEnterCollision + self.objectsStayCollision):
@@ -98,3 +84,21 @@ class Interactive(pygame.sprite.Sprite):
 
     def onCollisionStay(self, collided):
         pass
+
+    def update(self, *args):
+        self._detectCollision()
+
+    def addCollisionGroup(self, group):
+        """
+        Adds a new group to check collisions with
+        """
+
+        if group not in self.collisionGroups:
+            self.collisionGroups.append(group)
+
+    def changeCollisionRect(self, rect):
+        """
+        Changes the Rect used to check the collisions
+        """
+
+        self.collisionRect = rect
