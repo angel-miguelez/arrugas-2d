@@ -230,8 +230,8 @@ class Level(Observer):
         self.player.update(difference[0], difference[1])
         
         #Updating enemies position based on the player spawn
-        for enemyGroup in self.enemies:
-            enemyGroup.update(difference[0], difference[1])
+        #for enemyGroup in self.enemies:
+        #    enemyGroup.update(difference[0], difference[1])
 
 
     def setupLevel(self, layout):
@@ -365,5 +365,5 @@ class Level(Observer):
         #The player won't be needing this kind of updates later on
         self.player.update(difference[0], difference[1])
         
-        for enemyGroup in self.enemies:
-            enemyGroup.update(difference[0], difference[1])
+        #for enemyGroup in self.enemies:
+        #    enemyGroup.update(difference[0], difference[1])
