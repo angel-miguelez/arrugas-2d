@@ -72,6 +72,7 @@ class Phase(Scene):
         self.objectsGroup.draw(surface)
 
         self.npcGroup.draw(surface)
+        self.enemyGroup.draw(surface)
         self.playerGroup.draw(surface)
 
         self.foregroundGroup.draw(surface)
