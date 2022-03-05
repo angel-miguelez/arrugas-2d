@@ -1,5 +1,5 @@
 tile_size = 32 #Tile size used as a base to construct the map
-room_num = 5 #Number of rooms to pick from
+room_num = 7 #Number of rooms to pick from
 
 """
     The following variable consist of a list of strings that sets the layout for the map
@@ -14,16 +14,19 @@ room_num = 5 #Number of rooms to pick from
     'J' -> top left intersection
     'H' -> bottom left intersection
     'G' -> bottom right intersection
+    'W' -> worm enemy (Basic0)
+    'R' -> rabbit enemy (Basic1)
+    'M' -> magic range enemy (Basic2)
+    'T' -> tracking enemy (Normal2)
 
     For now we're using the same sprite for each type of wall
+
+    The floor tile in between the walls at the bottom right corner of the layout is
+    were the boss or final room is going to be, placement is temporary until we decide
+    how to do it
 """
 
-# player -> p
-# enemy basic0 -> w (worm)
-# enemy basic1 -> r (rabbit)
-# enemy basic2 -> m (magic range)
-# enemy normal2 -> t (tracked)
-
+#This is the basic layout for the first level were you spawn in your room
 basic_layout = [
     '                                                                       ',
     '            JXXXXXXXXK                                                 ',
@@ -65,6 +68,103 @@ basic_layout = [
     '                      GFFFFFFFFR                                       ',
     '                      DFFFFFFFFR                                       ',
     '                      KFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFH                                       ',
+    '                      LFFFFFFFFD                                       ',
+    '                      LFFFFFFFFJ                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      GFFFFFFFFR                                       ',
+    '                      DFFFFFFFFR                                       ',
+    '                      KFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFF                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      HXXXXXXXXG                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+]
+
+#This is the basic layout for the rest of the levels
+basic_layout_2 = [
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                      JXXXXXXXXK                                       ',
+    '                      GFFFFFFFFR                                       ',
+    '                      DFPFFFFFFR                                       ',
+    '                      KFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      GFFFFFFFFH                                       ',
+    '                      DFFFFFFFFD                                       ',
+    '                      KFFFFFFFFJ                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFH                                       ',
+    '                      LFFFFFFFFD                                       ',
+    '                      LFFFFFFFFJ                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      GFFFFFFFFR                                       ',
+    '                      DFFFFFFFFR                                       ',
+    '                      KFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFH                                       ',
+    '                      LFFFFFFFFD                                       ',
+    '                      LFFFFFFFFJ                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      GFFFFFFFFR                                       ',
+    '                      DFFFFFFFFR                                       ',
+    '                      KFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFF                                       ',
+    '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      HXXXXXXXXG                                       ',
     '                                                                       ',
@@ -126,5 +226,29 @@ rooms = [
         'XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XXXXXXXXXXXXXXXXXXXXX',
-    ]
+    ],
+    [
+        'XXXXXXXXX   XXXXXXXXX',
+        'XFFFFFFFX   XFFFFFFFX',
+        'XFFFFFFFXXXXXFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFD',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFXXXXXFFFFFFFX',
+        'XFFFFFFFX   XFFFFFFFX',
+        'XXXXXXXXX   XXXXXXXXX',
+    ],
+    [
+        'XXXXXXXX             ',
+        'XFFFFFFX             ',
+        'XFFFFFFX             ',
+        'XFFFFFFXXXXXXXXXXXXXX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFD',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFXXXXXXXXXXXXXX',
+        'XFFFFFFX             ',
+        'XFFFFFFX             ',
+        'XXXXXXXX             ',
+    ],
 ]
