@@ -5,7 +5,6 @@ import random
 import pygame
 
 from game.dialogue import DynamicDialogueIntervention, SimpleDialogueIntervention, Dialogue
-
 from objects.object import Interactive
 from characters.entity import Entity
 from utils.resourcesmanager import ResourcesManager
