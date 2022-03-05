@@ -9,7 +9,7 @@ from effects.occlusion import Occlude
 from map.level import Level
 
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
-from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2
+from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2, Advanced2
 from objects.door import Door, Switch
 
 from objects.glasses import Glasses
@@ -119,6 +119,12 @@ class PhaseTest(PlayablePhase):
             self.addToGroup(basic2, "npcGroup")
             basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic2)
+
+        elif data[2] == "Advanced2":
+            a2 = Advanced2([int(data[0]), int(data[1])], 3, self.player, "LEFT")
+            self.addToGroup(basic2, "npcGroup")
+            a2.setPlayer(self.player, (int(data[0]), int(data[1])))
+            self.player.attach(a2)
 
 
     def onEnterScene(self):
