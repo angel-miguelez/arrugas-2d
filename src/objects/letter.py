@@ -48,6 +48,7 @@ class Letter(Object, Subject):
         scene = Director().getCurrentScene()
         scene.removeFromGroup(self, "objectsGroup")
         scene.addToGroup(self, "foregroundGroup")
+        scene.addToGroup(self, "objectsToEvent")
 
     def close(self):
         """
@@ -59,10 +60,6 @@ class Letter(Object, Subject):
         self.notify()
 
     def events(self, events):
-
-        # Only get events when it is opened
-        if not self._opened:
-            return
 
         for event in events:
 

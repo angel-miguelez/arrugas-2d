@@ -11,6 +11,7 @@ from map.level import Level
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
 from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2
 from objects.door import Door, Switch
+from objects.elevator import Elevator
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
@@ -78,11 +79,14 @@ class PhaseTest(PlayablePhase):
         glasses = Glasses(self.playerGroup, (500, 300))
         labcoat = LabCoat(self.playerGroup, (600, 500))
         letter = Letter(self.playerGroup, (1100, 412), (400, 300))
+
         door = Door((953, 412), self.playerGroup)
         switch = Switch((1003, 412), self.playerGroup)
         switch.attach(door)
         letter.attach(door)
-        self.addToGroup([glasses, labcoat, letter, door, switch], "objectsGroup")
+
+        elevator = Elevator(self.playerGroup, (1018, 2021))
+        self.addToGroup([glasses, labcoat, letter, door, switch, elevator], "objectsGroup")
 
         # Foreground
         occlude = Occlude()
@@ -93,7 +97,7 @@ class PhaseTest(PlayablePhase):
 
         # Register objects to update and event methods
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
-        self.addToGroup([self.player, letter], "objectsToEvent")
+        self.addToGroup([self.player], "objectsToEvent")
 
     def createEnemy(self, enemy):
         data = enemy.split()
@@ -128,3 +132,7 @@ class PhaseTest(PlayablePhase):
     def onExitScene(self):
         super().onExitScene()
         pygame.mixer.music.stop()
+
+    def update(self, *args):
+        super().update(*args)
+        # print(self.player.lastPos)

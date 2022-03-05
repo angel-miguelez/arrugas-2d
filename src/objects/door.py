@@ -18,7 +18,7 @@ class Switch(Object, Subject):
 
     def onCollisionEnter(self, collided):
         self.notify()
-        Director().getCurrentScene().removeFromGroup(self, "objectsGroup")
+        self.remove()
 
 
 class Door(Object):
