@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 
-import pygame
 from pygame.locals import *
 
 from conf.configuration import ConfManager
@@ -17,6 +16,7 @@ class Dialogue(Observer):
         self.currentIntervention = 0  # the current intervention being played
 
         self.scene = None
+        self.finished = False
 
     def updateObserver(self, subject):
         self.next()
@@ -37,10 +37,11 @@ class Dialogue(Observer):
 
         self.currentIntervention += 1
         if self.currentIntervention == len(self.interventions):  # the dialogue has finished, closed it
-            self.scene.player.enableEvents()
             self.scene.removeFromGroup(self, "uiGroup")
             self.scene.removeFromGroup(self, "objectsToEvent")
             self.scene.removeFromGroup(self, "objectsToUpdate")
+            self.scene.unpauseEvents()
+            self.finished = True
         else:
             self.interventions[self.currentIntervention].start()  # start the next intervention
 
@@ -56,12 +57,16 @@ class Dialogue(Observer):
         """
         Starts the dialogue, playing the first intervention.
         """
+
+        self.finished = False
+
         self.scene = Director().getCurrentScene()  # the scene where the dialogue is going to be played
+        self.scene.pauseEvents()  # the dialogue will be the only object receiving events
+
         self.scene.addToGroup(self, "uiGroup")
         self.scene.addToGroup(self, "objectsToEvent")
         self.scene.addToGroup(self, "objectsToUpdate")
 
-        self.scene.player.disableEvents()
         self.interventions[0].start()  # start the first intervention
 
     def events(self, events):
@@ -151,7 +156,6 @@ class SimpleDialogueIntervention(TextUI, Subject):
         pass
 
     def draw(self, surface):
-
         surface.blit(self.box, self.boxPosition)
         surface.blit(self.avatar, self.avatarPosition)
 

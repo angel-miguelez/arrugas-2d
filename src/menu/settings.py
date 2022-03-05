@@ -5,6 +5,7 @@ import pygame.mouse
 import sys
 
 from conf.configuration import ConfManager
+from game.director import Director
 
 from menu.menu import Menu
 
@@ -14,8 +15,8 @@ class SettingsMenu(Menu):
     Class which holds the configuration menu and allows the user to edit it
     """
 
-    def __init__(self, director):
-        super().__init__(director, "Settings")
+    def __init__(self):
+        super().__init__("Settings")
 
         self._conf = ConfManager()  # get the instance of the ConfManager
 
@@ -27,7 +28,7 @@ class SettingsMenu(Menu):
         self._menu.add.vertical_margin(30)
         self._loadVolumeSettings()  # load the music and sound effects volumes and create buttons to edit them
         self._menu.add.vertical_margin(30)
-        self.returnButton = self._menu.add.button('return', self._director.pop)  # button to return to the main menu
+        self.returnButton = self._menu.add.button('return', Director().pop)  # button to return to the main menu
 
 
     def onExitScene(self):
@@ -53,7 +54,7 @@ class SettingsMenu(Menu):
 
                 # If the user decides to go back to the main menu
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
-                    self._director.pop()
+                    Director().pop()
                     return
 
                 # If the user presses a key, then it is assigned

@@ -10,9 +10,13 @@ class Scene:
     Class that represents a scene of the game, which could be a menu, a game map...
     """
 
-    def __init__(self, director, name):
-        self._director = director
-        self.name = name
+    def __init__(self):
+
+        self.objectsToEvent = []  # objects that need to catch events
+        self.objectsToUpdate = []  # objects that need to be updated
+
+        self.pausedEventsObjects = []
+        self.pausedUpdateObjects = []
 
     def events(self, *args):
         """
@@ -78,3 +82,43 @@ class Scene:
         group = getattr(self, groupName, None)
         if group is not None and object in group:
             group.remove(object)
+
+    def pauseEvents(self):
+        """
+        Removes all the current objects receiving events from the event method. They are save in
+        pausedEventsObjects to resume them later.
+        """
+
+        for object in self.objectsToEvent:
+            if hasattr(object, "disableEvents"):  # if the object has to change something when events are disabled
+                object.disableEvents()
+
+        self.pausedEventsObjects = self.objectsToEvent.copy()  # save the objects receiving events
+        self.objectsToEvent = []  # clean the list that receives events
+
+    def unpauseEvents(self):
+        """
+        Returns the events to the objects that have been disabled before with pauseEvents()
+        """
+
+        for object in self.pausedEventsObjects:
+            if hasattr(object, "enableEvents"):  # if the object has to change something when events are enabled
+                object.enableEvents()
+
+        self.objectsToEvent = self.pausedEventsObjects.copy()  # recover the objects that were paused before
+
+    def pauseUpdate(self):
+        """
+        Stops updating the objects that needed to update in every frame by removing them from the list of objects
+        to update. They are saved in a separate list in case we want to resume later.
+        """
+
+        self.pausedUpdateObjects = self.objectsToUpdate.copy()  # save the objects being updated
+        self.objectsToUpdate = []  # clean the list of objects that need to update
+
+    def unpauseUpdate(self):
+        """
+        Resumes the updating of objects previously paused with pauseUpdate()
+        """
+
+        self.objectsToUpdate = self.pausedUpdateObjects.copy()  # recover the objects that were paused before

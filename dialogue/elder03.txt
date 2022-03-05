@@ -1,7 +1,7 @@
 @elder.png
-It's said that recently some extrange people are
-appearing in the corridors. I haven't seen anyone,
-but I would be alert.
+Dicen que últimamente está apareciendo gente extraña
+por los pasillos. Yo no he visto a nadie, pero 
+estaría alerta.
 @character_avatar.png
-And the nurses have cut down on the regular dosis 
-of pills...
+Y las enfermeras han reducido la dosis diaria de 
+pastillas...

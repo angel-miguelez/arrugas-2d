@@ -3,6 +3,7 @@
 import pygame.mouse
 import pygame_menu
 
+from game.director import Director
 from menu.settings import SettingsMenu
 from menu.menu import Menu
 
@@ -14,8 +15,8 @@ class MainMenu(Menu):
     Class which holds the main menu of the game
     """
 
-    def __init__(self, director):
-        super().__init__(director, "Main menu")
+    def __init__(self):
+        super().__init__("Main menu")
 
         self._menu.add.button('Play', self.onStartGame)  # button to start the game
         self._menu.add.button('Configuration', self.onOpenConfigurationMenu)  # button to edit the configuration
@@ -44,13 +45,13 @@ class MainMenu(Menu):
         """
 
         self._startGame = True
-        phase1 = PhaseTest(self._director)
-        self._director.push(phase1)
+        phase1 = PhaseTest()
+        Director().push(phase1)
 
     def onOpenConfigurationMenu(self):
         """
         Edit the configuration of the game
         """
 
-        confMenu = SettingsMenu(self._director)
-        self._director.push(confMenu)
+        confMenu = SettingsMenu()
+        Director().push(confMenu)

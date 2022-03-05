@@ -1,0 +1,23 @@
+@character_avatar.png
+¡Por fin!
+#
+¡Por fin libre!
+#
+Por fin podré volver a mi casa, lejos de esta
+apestosa residencia y de ese estúpido compañero
+que tenía.
+@elder.png
+Así que finalmente conseguiste escapar, eh?
+@character_avatar.png
+¡¡¡ !!!
+#
+¿De donde has salido?
+#
+¿Cómo has conseguido escapar?
+@elder.png
+Yo siempre te acompañaré a donde vayas, al fin
+y al cabo vivo dentro de tu cabeza.
+@character_avatar.png
+...
+@elder.png
+Deja que te guíe a tu casa.

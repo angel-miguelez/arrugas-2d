@@ -1,7 +1,7 @@
 @elder.png
-I heard you tried to slipped away from the residence again.
+Escuché que te intestaste escapar de nuevo de la residencia.
 @character_avatar.png
-Shut up!
+¡Cállate!
 @elder.png
 Ha, ha, ha!
-Seems like someone got up on the wrong foot.
+Vaya, parece que alguien se ha levantado con el pie izquierdo...

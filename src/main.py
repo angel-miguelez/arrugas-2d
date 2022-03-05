@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     # Create a director and the initial scene (main menu)
     director = Director()
-    mainMenu = MainMenu(director)
+    mainMenu = MainMenu()
 
     director.push(mainMenu)  # add the main menu as the initial scene
     director.execute()  # start the game loop

@@ -8,25 +8,25 @@ from effects.occlusion import Occlude
 
 from map.level import Level
 
-from phase.phase import Phase
-
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
 from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
 from objects.letter import Letter
+from phase.playable import PlayablePhase
 
 from res.levels import *
 
 
-class PhaseTest(Phase):
+class PhaseTest(PlayablePhase):
     """
     Fase usada para probar cosas
     """
 
-    def __init__(self, director):
-        super().__init__(director, "PhaseTest")
+    def __init__(self):
+
+        super().__init__()
 
         # Level
         self.level = Level(basic_layout, 400, 300)  # Setup map structure

@@ -5,6 +5,7 @@ import pygame.mouse
 import pygame_menu
 import sys
 
+from game.director import Director
 from game.scene import Scene
 
 
@@ -13,8 +14,9 @@ class Menu(Scene):
     Abstract class which holds the basic attributes and methods of a menu
     """
 
-    def __init__(self, director, title, **kwargs):
-        super().__init__(director, title)
+    def __init__(self, title, **kwargs):
+
+        super().__init__()
 
         # Every menu has a pygame_menu object
         self._menu = pygame_menu.Menu(title, 800, 600, theme=pygame_menu.themes.THEME_BLUE, **kwargs)
@@ -29,7 +31,7 @@ class Menu(Scene):
 
             # In every menu we can return to the previous menu with K_ESCAPE
             if event.type == KEYDOWN and event.key == K_ESCAPE:
-                self._director.pop()
+                Director().pop()
 
         self._menu.update(events)
 

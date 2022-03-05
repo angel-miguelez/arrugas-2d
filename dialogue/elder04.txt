@@ -1,5 +1,5 @@
 @elder.png
-Have you seen my glasses? I need to them to see
-properly.
+¿Has visto mis gafas? Las necesito para poder
+ver correctamente.
 @character_avatar.png
-Ask someone else.
+Pregúntale a otra persona.

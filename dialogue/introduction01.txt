@@ -4,4 +4,4 @@
 ¿Quién eres? ¿Qué hago aquí?
 @elder.png
 Siempre lo mismo... ¿No te acuerdas ni de como se respira verdad?
-Prueba a mover un poco las piernas con W,A,S,D a ver si por lo menos puedes andar.
+Prueba a mover un poco las piernas con UP_KEY,DOWN_KEY,RIGHT_KEY,LEFT_KEY a ver si por lo menos puedes andar.
