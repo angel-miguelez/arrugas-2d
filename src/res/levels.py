@@ -18,7 +18,7 @@ room_num = 7 #Number of rooms to pick from
     'R' -> rabbit enemy (Basic1)
     'M' -> magic range enemy (Basic2)
     'T' -> tracking enemy (Normal2)
-    'D' -> dragon enemy (Advanced2)
+    'I' -> dragon enemy (Advanced2)
 
     For now we're using the same sprite for each type of wall
 
@@ -60,7 +60,7 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFIFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFH                                       ',
     '                      LFFFFFFFFD                                       ',
