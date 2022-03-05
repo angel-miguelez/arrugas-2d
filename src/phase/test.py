@@ -32,8 +32,9 @@ class PhaseTest(Phase):
         #self.level = Level(basic_layout_2, 400, 300)  # Setup map structure
 
         # Player
-        self.player = Player((400, 300), 0.2, walls=self.level.walls)
+        self.player = Player((400, 300), 0.2)
         self.player.attach(self.level)
+        self.player.addCollisionGroup(self.level.walls)
         self.addToGroup(self.player, "playerGroup")
 
         # NPC
@@ -41,8 +42,10 @@ class PhaseTest(Phase):
         nurse = NurseCharacter((800, 600), self.playerGroup)
         self.addToGroup([speaker, nurse], "npcGroup")
 
-        #basic0 = Basic0([300, 300])
-        #self.addToGroup(basic0, "npcGroup")
+        basic0 = Basic0([300, 300])
+        self.addToGroup(basic0, "npcGroup")
+        basic0.setPlayer(self.player, (300, 300))
+        self.player.attach(basic0)
 
         #waypoints = [(360, 200), (140, 200)]
         #spawn = [140, 200]

@@ -1,18 +1,33 @@
 # -*- coding: utf-8 -*-
 
+import pygame
+
 from game.director import Director
 from game.interactive import Interactive
 from characters.entity import Entity
+from utils.resourcesmanager import ResourcesManager
 
 
-class Object(Interactive, Entity):
+class Object(pygame.sprite.Sprite, Entity, Interactive):
     """
     Any type of object, which interacts by collisions and whose position needs to be updated with respect to the player
     """
 
-    def __init__(self, image, collisionsGroup, position, player, name=None):
-        Interactive.__init__(self, image, collisionsGroup, position, name)
-        Entity.__init__(self, player, position)
+    def __init__(self, image, position, playerGroup):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = ResourcesManager.loadImage(image, transparency=True)
+        self.rect = self.image.get_rect()
+        self.rect.center = position
+
+        Entity.__init__(self,)
+        Entity.setPlayer(self, playerGroup.sprites()[0], position)
+
+        Interactive.__init__(self, self.rect)
+        self.addCollisionGroup(playerGroup)
+
+    def update(self, *args):
+        pygame.sprite.Sprite.update(self, *args)
+        Interactive.update(self, *args)
 
     def remove(self):
         """
@@ -34,12 +49,11 @@ class InstaUseObject(Object):
     Object whose effect is executed exactly when the player picked it up
     """
 
-    def __init__(self, image, playerGroup, callbacks, position, name=None):
-        super().__init__(image, [playerGroup], position, playerGroup.sprites()[0], name)
+    def __init__(self, image, playerGroup, callbacks, position):
+        super().__init__(image, position, playerGroup)
         self.callbacks = callbacks  # functions executed onCollisionEnter with the player
 
     def onCollisionEnter(self, collided):
-
         for callback in self.callbacks:
             callback()
 

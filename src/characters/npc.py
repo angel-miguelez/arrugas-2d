@@ -2,6 +2,8 @@
 
 import random
 
+import pygame
+
 from game.dialogue import DynamicDialogueIntervention, SimpleDialogueIntervention, Dialogue
 
 from objects.object import Interactive
@@ -9,16 +11,28 @@ from characters.entity import Entity
 from utils.resourcesmanager import ResourcesManager
 
 
-class DialogueCharacter(Entity, Interactive):
+class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
     """
     Character whose only behaviour is to speak when the characters collides with it
     """
 
     def __init__(self, image, text, position, playerGroup):
-        Entity.__init__(self, playerGroup.sprites()[0], position)
-        Interactive.__init__(self, image, [playerGroup], position=position)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = ResourcesManager.loadImage(image, transparency=True)
+        self.rect = self.image.get_rect()
+        self.rect.center = position
+
+        Entity.__init__(self)
+        Entity.setPlayer(self, playerGroup.sprites()[0], position)
+
+        Interactive.__init__(self, self.rect)
+        self.addCollisionGroup(playerGroup)
 
         self.text = text  # dialogue text file
+
+    def update(self, *args):
+        pygame.sprite.Sprite.update(self, *args)
+        Interactive.update(self, *args)
 
     def onCollisionEnter(self, collided):
         Interactive.onCollisionEnter(self, collided)
