@@ -205,6 +205,16 @@ class Level(Observer):
                     #basic2.addCollisionGroup(self.walls)
                     #enemyGroup.add(basic2)
                 
+                if room_cell == 'I':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+                    
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_3, (x, y), self.floor)
+
+                    enemyGroup.append(str(x) + " " + str(y) + " Advanced2")
+
                 #Check to see if we have to add a Basic3 enemy
                 #For now it's adding a random tile
                 if room_cell == 'T':
