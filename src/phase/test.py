@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from tokenize import String
 import pygame
 from pygame.locals import *
 
@@ -45,9 +46,13 @@ class PhaseTest(Phase):
 
         # Enemies
         for enemyGroup in self.level.enemies:
-            for enemy in enemyGroup:
-                self.addToGroup(enemy, "npcGroup")
-                self.player.attach(enemy)
+            if enemyGroup == []:
+                pass
+            else:
+                for enemy in enemyGroup:
+                    self.createEnemy(enemy)
+                    #self.addToGroup(enemy, "npcGroup")
+                    #self.player.attach(enemy)
 
         #basic0 = Basic0([300, 300])
         #self.addToGroup(basic0, "npcGroup")
@@ -83,6 +88,32 @@ class PhaseTest(Phase):
         # Register objects to update and event methods
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
         self.addToGroup([self.player, letter], "objectsToEvent")
+
+    def createEnemy(self, enemy):
+        data = enemy.split()
+
+        if data[2] == "Basic0":
+            basic0 = Basic0([int(data[0]), int(data[1])])
+            self.addToGroup(basic0, "npcGroup")
+            basic0.setPlayer(self.player, (int(data[0]), int(data[1])))
+            self.player.attach(basic0)
+
+        elif data[2] == "Basic1":
+            waypoints = [(360, 200), (140, 200)]
+            #spawn = [int(data[0]), int(data[1])]
+            spawn = [500, 500]
+            basic1 = Basic1(spawn, waypoints, 1.5)
+            self.addToGroup(basic1, "npcGroup")
+            basic1.setPlayer(self.player, (int(data[0]), int(data[1])))
+            self.player.attach(basic1)
+
+        elif data[2] == "Basic2":
+            #basic2 = Basic2([int(data[1]), int(data[0])], self.player, 500)
+            basic2 = Basic2([400, 400], self.player, 500)
+            self.addToGroup(basic2, "npcGroup")
+            basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
+            self.player.attach(basic2)
+
 
     def onEnterScene(self):
         super().onEnterScene()

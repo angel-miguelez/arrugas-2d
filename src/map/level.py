@@ -102,7 +102,8 @@ class Level(Observer):
         row_index = layout_door_pos[0]
         col = layout_door_pos[1]
 
-        enemyGroup = pygame.sprite.Group() #We're generating a group of enemies for each room
+        #enemyGroup = pygame.sprite.Group() #We're generating a group of enemies for each room
+        enemyGroup = []
 
         #Get the door position in the room
         for room_row_index, room_row in enumerate(room):
@@ -161,12 +162,13 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_1, (x, y), self.floor)
 
+                    enemyGroup.append(str(x) + " " + str(y) + " Basic1")
                     #Create the enemy and add it to the group of enemies of that room
-                    waypoints = [(360, 200), (140, 200)]
-                    spawn = [x, y]
-                    basic1 = Basic1(spawn, waypoints, 1.5)
-                    basic1.addCollisionGroup(self.walls)
-                    enemyGroup.add(basic1)
+                    #waypoints = [(360, 200), (140, 200)]
+                    #spawn = [x, y]
+                    #basic1 = Basic1(spawn, waypoints, 1.5)
+                    #basic1.addCollisionGroup(self.walls)
+                    #enemyGroup.add(basic1)
 
                 #Check to see if we have to add a Basic1 enemy
                 #For now it's adding a random tile
@@ -178,11 +180,13 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_3, (x, y), self.floor)
 
+                    enemyGroup.append(str(x) + " " + str(y) + " Basic0")
+
                     #Create the enemy and add it to the group of enemies of that room
-                    basic0 = Basic0([x, y])
-                    basic0.addCollisionGroup(self.walls)
-                    basic0.setPlayer(self._player, (x, y))
-                    enemyGroup.add(basic0)
+                    #basic0 = Basic0([x, y])
+                    #basic0.addCollisionGroup(self.walls)
+                    #basic0.setPlayer(self._player, (x, y))
+                    #enemyGroup.add(basic0)
                 
                 #Check to see if we have to add a Basic2 enemy
                 #For now it's adding a random tile
@@ -194,10 +198,12 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_4, (x, y), self.floor)
 
+                    enemyGroup.append(str(x) + " " + str(y) + " Basic2")
+
                     #Create the enemy and add it to the group of enemies of that room
-                    basic2 = Basic2([x, y], self._player, 500)
-                    basic2.addCollisionGroup(self.walls)
-                    enemyGroup.add(basic2)
+                    #basic2 = Basic2([x, y], self._player, 500)
+                    #basic2.addCollisionGroup(self.walls)
+                    #enemyGroup.add(basic2)
                 
                 #Check to see if we have to add a Basic3 enemy
                 #For now it's adding a random tile
@@ -358,8 +364,8 @@ class Level(Observer):
         else:    
             self.walls.draw(self.display_surface) #Draw the walls of the map itself
             self.floor.draw(self.display_surface) #Draw the floor of the map itself
-            for enemyGroup in self.enemies:
-                enemyGroup.draw(self.display_surface)  # Draw the enemies
+            #for enemyGroup in self.enemies:
+            #    enemyGroup.draw(self.display_surface)  # Draw the enemies
     
     def updateObserver(self, subject: Player):
         newPos = subject.getPos()
