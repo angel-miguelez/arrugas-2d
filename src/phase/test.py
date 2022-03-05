@@ -129,7 +129,7 @@ class PhaseTest(PlayablePhase):
 
     def onEnterScene(self):
         super().onEnterScene()
-        self.playMusic("phase1_background.ogg", "sound.game_music_volume")
+        self.playMusic("phase1_background.wav", "sound.game_music_volume")
 
     def onExitScene(self):
         super().onExitScene()
