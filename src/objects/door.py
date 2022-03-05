@@ -55,7 +55,7 @@ class Door(Object):
 
         self._opened = True
         self.image = ResourcesManager.loadImage("door_opened.png", transparency=True)
-        ResourcesManager.loadSound("door.ogg").play()
+        ResourcesManager.loadSound("door.wav").play()
 
     def close(self):
 
@@ -64,4 +64,4 @@ class Door(Object):
 
         self._opened = False
         self.image = ResourcesManager.loadImage("door_closed.png", transparency=True)
-        ResourcesManager.loadSound("door.ogg").play()
+        ResourcesManager.loadSound("door.wav").play()

@@ -62,7 +62,7 @@ class CodeLock(pygame.sprite.Sprite):
         self.numbers.append(ui)
 
         Director().getCurrentScene().addToGroup(ui, "uiGroup")  # add the UI object to the scene
-        ResourcesManager.loadSound("beep.ogg").play()
+        ResourcesManager.loadSound("beep.wav").play()
 
     def enterPassword(self):
         """
@@ -71,11 +71,11 @@ class CodeLock(pygame.sprite.Sprite):
 
         for idx in range(0, 4):
             if self.password[idx] != self.input[idx]:  # one number mismatched
-                ResourcesManager.loadSound("wrong_password.ogg").play()
+                ResourcesManager.loadSound("wrong_password.wav").play()
                 self.clear()  # reset the input to try again
                 return False
 
-        ResourcesManager.loadSound("correct_password.ogg").play()
+        ResourcesManager.loadSound("correct_password.wav").play()
         return True
 
 
@@ -98,6 +98,17 @@ class Elevator(Object):
         scene.addToGroup(self, "objectsToEvent")  # to enter the password
         scene.addToGroup(self.codeLock, "foregroundGroup")  # display the current input
 
+    def close(self):
+        """
+        Closes the code lock input and returns the events to the player
+        """
+
+        self.codeLock.close()
+        scene = Director().getCurrentScene()
+        scene.removeFromGroup(self, "objectsToEvents")
+        scene.unpauseEvents()
+
+
     def events(self, events):
 
         for event in events:
@@ -105,7 +116,7 @@ class Elevator(Object):
             if event.type == KEYDOWN:
 
                 if event.key == K_RETURN:  # return to the game
-                    self.codeLock.close()
+                    self.close()
 
                 elif K_0 <= event.key <= K_9:  # only numbers between 0-9
                     self.codeLock.addNumber(int(event.key - K_0))  # add the number to the list of inputs
