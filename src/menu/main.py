@@ -16,14 +16,14 @@ class MainMenu(Menu):
     """
 
     def __init__(self):
-        super().__init__("Main menu")
+        super().__init__("Arrugas")
 
         self._menu.add.button('Play', self.onStartGame)  # button to start the game
         self._menu.add.button('Configuration', self.onOpenConfigurationMenu)  # button to edit the configuration
         self._menu.add.button('Quit', pygame_menu.events.EXIT)  # button to exit the game
 
         self._startGame = False  # flag to know when to stop the main menu music
-        self.playMusic("main_menu.mp3", "sound.menu_music_volume")
+        self.playMusic("main_menu.wav", "sound.menu_music_volume")
 
     def onEnterScene(self):
         super().onEnterScene()
@@ -31,7 +31,7 @@ class MainMenu(Menu):
         # If the player returns from the game, instead from a submenu, set again the menu music
         if self._startGame:
             self._startGame = False
-            self.playMusic("main_menu.mp3", "sound.menu_music_volume")
+            self.playMusic("main_menu.wav", "sound.menu_music_volume")
 
     def onExitScene(self):
         super().onExitScene()
