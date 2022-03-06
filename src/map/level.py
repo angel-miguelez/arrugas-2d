@@ -185,6 +185,7 @@ class Level(Observer):
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic2")
                 
+                #Check to see if we have to add a Advanced2 enemy
                 if room_cell == 'I':
                     
                     #Calculate position for the tile
