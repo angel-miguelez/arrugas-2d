@@ -60,7 +60,7 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFIFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFH                                       ',
     '                      LFFFFFFFFD                                       ',

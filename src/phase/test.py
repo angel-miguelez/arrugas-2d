@@ -52,8 +52,7 @@ class PhaseTest(PlayablePhase):
                 pass
             else:
                 for enemy in enemyGroup:
-                    pass
-                    # self.createEnemy(enemy)
+                    self.createEnemy(enemy)
                     #self.addToGroup(enemy, "npcGroup")
                     #self.player.attach(enemy)
 
@@ -126,7 +125,7 @@ class PhaseTest(PlayablePhase):
 
         elif data[2] == "Advanced2":
             a2 = Advanced2([int(data[0]), int(data[1])], 3, self.player, "LEFT")
-            self.addToGroup(basic2, "npcGroup")
+            self.addToGroup(a2, "npcGroup")
             a2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(a2)
 
