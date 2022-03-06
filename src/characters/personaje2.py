@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from abc import ABC
 from pickle import TRUE
 import pygame.key
 from characters.entity import Entity
@@ -258,10 +259,8 @@ class Player(Character, Subject):
             self.readMovementEvent(event)
 
     def update(self, time):
-
         self.movement = self.lastMovements[-1]  # the last key pressed by the user
         Character.update(self, time)
-
         self.notify()  # notify to draw the level properly
 
     def getPos(self):
@@ -291,18 +290,24 @@ class Enemy(Character, Entity):
 
     def update(self, time):
         Character.update(self, time)
+
+        self.position = self.x, self.y
+        self.rect.center = self.position
+
         # self.position = self.position[0] + self.xShift, self.position[1] + self.yShift
         # self.x, self.y = self.position
 
     def updateObserver(self, subject):
-        self.position = (self.position[0] + self.xShift, self.position[1] + self.yShift)
         Entity.updateObserver(self, subject)
+        self.x, self.y = self.position
+        # self.position = (self.position[0] + self.xShift, self.position[1] + self.yShift)
 
     def onCollisionEnter(self, collided):
-        # if isinstance(collided, Tile):
-        #     self.position = self.lastPos
-        #     self.x, self.y = self.lastPos
-        #     self.objectsEnterCollision.remove(collided)
+        Character.onCollisionEnter(self, collided)
+
+        if isinstance(collided, Tile):
+            self.position = self.lastPos
+
         if isinstance(collided, Player):
             Director().pop()
 
@@ -327,55 +332,43 @@ class Basic1(Enemy):
         Entity.__init__(self)
         self.setPlayer(playerGroup.sprites()[0], position)
 
-        self.player = playerGroup
-        self.vel = pygame.math.Vector2(0, 0)
         self.target_radius = 20
         self.waypoints = itertools.cycle(waypoints)
         self.target = next(self.waypoints)
         self.targetOffset = pygame.math.Vector2(0, 0)
-        self.orientationvector = itertools.cycle((RIGHT, LEFT))
-        self.orientation = next(self.orientationvector)
 
-        self.timeSamePosition = 0
-        self.oldDistance = 0
+        self._lastDistance = 0  # to check if the enemy cannot reach the target due to int(vel) = (0, 0) or collisions
 
     def move(self):
         heading = (self.target + self.targetOffset) - self.position
 
-        if (heading[0] > 0):
+        if heading[0] < 0:
             self.movement = LEFT
-            self.posture = 0
+            self.posture = 1
         else:
             self.movement = RIGHT
-            self.posture = 1
+            self.posture = 0
+
         distance = heading.length()  # Distance to the target.
-        if (self.oldDistance - distance) == 0:
-            self.timeSamePosition += 1
-        self.oldDistance = distance
-        heading.normalize_ip()
-        if distance <= 2:  # We're closer than 2 pixels.
+        vel = pygame.math.Vector2(0, 0)
+
+        if (self.movement == LEFT and heading[0] > 0) or (self.movement == RIGHT and heading[0] < 0):  # We're closer than 2 pixels.
             # Increment the waypoint index to swtich the target.
             # The modulo sets the index back to 0 if it's equal to the length.
             self.target = next(self.waypoints)
-            self.orientation = next(self.orientationvector)
-        if distance <= self.target_radius:
+        elif distance <= self.target_radius:
             # If we're approaching the target, we slow down.
-            self.vel = heading * (distance / self.target_radius * self.speed)
+            heading.normalize_ip()
+            vel = heading * (distance / self.target_radius * self.speed)
         else:  # Otherwise move with max_speed.
-            self.vel = heading * self.speed
+            heading.normalize_ip()
+            vel = heading * self.speed
 
-        self.lastPos = self.position
+        if self._lastDistance == distance:
+            self.target = next(self.waypoints)
+        self._lastDistance = distance
 
-        return self.vel
-
-    # def onCollisionEnter(self, collided):
-    #     return
-    #     print(self.position)
-    #     super().onCollisionEnter(collided)
-    #     print(self.position)
-    #
-    #     if isinstance(collided, Tile):
-    #         print("tile")
+        return vel
 
     def updateObserver(self, subject):
         super().updateObserver(subject)
@@ -400,7 +393,7 @@ class Basic2(Enemy):
         distance = heading.length()
         heading.normalize_ip()
         self.isPlayerClose = distance <= self.radius
-        return 0,0
+        return 0, 0
 
     def updateImage(self):
         if not self.isPlayerClose:
@@ -480,25 +473,17 @@ class Advanced2(Enemy):
                 else:
                     self.posture = 5
 
-        print(self._player.rect.bottom, self.position[1])
         if abs(self._player.rect.bottom - self.position[1]) > 5 and not self.activation:
             self.movement = IDLE
             return 0, 0
 
-        print("active")
         self.activation = True
         if self._player.rect.left > self.x:
             self.movement = RIGHT
-            # self.looking = RIGHT
-            # self.x += self.speed
-            # self.rect.left = self.x
             return self.speed, 0
 
         else:
-            # self.looking = LEFT
             self.movement = LEFT
-            # self.x -= self.speed
-            # self.rect.left = self.x
             return -self.speed, 0
 
     # def onCollisionEnter(self, collided):

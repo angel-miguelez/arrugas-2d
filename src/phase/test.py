@@ -68,17 +68,14 @@ class PhaseTest(PlayablePhase):
 
         basic2 = Basic2([1000, 500], 200, self.playerGroup, self.level.walls)
         self.addToGroup(basic2, "npcGroup")
-        basic2.setPlayer(self.player, (1000, 500))
         self.player.attach(basic2)
 
-        # normal2 = Normal2([500, 300], self.playerGroup, self.level.walls)
-        # self.addToGroup(normal2, "npcGroup")
-        # normal2.setPlayer(self.player, (850, 400))
-        # self.player.attach(normal2)
+        normal2 = Normal2([850, 800], self.playerGroup, self.level.walls)
+        self.addToGroup(normal2, "npcGroup")
+        self.player.attach(normal2)
 
         advanced2 = Advanced2([850, 800], self.playerGroup, self.level.walls, "LEFT")
         self.addToGroup(advanced2, "npcGroup")
-        advanced2.setPlayer(self.player, (850, 800))
         self.player.attach(advanced2)
 
         # Objects
