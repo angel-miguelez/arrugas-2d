@@ -31,7 +31,7 @@ class MainMenu(Menu):
         # If the player returns from the game, instead from a submenu, set again the menu music
         if self._startGame:
             self._startGame = False
-            self.playMusic("main_menu.wav", "sound.menu_music_volume")
+            self.playMusic("main_menu2.wav", "sound.menu_music_volume")
 
     def onExitScene(self):
         super().onExitScene()
