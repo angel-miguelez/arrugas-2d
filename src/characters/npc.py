@@ -31,7 +31,7 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
 
     def update(self, *args):
         pygame.sprite.Sprite.update(self, *args)
-        Interactive.update(self, *args)
+        Interactive.updateCollisions(self, *args)
 
     def onCollisionEnter(self, collided):
         Interactive.onCollisionEnter(self, collided)

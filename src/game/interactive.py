@@ -85,7 +85,7 @@ class Interactive:
     def onCollisionStay(self, collided):
         pass
 
-    def update(self, *args):
+    def updateCollisions(self, *args):
         self._detectCollision()
 
     def addCollisionGroup(self, group):

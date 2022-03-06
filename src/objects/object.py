@@ -27,7 +27,7 @@ class Object(pygame.sprite.Sprite, Entity, Interactive):
 
     def update(self, *args):
         pygame.sprite.Sprite.update(self, *args)
-        Interactive.update(self, *args)
+        self.updateCollisions(self, *args)
 
     def remove(self):
         """
