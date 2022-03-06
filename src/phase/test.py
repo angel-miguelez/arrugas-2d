@@ -10,7 +10,7 @@ from map.level import Level
 
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
 from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2, Advanced2
-from objects.door import Door, Switch
+from objects.door import Door, Switch, SwitchOut
 from objects.elevator import Elevator
 
 from objects.glasses import Glasses
@@ -83,11 +83,14 @@ class PhaseTest(PlayablePhase):
 
         door = Door((953, 412), self.playerGroup)
         switch = Switch((1003, 412), self.playerGroup)
+        switch1 = SwitchOut((940, 412), self.playerGroup)
         switch.attach(door)
+        switch.attach(switch1)
+        switch1.attach(door)
         letter.attach(door)
 
         elevator = Elevator(self.playerGroup, (1018, 2021))
-        self.addToGroup([glasses, labcoat, letter, door, switch, elevator], "objectsGroup")
+        self.addToGroup([glasses, labcoat, letter, door, switch, switch1, elevator], "objectsGroup")
 
         # Foreground
         occlude = Occlude()

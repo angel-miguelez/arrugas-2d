@@ -20,6 +20,26 @@ class Switch(Object, Subject):
         self.notify()
         self.remove()
 
+class SwitchOut(Object, Subject):
+
+    def __init__(self, position, playerGroup, room=None):
+        super().__init__( "white_tile.jpg", position, playerGroup)
+        Subject.__init__(self)
+        self.room = room
+        self.active = False
+        
+    def updateObserver(self, subject):
+        Object.updateObserver(self, subject)
+        print(isinstance(subject, Switch))
+        if isinstance(subject, Switch):
+            self.active = True
+
+    def onCollisionEnter(self, collided):
+       if self.active:
+            self.remove()
+            self.notify()
+
+
 
 class Door(Object):
 
@@ -47,6 +67,10 @@ class Door(Object):
         elif isinstance(subject, Letter):
             self._locked = False
             self.open()
+        elif isinstance(subject, SwitchOut):
+            self._locked = True
+            self.open()
+
 
     def open(self):
 
