@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from posixpath import split
-from tokenize import String
 import pygame
-from pygame.locals import *
 
 from effects.occlusion import Occlude
 
 from map.level import Level
 
-from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
+from characters.npc import ElderCharacter, NurseCharacter
 from characters.character import Player
 from characters.enemy import Basic0, Basic1, Normal2, Basic2, Advanced2
 from objects.door import Door, Switch, SwitchOut
@@ -80,7 +77,6 @@ class PhaseTest(PlayablePhase):
         # Objects
         glasses = Glasses(self.playerGroup, (500, 300))
         labcoat = LabCoat(self.playerGroup, (600, 500))
-        #letter = Letter(self.playerGroup, (1100, 412), (400, 300))
 
         #Adding the doors and switches to the scene
         for switch in self.level.switches:
@@ -102,14 +98,6 @@ class PhaseTest(PlayablePhase):
 
             self.addToGroup([letter, door, switch, switch1], "objectsGroup")
 
-        #door = Door((953, 412), self.playerGroup)
-        #switch = Switch((1003, 412), self.playerGroup)
-        #switch1 = SwitchOut((940, 412), self.playerGroup)
-        #switch.attach(door)
-        #switch.attach(switch1)
-        #switch1.attach(door)
-        #letter.attach(door)
-
         elevator = Elevator(self.playerGroup, (1018, 2021))
         self.addToGroup([glasses, labcoat, elevator], "objectsGroup")
 
@@ -130,36 +118,28 @@ class PhaseTest(PlayablePhase):
         if data[2] == "Basic0":
             basic0 = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.walls)
             self.addToGroup(basic0, "npcGroup")
-            basic0.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic0)
 
         elif data[2] == "Basic1":
             waypoints = [(320, 400), (500, 400)]
             spawn = [int(data[0]), int(data[1])]
-            #spawn = [500, 500]
-            basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup, self.level.walls)
+            basic1 = Basic1(spawn, self.playerGroup, self.level.walls, waypoints)
             self.addToGroup(basic1, "npcGroup")
-            basic1.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic1)
 
         elif data[2] == "Basic2":
-            basic2 = Basic2([int(data[0]), int(data[1])],
-                            500, self.playerGroup, self.level.walls)
-            #basic2 = Basic2([400, 400], self.player, 500, self.playerGroup)
+            basic2 = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.walls)
             self.addToGroup(basic2, "npcGroup")
-            basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic2)
 
         elif data[2] == "Normal2":
             normal2 = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.walls)
             self.addToGroup(normal2, "npcGroup")
-            normal2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(normal2)
 
         elif data[2] == "Advanced2":
-            a2 = Advanced2([int(data[0]), int(data[1])], 0.2, self.playerGroup, self.level.walls, "LEFT")
+            a2 = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.walls)
             self.addToGroup(a2, "npcGroup")
-            a2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(a2)
 
 

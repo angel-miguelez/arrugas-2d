@@ -39,38 +39,15 @@ class MainMenu(Menu):
         if self._startGame:
             pygame.mixer.music.stop()
 
-    def fade(self):
-        win=pygame.display.set_mode((800, 600))
-        fade = pygame.Surface((800, 600))
-        fade.fill((0,0,0))
-        alpha=0
-        while alpha<300:
-            alpha+=3.5
-            fade.set_alpha(alpha)
-            self.redrawWindow()
-            win.blit(fade, (0,0))
-            pygame.display.update()
-        #for alpha in range(0,300):
-        #    fade.set_alpha(alpha)
-        #    self.redrawWindow()
-        #    win.blit(fade, (0,0))
-        #    pygame.display.update()
-            #pygame.time.delay(2)
-
-    def redrawWindow(self):
-        win=pygame.display.set_mode((800, 600))
-        image = pygame.image.load('..\img\ground2.png')
-        win.blit(image, (0, 0))
-
     def onStartGame(self):
         """
         Initiate the game
         """
+
         self.playMusic("button2.wav", "sound.menu_music_volume")
-        self.fade()
         self._startGame = True
         phase1 = PhaseTest()
-        Director().push(phase1)
+        Director().push(phase1, fade=True)
 
     def onOpenConfigurationMenu(self):
         """

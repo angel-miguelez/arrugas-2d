@@ -25,7 +25,6 @@ class Enemy(Character, Entity):
 
     def update(self, time):
         Character.update(self, time)
-
         self.position = self.x, self.y  # the (x,y) of Character must be consistent with position of Entity
         self.rect.center = self.position  # enemy need to update its rect because its position on the screen varies
 
@@ -40,8 +39,7 @@ class Enemy(Character, Entity):
             self.position = self.lastPos  # the (x,y) of Character must be consistent with position of Entity
 
         if isinstance(collided, Player):
-            Director().pop()
-
+            Director().pop(fade=True)
 
 class Basic0(Enemy):
     """
