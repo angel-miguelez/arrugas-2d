@@ -237,9 +237,6 @@ class Level(Observer):
         self.walls.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
 
-        print("Before: ")
-        print(self.enemies)
-
         for groupIndex, enemyGroup in enumerate(self.enemies):
             if enemyGroup == []:
                 pass
@@ -251,9 +248,6 @@ class Level(Observer):
                     enemyGroup[enemyIndex] = enemy
             
             self.enemies[groupIndex] = enemyGroup
-        
-        print("After: ")
-        print(self.enemies)
 
     def setupLevel(self, layout):
         inside = False
