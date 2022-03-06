@@ -153,7 +153,6 @@ class Level(Observer):
                 """
 
                 #Check to see if we have to add a Basic0 enemy
-                #For now it's adding a random tile
                 if room_cell == 'R':
                     
                     #Calculate position for the tile
@@ -165,7 +164,6 @@ class Level(Observer):
                     enemyGroup.append(str(x) + " " + str(y) + " Basic1")
 
                 #Check to see if we have to add a Basic1 enemy
-                #For now it's adding a random tile
                 if room_cell == 'W':
                     
                     #Calculate position for the tile
@@ -177,7 +175,6 @@ class Level(Observer):
                     enemyGroup.append(str(x) + " " + str(y) + " Basic0")
                 
                 #Check to see if we have to add a Basic2 enemy
-                #For now it's adding a random tile
                 if room_cell == 'M':
                     
                     #Calculate position for the tile
@@ -199,7 +196,6 @@ class Level(Observer):
                     enemyGroup.append(str(x) + " " + str(y) + " Advanced2")
 
                 #Check to see if we have to add a Basic3 enemy
-                #For now it's adding a random tile
                 if room_cell == 'T':
                     
                     #Calculate position for the tile
@@ -240,11 +236,24 @@ class Level(Observer):
 
         self.walls.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
-        
-        #Updating enemies position based on the player spawn
-        #for enemyGroup in self.enemies:
-        #    enemyGroup.update(difference[0], difference[1])
 
+        print("Before: ")
+        print(self.enemies)
+
+        for groupIndex, enemyGroup in enumerate(self.enemies):
+            if enemyGroup == []:
+                pass
+            else:
+                for enemyIndex, enemy in enumerate(enemyGroup):
+                    data = enemy.split()
+                    enemy = str(int(data[0]) + difference[0] + 16) + \
+                        " " + str(int(data[1]) + difference[1]) + " " + data[2]
+                    enemyGroup[enemyIndex] = enemy
+            
+            self.enemies[groupIndex] = enemyGroup
+        
+        print("After: ")
+        print(self.enemies)
 
     def setupLevel(self, layout):
         inside = False
