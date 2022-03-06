@@ -443,14 +443,14 @@ class Normal2(Enemy):
 # -------------------------------------------------
 # Advanced enemy 2
 
-class Advanced2(WalkingEnemy):
+class Advanced2(Enemy):
     def __init__(self, position, speed, player, orientation):
         # called constructor of father class
+        Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, player, (32, 32), speed, 5, 0.5)
         self.enemy=player
         self.looking=orientation
         self.activation=False
         self.destruction= False
-        Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5)
 
     def updateImage(self, time):
 
@@ -492,11 +492,12 @@ class Advanced2(WalkingEnemy):
             return True
 
     def update(self, time): #FALTA HACER LA COLISIÓN
-        if self.onCollisionEnter():
+        if self.onCollisionEnter(Player):# or self.onCollisionEnter(Wall)
             self.destruction=True
-        if self.enemy.y == self.y or self.activation == True: #Player cross
+        posy=self._player.rect.bottom  #self.enemy.y
+        if posy == self.y or self.activation == True: #Player cross  
             self.activation= True
-            if self.enemy.x > self.x:
+            if self._player.rect.left > self.x:
                 self.movement=RIGHT
                 self.looking=RIGHT
                 self.x += self.speed
