@@ -14,6 +14,7 @@ class Entity(Observer):
         self._player = None
         self._lastPlayerPos = None
         self.position = None
+        self.offset = None
 
     def setPlayer(self, player, position):
         Observer.__init__(self)
@@ -23,6 +24,7 @@ class Entity(Observer):
 
         self._lastPlayerPos = self._player.getPos()
         self.position = position  # position in the world
+        self.offset = (0, 0)
 
     def updateObserver(self, subject):
 
@@ -30,9 +32,9 @@ class Entity(Observer):
             return
 
         playerPos = self._player.getPos()
-        offset = playerPos[0] - self._lastPlayerPos[0], playerPos[1] - self._lastPlayerPos[1]
+        self.offset = playerPos[0] - self._lastPlayerPos[0], playerPos[1] - self._lastPlayerPos[1]
 
-        self.position = self.position[0] - offset[0], self.position[1] - offset[1]
+        self.position = self.position[0] - self.offset[0], self.position[1] - self.offset[1]
         self._lastPlayerPos = playerPos
 
         if hasattr(self, "rect"):

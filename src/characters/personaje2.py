@@ -91,12 +91,12 @@ class Character(pygame.sprite.Sprite, Interactive):
 
         return out
 
-    def updateImage(self):
+    def updateImage(self, time):
         """
         Updates the current image of the sprite, if the counter has reached 0
         """
 
-        self.timeToUpdateSprite -= 1
+        self.timeToUpdateSprite -= time
         if self.timeToUpdateSprite > 0:  # we have to wait more time to update the image
             return
 
@@ -138,7 +138,7 @@ class Character(pygame.sprite.Sprite, Interactive):
         elif self.movement == IDLE:  # no movement updates in IDLE state
             pass
 
-        self.updateImage()
+        self.updateImage(time)
         self.lastPos = (self.x, self.y)
         self.x += self.xShift
         self.y += self.yShift
@@ -165,7 +165,7 @@ class Player(Character, Subject):
     Class that represents the playable character
     """""
 
-    def __init__(self, position, speed=1, animationDelay=4):
+    def __init__(self, position, speed=1, animationDelay=80):
         Subject.__init__(self)
         Character.__init__(self, 'character.png', 'coordMan.txt', [3, 3, 3, 3], position, (25, 29),
                            speed, animationDelay, 0)
@@ -270,44 +270,49 @@ class Player(Character, Subject):
             grupo.pillEffect()
      
 
-
 class Enemy(Character, Entity):
 
     def __init__(self, imageFile, coordFile, sheetDimension, position, playerGroup, scale, speed, animationDelay, updateByTime):
         Character.__init__(self, imageFile, coordFile, sheetDimension, position, scale, speed, animationDelay, updateByTime)
         Entity.__init__(self)
         Entity.setPlayer(self, playerGroup.sprites()[0], position)
-        self.extrax, self.extray = (0, 0)
-        
+
+        # self.localShift = (0, 0)
         self.addCollisionGroup(playerGroup)
 
     def updateObserver(self, subject):
+        self.position = (self.position[0] + self.xShift, self.position[1] + self.yShift)
         Entity.updateObserver(self, subject)
-        self.rect.left += self.extrax
-        self.rect.bottom += self.extray
-    
+
     def onCollisionEnter(self, collided):
 
         if isinstance(collided, Tile):
-            self.x, self.y = self.lastPos
+            # self.x, self.y = self.lastPos
+            self.position = self.lastPos
             self.objectsEnterCollision.remove(collided)
         if isinstance(collided, Player):
             Director().pop()
 
+
 class WalkingEnemy(Enemy):
+
     def __init__(self, imageFile, coordFile, sheetDimension, position, playerGroup, scale, speed, animationDelay, updateByTime, waypoints):
+        # called constructor of father class
         Enemy.__init__(self, imageFile, coordFile, sheetDimension, position, playerGroup, scale, speed, animationDelay, updateByTime)
+
         self.vel = pygame.math.Vector2(0, 0)
-        self.pos = pygame.math.Vector2((self.x, self.y))
+        self.position = pygame.math.Vector2((self.x, self.y))
         self.target_radius = 20
         self.waypoints = itertools.cycle(waypoints)
         self.target = next(self.waypoints)
-        self.orientationvector=itertools.cycle((RIGHT, LEFT))
-        self.orientation=next(self.orientationvector)
+        self.targetOffset = pygame.math.Vector2(0, 0)
+        self.orientationvector = itertools.cycle((RIGHT, LEFT))
+        self.orientation = next(self.orientationvector)
 
     def update(self, time):
         # A vector pointing from self to the target.
-        heading = self.target - self.pos
+
+        heading = (self.target + self.targetOffset) - self.position
         if(heading[0] > 0):
             self.movement = LEFT
             self.posture = 0
@@ -327,52 +332,54 @@ class WalkingEnemy(Enemy):
         else:  # Otherwise move with max_speed.
             self.vel = heading * self.speed
 
-        self.pos += self.vel
-        self.extrax += self.vel[0]
-        self.extray += self.vel[1]
+        # self.pos += self.vel
+        self.xShift, self.yShift = self.vel * time
+        print(self.vel)
+        # self.localShift = (self.localShift[0] + self.vel[0], self.localShift[1] + self.vel[1])
         # self.rect.center = self.pos
-        super().updateImage()
-       
+        super().updateImage(time)
+
+    def updateObserver(self, subject):
+        super().updateObserver(subject)
+        self.targetOffset -= pygame.math.Vector2(self.offset)
 
 # -------------------------------------------------
-# Basic enemy 0 class
+# Basic enemy 0 class (worm)
+
 
 class Basic0(Enemy, Entity):
     def __init__(self, position, playerGroup):
         # called constructor of father class
-        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, playerGroup, (32, 32), 0.3, 5, 0.5)
+        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, playerGroup, (32, 32), 0.3, 100, 0.5)
 
 
 # -------------------------------------------------
-# Basic enemy 1 class
+# Basic enemy 1 class (ratt)
 
 class Basic1(WalkingEnemy, Entity):
     def __init__(self, position, waypoints, speed, playerGroup):
         # called constructor of father class
-        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, (32, 32), speed, 5, 0.5, waypoints)
-
+        WalkingEnemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, (32, 32), speed, 100, 0.5, waypoints)
 
 # -------------------------------------------------
-# Basic enemy 2 class
+# Basic enemy 2 class (wizard)
+
 
 class Basic2(Enemy, Entity):
-    def __init__(self, position, player, radius, playerGroup):
+    def __init__(self, position, radius, playerGroup):
+        Entity.__init__(self)
         # called constructor of father class
-        self.radius=radius
-        self.enemy=player
-        Enemy.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, playerGroup, (148, 120), 0.3, 15, 0.5)
+        self.radius = radius
+        Enemy.__init__(self, 'B2.png', 'coordBasic2.txt', [10], position, playerGroup, (148, 120), 0.3, 100, 0.5)
 
-        
-
-    def updateImage(self):
-        self.timeToUpdateSprite -= 1
-
+    def updateImage(self, time):
+        self.timeToUpdateSprite -= time
+        print(self._player.rect.center, self.position, self.rect.center)
         # check if time between sprites updates
 
-        self.pos = pygame.math.Vector2((self.x, self.y))
-        self.target = (self.enemy.x, self.enemy.y)
-        heading = self.target - self.pos
-        distance = heading.length() 
+        target = pygame.math.Vector2(self._player.rect.center)
+        heading = target - pygame.math.Vector2(self.position)
+        distance = heading.length()
         heading.normalize_ip()
         if distance <= self.radius:   
             if self.timeToUpdateSprite < 0:
@@ -388,49 +395,50 @@ class Basic2(Enemy, Entity):
             # no movement is being done
             if self.movement == IDLE:
                 self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.posture][0]), self.scale)
-            
 
 # -------------------------------------------------
-# Normal enemy 2 
+# Normal enemy 2 (cactus)
 
 class Normal2(Enemy):
     "Normal2 enemy 3"
-    def __init__(self, position, player, playerGroup):
+    def __init__(self, position, playerGroup):
         # called constructor of father class
-        Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, (32, 50), 0.1, 5, 0)
-        self.player = player
+        Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, (32, 50), 0.1, 75, 0)
 
     def update(self, *args):
         super().update(*args)
-        self.move(self.player, 300)
+
+        self.move(300)
+        # self.localShift = (self.localShift[0] + self.xShift, self.localShift[1] + self.yShift)
 
         #move function that chase the player
-    def move(self, player, area):
+    def move(self, area):
         # tracked player
         # area where the player is going to be tracked
-        if (abs(self.x - player.x) < area) and (abs(self.y - player.y) < area):
+        playerx, playery = (self._player.rect.left, self._player.rect.bottom)
+
+        if (abs(self.rect.left - playerx) < area) and (abs(self.rect.bottom - playery) < area):
         # Indicamos la acción a realizar segun la tecla pulsada para el jugador
-            if ((self.x - player.x) == 0) and ((self.y - player.y) == 0):
+            if ((self.rect.left - playerx) == 0) and ((self.rect.bottom - playery) == 0):
                 self.movement = IDLE
-            elif ((self.x - player.x) == 0) and ((self.y - player.y) > 0):
+            elif ((self.rect.left - playerx) == 0) and ((self.rect.bottom - playery) > 0):
                 self.movement = UP
-            elif ((self.x - player.x) == 0) and ((self.y - player.y) < 0):
+            elif ((self.rect.left - playerx) == 0) and ((self.rect.bottom - playery) < 0):
                 self.movement = DOWN
-            elif ((self.x - player.x) < 0) and ((self.y - player.y) == 0):
+            elif ((self.rect.left - playerx) < 0) and ((self.rect.bottom - playery) == 0):
                 self.movement = RIGHT
-            elif ((self.x - player.x) > 0) and ((self.y - player.y) == 0):
+            elif ((self.rect.left - playerx) > 0) and ((self.rect.bottom - playery) == 0):
                 self.movement = LEFT
-            elif ((self.x - player.x) < 0) and ((self.y - player.y) < 0):
+            elif ((self.rect.left - playerx) < 0) and ((self.rect.bottom - playery) < 0):
                 self.movement = DOWN
-            elif ((self.x - player.x) > 0) and ((self.y - player.y) > 0):
+            elif ((self.rect.left - playerx) > 0) and ((self.rect.bottom - playery) > 0):
                 self.movement = UP
-            elif ((self.x - player.x) < 0) and ((self.y - player.y) > 0):
+            elif ((self.rect.left - playerx) < 0) and ((self.rect.bottom - playery) > 0):
                 self.movement = RIGHT
-            elif ((self.x - player.x) > 0) and ((self.y - player.y) < 0):
+            elif ((self.rect.left - playerx) > 0) and ((self.rect.bottom - playery) < 0):
                 self.movement = LEFT
         else:
              self.movement = IDLE
-
 
 # -------------------------------------------------
 # Advanced enemy 2
@@ -442,11 +450,11 @@ class Advanced2(WalkingEnemy):
         self.looking=orientation
         self.activation=False
         self.destruction= False
-        Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5);
+        Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5)
 
-    def updateImage(self):
+    def updateImage(self, time):
 
-        self.timeToUpdateSprite -= 1
+        self.timeToUpdateSprite -= time
         if self.timeToUpdateSprite > 0:  # we have to wait more time to update the image
             return
 
@@ -501,89 +509,6 @@ class Advanced2(WalkingEnemy):
                 self.rect.left = self.x
         else: 
             self.movement=IDLE  #Movimiento estático
-        self.updateImage()
+        self.updateImage(time)
 
 
-# -------------------------------------------------
-# Funcion principal del juego
-# -------------------------------------------------
-
-def main():
-
-    # Inicializar pygame
-    pygame.init()
-
-    # Crear la pantalla
-    pantalla = pygame.display.set_mode((800, 600), 0, 32)
-
-    # Creamos el objeto reloj para sincronizar el juego
-    reloj = pygame.time.Clock()
-
-    # Poner el título de la ventana
-    pygame.display.set_caption('Ejemplo de uso de Sprites')
-
-    # Creamos los jugadores
-    #jugador1 = Character('old_man.png', 'coordMan.txt', [3,3,3,3],[300, 100], 0.3, 0)
-    jugador1 = Player()
-    basic0 = Basic0([100, 100])
-    
-    waypoints=[(360,200),(140,200)]
-    spawn=[140, 200]
-
-    basic1=Basic1(spawn, waypoints, 1.5)
-
-    basic2 = Basic2([500, 500], jugador1)
-    
-    normal2 = Normal2([500, 100])
-    
-    # Creamos el grupo de Sprites de jugadores
-    grupoJugadores = pygame.sprite.Group( jugador1, basic0, basic1, basic2, normal2 )
-
-
-    # El bucle de eventos
-    while True:
-
-        # Hacemos que el reloj espere a un determinado fps
-        time_pasado = reloj.tick(60)
-
-        # Para cada evento, hacemos
-        for event in pygame.event.get():
-
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-
-        # Miramos que teclas se han pulsado
-        toggledKeys = pygame.key.get_pressed()
-
-        # Si la tecla es Escape
-        if toggledKeys[K_ESCAPE]:
-            # Se sale del programa
-            pygame.quit()
-            sys.exit()
-
-        # Si la tecla es X
-        if toggledKeys[K_x]:
-            # Se ejecuta mecánica pastillas
-            jugador1.hasPills()
-
-        # Indicamos la acción a realizar segun la tecla pulsada para cada jugador
-        jugador1.move(toggledKeys, K_UP, K_DOWN, K_LEFT, K_RIGHT)
-        normal2.move(jugador1, 200)
-
-        # Actualizamos los jugadores actualizando el grupo
-        grupoJugadores.update(time_pasado)
-
-
-        # Dibujar el fondo de color
-        pantalla.fill((133,133,133))
-
-        # Dibujar el grupo de Sprites
-        grupoJugadores.draw(pantalla)
-        
-        # Actualizar la pantalla
-        pygame.display.update()
-
-
-if __name__ == "__main__":
-    main()
