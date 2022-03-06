@@ -47,6 +47,8 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
             dialogue.add(intervention)
 
         dialogue.start()  # start the dialogue
+        
+
 
 
 class ElderCharacter(DialogueCharacter):
