@@ -47,34 +47,39 @@ class PhaseTest(PlayablePhase):
         self.addToGroup([speaker, nurse], "npcGroup")
 
         # Enemies
-        for enemyGroup in self.level.enemies:
-            if enemyGroup == []:
-                pass
-            else:
-                for enemy in enemyGroup:
-                    self.createEnemy(enemy)
+        # for enemyGroup in self.level.enemies:
+        #     if enemyGroup == []:
+        #         pass
+        #     else:
+        #         for enemy in enemyGroup:
+        #             self.createEnemy(enemy)
 
         #basic0 = Basic0([300, 300])
         #self.addToGroup(basic0, "npcGroup")
-        basic0 = Basic0([450, 300], self.playerGroup)
+        basic0 = Basic0([450, 300], self.playerGroup, self.level.walls)
         self.addToGroup(basic0, "npcGroup")
         basic0.setPlayer(self.player, (450, 300))
         self.player.attach(basic0)
 
         waypoints = [(320, 400), (500, 400)]
         spawn = [500, 400]
-        basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup)
+        basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup, self.level.walls)
         self.addToGroup(basic1, "npcGroup")
 
-        #basic2 = Basic2([1000, 500], 200, self.playerGroup)
-        #self.addToGroup(basic2, "npcGroup")
-        #basic2.setPlayer(self.player, (1000, 500))
-        #self.player.attach(basic2)
+        basic2 = Basic2([1000, 500], 200, self.playerGroup, self.level.walls)
+        self.addToGroup(basic2, "npcGroup")
+        basic2.setPlayer(self.player, (1000, 500))
+        self.player.attach(basic2)
 
-        #normal2 = Normal2([500, 300], self.playerGroup)
-        #self.addToGroup(normal2, "npcGroup")
-        #normal2.setPlayer(self.player, (850, 400))
-        #self.player.attach(normal2)
+        # normal2 = Normal2([500, 300], self.playerGroup, self.level.walls)
+        # self.addToGroup(normal2, "npcGroup")
+        # normal2.setPlayer(self.player, (850, 400))
+        # self.player.attach(normal2)
+
+        advanced2 = Advanced2([850, 800], self.playerGroup, self.level.walls, "LEFT")
+        self.addToGroup(advanced2, "npcGroup")
+        advanced2.setPlayer(self.player, (850, 800))
+        self.player.attach(advanced2)
 
         # Objects
         glasses = Glasses(self.playerGroup, (500, 300))
@@ -107,7 +112,7 @@ class PhaseTest(PlayablePhase):
         data = enemy.split()
 
         if data[2] == "Basic0":
-            basic0 = Basic0([int(data[0]), int(data[1])], self.playerGroup)
+            basic0 = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.walls)
             self.addToGroup(basic0, "npcGroup")
             basic0.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic0)
@@ -116,28 +121,27 @@ class PhaseTest(PlayablePhase):
             waypoints = [(320, 400), (500, 400)]
             spawn = [int(data[0]), int(data[1])]
             #spawn = [500, 500]
-            basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup)
+            basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup, self.level.walls)
             self.addToGroup(basic1, "npcGroup")
             basic1.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic1)
 
         elif data[2] == "Basic2":
             basic2 = Basic2([int(data[0]), int(data[1])],
-                            500, self.playerGroup)
+                            500, self.playerGroup, self.level.walls)
             #basic2 = Basic2([400, 400], self.player, 500, self.playerGroup)
             self.addToGroup(basic2, "npcGroup")
             basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic2)
 
         elif data[2] == "Normal2":
-            normal2 = Normal2([int(data[0]), int(data[1])], self.playerGroup)
+            normal2 = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.walls)
             self.addToGroup(normal2, "npcGroup")
             normal2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(normal2)
 
         elif data[2] == "Advanced2":
-            a2 = Advanced2([int(data[0]), int(data[1])],
-                           3, self.playerGroup, "LEFT")
+            a2 = Advanced2([int(data[0]), int(data[1])], 0.2, self.playerGroup, self.level.walls, "LEFT")
             self.addToGroup(a2, "npcGroup")
             a2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(a2)

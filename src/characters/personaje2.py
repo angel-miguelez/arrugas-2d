@@ -299,13 +299,12 @@ class Enemy(Character, Entity):
         Entity.updateObserver(self, subject)
 
     def onCollisionEnter(self, collided):
-        return
         # if isinstance(collided, Tile):
         #     self.position = self.lastPos
         #     self.x, self.y = self.lastPos
         #     self.objectsEnterCollision.remove(collided)
-        # if isinstance(collided, Player):
-        #     Director().pop()
+        if isinstance(collided, Player):
+            Director().pop()
 
 # -------------------------------------------------
 # Basic enemy 0 class (worm)
@@ -420,7 +419,6 @@ class Normal2(Enemy):
         self.area = 300
 
     def move(self):
-        print(self.position)
         # tracked player
         # area where the player is going to be tracked
         playerx, playery = (self._player.rect.left, self._player.rect.bottom)
@@ -454,72 +452,63 @@ class Normal2(Enemy):
 # -------------------------------------------------
 # Advanced enemy 2
 
-class Advanced2:
-    def __init__(self, position, speed, player, orientation):
+class Advanced2(Enemy):
+    def __init__(self, position, playerGroup, wallsGroup, orientation):
         # called constructor of father class
-        self.enemy=player
-        self.looking=orientation
-        self.activation=False
-        self.destruction= False
-        Character.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, (32, 32), speed, 5, 0.5)
+        Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, playerGroup, wallsGroup, (32, 32), 0.2, 5, 0.5)
+        self.enemy = playerGroup.sprites()[0]
+        self.looking = orientation
+        self.activation = False
+        self.destruction = False
 
-    def updateImage(self):
+    def move(self):
 
-        self.timeToUpdateSprite -= 1
-        if self.timeToUpdateSprite > 0:  # we have to wait more time to update the image
-            return
-
-        self.timeToUpdateSprite = self.animationDelay  # reset the counter
-        self.subPosture += 1  # go to the next subposture in the row
-
-        # If we have reached the last subposture, return to the initial one
-        if self.subPosture >= len(self.sheetCoord[self.posture]):
-            if self.destruction==True:
-                del self #Delete yourself     
-            else:
-                self.subPosture = 0
-        
-        if self.activation == False: # No movement is being done
-            if self.looking == RIGHT: 
-                self.posture=0
-            if self.looking == LEFT: 
-                self.posture=3
-        else: # Update the image
-            if self.looking == RIGHT:
-                if self.destruction==False: 
-                    self.posture=1
+        if not self.activation:  # No movement is being done
+            if self.movement == RIGHT:
+                self.posture = 0
+            if self.movement == LEFT:
+                self.posture = 3
+        else:  # Update the image
+            if self.movement == RIGHT:
+                if not self.destruction:
+                    self.posture = 1
                 else:
-                    self.posture=2
-            if self.looking == LEFT: 
-                if self.destruction==False: 
-                    self.posture=4
+                    self.posture = 2
+            if self.movement == LEFT:
+                if not self.destruction:
+                    self.posture = 4
                 else:
-                    self.posture=5
-        self.image = pygame.transform.scale(self.sheet.subsurface(self.sheetCoord[self.posture][self.subPosture]), self.scale)
-            
-    def onCollisionEnter(self, collided):
-        if isinstance(collided, Tile):
-            self.x, self.y = self.lastPos
-            self.objectsEnterCollision.remove(collided)
-            self.destruction = True
+                    self.posture = 5
 
-    def update(self, time): #FALTA HACER LA COLISIÓN
+        print(self._player.rect.bottom, self.position[1])
+        if abs(self._player.rect.bottom - self.position[1]) > 5 and not self.activation:
+            self.movement = IDLE
+            return 0, 0
 
-        if self.enemy.y == self.y or self.activation == True: #Player cross
-            self.activation= True
-            if self.enemy.x > self.x:
-                self.movement=RIGHT
-                self.looking=RIGHT
-                self.x += self.speed
-                self.rect.left = self.x
+        print("active")
+        self.activation = True
+        if self._player.rect.left > self.x:
+            self.movement = RIGHT
+            # self.looking = RIGHT
+            # self.x += self.speed
+            # self.rect.left = self.x
+            return self.speed, 0
 
-            else:
-                self.looking=LEFT
-                self.movement=LEFT 
-                self.x -= self.speed
-                self.rect.left = self.x
-        else: 
-            self.movement=IDLE  #Movimiento estático
-        self.updateImage()
+        else:
+            # self.looking = LEFT
+            self.movement = LEFT
+            # self.x -= self.speed
+            # self.rect.left = self.x
+            return -self.speed, 0
+
+    # def onCollisionEnter(self, collided):
+    #
+    #     if isinstance(collided, Tile):
+    #         self.x, self.y = self.lastPos
+    #         self.objectsEnterCollision.remove(collided)
+    #         return True
+    #
+    #     elif isinstance(collided, Player):
+    #         self.destruction = True
 
 

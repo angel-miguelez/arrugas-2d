@@ -30,7 +30,6 @@ class SwitchOut(Object, Subject):
         
     def updateObserver(self, subject):
         Object.updateObserver(self, subject)
-        print(isinstance(subject, Switch))
         if isinstance(subject, Switch):
             self.active = True
 
