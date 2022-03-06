@@ -19,6 +19,7 @@ room_num = 7 #Number of rooms to pick from
     'M' -> magic range enemy (Basic2)
     'T' -> tracking enemy (Normal2)
     'I' -> dragon enemy (Advanced2)
+    'C' -> letter
 
     For now we're using the same sprite for each type of wall
 
@@ -186,20 +187,20 @@ rooms = [
         'XXXXX',
         'XFFFX',
         'XFFFD',
-        'XFIFX',
+        'XFCFX',
         'XFFFX',
         'XXXXX',
     ],
     [
         'XXXXXXX',
-        'XFFFFFX',
+        'XCFFFFX',
         'XFFIFFD',
         'XFFFFFX',
         'XXXXXXX',
     ],
     [
         'XXXXXXXXXXXX',
-        'XFFFFFFFFFFX',
+        'XCFFFFFFFFFX',
         'XFFWFFFFFFFX',
         'XFFFRFFFFFFX',
         'XFFFFMFFFFFX',
@@ -212,14 +213,14 @@ rooms = [
     ],
     [
         'XXXXXXXXXXXXXXXXXXXXX',
-        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFCFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFIFFFFFFFFFD',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XXXXXXXXXXXXXXXXXXXXX',
     ],
     [
         'XXXXXXXXXXXXXXXXXXXXX',
-        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFCFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFIFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFD',
@@ -230,7 +231,7 @@ rooms = [
     ],
     [
         'XXXXXXXXX   XXXXXXXXX',
-        'XFFFFFFFX   XFFFFFFFX',
+        'XFCFFFFFX   XFFFFFFFX',
         'XFFFFFFFXXXXXFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFIFFFFFFFFFFFFFFD',
@@ -244,7 +245,7 @@ rooms = [
         'XFFFFFFX             ',
         'XFFFFFFX             ',
         'XFFFFFFXXXXXXXXXXXXXX',
-        'XFFFFFFFFFFFFFFFFFFFX',
+        'XCFFFFFFFFFFFFFFFFFFX',
         'XFFFFIFFFFFFFFFFFFFFD',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFXXXXXXXXXXXXXX',
