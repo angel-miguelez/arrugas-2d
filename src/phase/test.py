@@ -73,7 +73,7 @@ class PhaseTest(PlayablePhase):
 
         #normal2 = Normal2([500, 300], self.playerGroup)
         #self.addToGroup(normal2, "npcGroup")
-        #normal2.setPlayer(self.player, (450, 300))
+        #normal2.setPlayer(self.player, (850, 400))
         #self.player.attach(normal2)
 
         # Objects

@@ -69,7 +69,7 @@ class Door(Object):
             self.open()
         elif isinstance(subject, SwitchOut):
             self._locked = True
-            self.open()
+            self.close()
 
 
     def open(self):
