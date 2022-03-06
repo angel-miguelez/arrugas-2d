@@ -7,6 +7,7 @@ import sys
 
 from game.director import Director
 from game.scene import Scene
+from pygame_menu import Theme
 
 
 class Menu(Scene):
@@ -18,8 +19,19 @@ class Menu(Scene):
 
         super().__init__()
 
+        mytheme = pygame_menu.themes.THEME_GREEN.copy()
+        myimage = pygame_menu.baseimage.BaseImage(
+            image_path='..\img\ground.png',
+            drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL,
+        )
+        mytitle=pygame_menu.widgets.MENUBAR_STYLE_UNDERLINE_TITLE
+        mytheme.title_bar_style=mytitle
+        mytheme.background_color = myimage
+        #mytheme.selection_effect=Theme.widget_selection_effect
+        mytheme.widget_font=pygame_menu.font.FONT_MUNRO
+
         # Every menu has a pygame_menu object
-        self._menu = pygame_menu.Menu(title, 800, 600, theme=pygame_menu.themes.THEME_BLUE, **kwargs)
+        self._menu = pygame_menu.Menu(title, 800, 600, theme=mytheme, **kwargs)
 
     def events(self, events):
 
