@@ -35,7 +35,7 @@ class PhaseTest(PlayablePhase):
         #self.level = Level(basic_layout_2, 400, 300)  # Setup map structure
 
         # Player
-        self.player = Player((400, 300), 0.2)
+        self.player = Player((400, 300), 0.3)
         self.player.attach(self.level)
         self.player.addCollisionGroup(self.level.walls)
         self.addToGroup(self.player, "playerGroup")
@@ -63,16 +63,20 @@ class PhaseTest(PlayablePhase):
         basic0.setPlayer(self.player, (450, 300))
         self.player.attach(basic0)
 
-        #waypoints = [(360, 200), (140, 200)]
-        #spawn = [140, 200]
-        #basic1 = Basic1(spawn, waypoints, 1.5)
-        #self.addToGroup(basic1, "npcGroup")
+        waypoints = [(320, 400), (500, 400)]
+        spawn = [500, 400]
+        basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup)
+        self.addToGroup(basic1, "npcGroup")
 
-        #basic2 = Basic2([500, 500], self.player, 500)
-        #self.addToGroup(basic2, "npcGroup")
+        basic2 = Basic2([1000, 500], 200, self.playerGroup)
+        self.addToGroup(basic2, "npcGroup")
+        basic2.setPlayer(self.player, (1000, 500))
+        self.player.attach(basic2)
 
-        #normal2 = Normal2([500, 300], self.player)
-        #self.addToGroup(normal2, "npcGroup")
+        normal2 = Normal2([500, 300], self.playerGroup)
+        self.addToGroup(normal2, "npcGroup")
+        normal2.setPlayer(self.player, (450, 300))
+        self.player.attach(normal2)
 
         # Objects
         glasses = Glasses(self.playerGroup, (500, 300))
@@ -107,21 +111,21 @@ class PhaseTest(PlayablePhase):
             basic0.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic0)
 
-        elif data[2] == "Basic1":
-            waypoints = [(360, 200), (140, 200)]
-            #spawn = [int(data[0]), int(data[1])]
-            spawn = [500, 500]
-            basic1 = Basic1(spawn, waypoints, 1.5, self.playerGroup)
-            self.addToGroup(basic1, "npcGroup")
-            basic1.setPlayer(self.player, (int(data[0]), int(data[1])))
-            self.player.attach(basic1)
+        # elif data[2] == "Basic1":
+        #     waypoints = [(360, 200), (140, 200)]
+        #     #spawn = [int(data[0]), int(data[1])]
+        #     spawn = [500, 500]
+        #     basic1 = Basic1(spawn, waypoints, 1.5, self.playerGroup)
+        #     self.addToGroup(basic1, "npcGroup")
+        #     basic1.setPlayer(self.player, (int(data[0]), int(data[1])))
+        #     self.player.attach(basic1)
 
-        elif data[2] == "Basic2":
-            #basic2 = Basic2([int(data[1]), int(data[0])], self.player, 500)
-            basic2 = Basic2([400, 400], self.player, 500, self.playerGroup)
-            self.addToGroup(basic2, "npcGroup")
-            basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
-            self.player.attach(basic2)
+        # elif data[2] == "Basic2":
+        #     #basic2 = Basic2([int(data[1]), int(data[0])], self.player, 500)
+        #     basic2 = Basic2([400, 400], self.player, 500, self.playerGroup)
+        #     self.addToGroup(basic2, "npcGroup")
+        #     basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
+        #     self.player.attach(basic2)
 
         elif data[2] == "Advanced2":
             a2 = Advanced2([int(data[0]), int(data[1])], 3, self.player, "LEFT")
