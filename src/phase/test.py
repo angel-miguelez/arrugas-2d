@@ -9,7 +9,8 @@ from effects.occlusion import Occlude
 from map.level import Level
 
 from characters.npc import DialogueCharacter, ElderCharacter, NurseCharacter
-from characters.personaje2 import Player, Basic0, Basic1, Normal2, Basic2, Advanced2
+from characters.character import Player
+from characters.enemy import Basic0, Basic1, Normal2, Basic2, Advanced2
 from objects.door import Door, Switch, SwitchOut
 from objects.elevator import Elevator
 
@@ -54,19 +55,16 @@ class PhaseTest(PlayablePhase):
         #         for enemy in enemyGroup:
         #             self.createEnemy(enemy)
 
-        #basic0 = Basic0([300, 300])
-        #self.addToGroup(basic0, "npcGroup")
         basic0 = Basic0([450, 300], self.playerGroup, self.level.walls)
         self.addToGroup(basic0, "npcGroup")
-        basic0.setPlayer(self.player, (450, 300))
         self.player.attach(basic0)
 
         waypoints = [(320, 400), (500, 400)]
         spawn = [500, 400]
-        basic1 = Basic1(spawn, waypoints, 0.3, self.playerGroup, self.level.walls)
+        basic1 = Basic1(spawn, self.playerGroup, self.level.walls, waypoints)
         self.addToGroup(basic1, "npcGroup")
 
-        basic2 = Basic2([1000, 500], 200, self.playerGroup, self.level.walls)
+        basic2 = Basic2([1000, 500], self.playerGroup, self.level.walls)
         self.addToGroup(basic2, "npcGroup")
         self.player.attach(basic2)
 
@@ -74,7 +72,7 @@ class PhaseTest(PlayablePhase):
         self.addToGroup(normal2, "npcGroup")
         self.player.attach(normal2)
 
-        advanced2 = Advanced2([850, 800], self.playerGroup, self.level.walls, "LEFT")
+        advanced2 = Advanced2([850, 800], self.playerGroup, self.level.walls)
         self.addToGroup(advanced2, "npcGroup")
         self.player.attach(advanced2)
 

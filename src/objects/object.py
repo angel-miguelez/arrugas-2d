@@ -19,8 +19,8 @@ class Object(pygame.sprite.Sprite, Entity, Interactive):
         self.rect = self.image.get_rect()
         self.rect.center = position
 
-        Entity.__init__(self,)
-        Entity.setPlayer(self, playerGroup.sprites()[0], position)
+        Entity.__init__(self, position)
+        Entity.setPlayer(self, playerGroup.sprites()[0])
 
         Interactive.__init__(self, self.rect)
         self.addCollisionGroup(playerGroup)

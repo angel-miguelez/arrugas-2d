@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pygame
 
-from characters.personaje2 import Player
+from characters.character import Player
 from game.director import Director
 from objects.letter import Letter
 from objects.object import Object
