@@ -64,8 +64,14 @@ class Level(Observer):
         self.worldShiftY = posy
         self.levels = np.zeros((room_num), dtype=bool)
 
-        #Enemy array for room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
+        #Enemy array, for room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
         self.enemies = []
+
+        #Array for switches, room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
+        self.switches = []
+
+        #Array for letters, room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
+        self.letters = []
 
         self.setupLevel(level_data)
 
@@ -210,6 +216,17 @@ class Level(Observer):
                     # normal2.addCollisionGroup(self.walls)
                     #enemyGroup.add(normal2)
                 
+                #Check to see if we have to add a letter in the room
+                if room_cell == 'C':
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+
+                    #Store letter position to add on the scene
+                    self.letters.append(str(x) + " " + str(y))
+
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
                     
@@ -249,6 +266,21 @@ class Level(Observer):
                     enemyGroup[enemyIndex] = enemy
             
             self.enemies[groupIndex] = enemyGroup
+
+        for switchIndex, switch in enumerate(self.switches):
+            data = switch.split()
+            letter = self.letters[switchIndex]
+            data2 = letter.split()  
+
+            switch = str(int(data[0]) + difference[0] + 16) + \
+                " " + str(int(data[1]) + difference[1] + 16) + \
+                " " + str(int(data[2]) + difference[0] + 16) + \
+                " " + str(int(data[3]) + difference[1] + 16) + \
+                " " + str(int(data[4])) + " " + \
+                str(int(data2[0]) + difference[0] + 16) + " " + \
+                str(int(data2[1]) + difference[1] + 16)
+
+            self.switches[switchIndex] = switch
 
     def setupLevel(self, layout):
         inside = False
@@ -317,29 +349,38 @@ class Level(Observer):
                 
                 #Check to see if we have a door
                 if cell == 'D':
-                    
+                    insideInt = -1
+
                     #Get the room we want to add
                     while True:
                         num = np.random.randint(0, room_num)
                         if self.levels[num] == False:
                             self.levels[num] = True
                             break
-
+                    
                     #Get the room from the list of rooms based on the random number
                     room = rooms[num]
 
                     if inside:
-                        
+                        insideInt = 1
                         #The empty space on the map is to the right of the door
                         col = col_index + 1
+
+                        #Save positions for the switches and the door
+                        self.switches.append(
+                            str(x) + " " + str(y) + " " + str(col * tile_size) + " " + str(y) + " " + str(insideInt))
 
                         #Add the room
                         self.__addRoom(room, (row_index, col), inside)
                         
                     else:
-
+                        insideInt = 0
                         #The empty space on the map is to the left of the door
                         col = col_index - 1
+
+                        #Save positions for the switches and the door
+                        self.switches.append(
+                            str(x) + " " + str(y) + " " + str(col * tile_size) + " " + str(y) + " " + str(insideInt))
 
                         #Add the room
                         self.__addRoom(room, (row_index, col), inside)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from posixpath import split
 from tokenize import String
 import pygame
 from pygame.locals import *
@@ -79,18 +80,38 @@ class PhaseTest(PlayablePhase):
         # Objects
         glasses = Glasses(self.playerGroup, (500, 300))
         labcoat = LabCoat(self.playerGroup, (600, 500))
-        letter = Letter(self.playerGroup, (1100, 412), (400, 300))
+        #letter = Letter(self.playerGroup, (1100, 412), (400, 300))
 
-        door = Door((953, 412), self.playerGroup)
-        switch = Switch((1003, 412), self.playerGroup)
-        switch1 = SwitchOut((940, 412), self.playerGroup)
-        switch.attach(door)
-        switch.attach(switch1)
-        switch1.attach(door)
-        letter.attach(door)
+        #Adding the doors and switches to the scene
+        for switch in self.level.switches:
+            aux = switch.split()
+            data = [int(numeric_string) for numeric_string in aux]
+            
+            door = Door((data[0], data[1]), self.playerGroup)
+            switch = Switch((data[2], data[3]), self.playerGroup)
+            if data[4]:
+                switch1 = SwitchOut((data[0] - 8, data[1]), self.playerGroup)
+            else:
+                switch1 = SwitchOut((data[0] + 8, data[1]), self.playerGroup)
+                
+            letter = Letter(self.playerGroup, (data[5], data[6]), (400, 300))
+            switch.attach(door)
+            switch.attach(switch1)
+            switch1.attach(door)
+            letter.attach(door)
+
+            self.addToGroup([letter, door, switch, switch1], "objectsGroup")
+
+        #door = Door((953, 412), self.playerGroup)
+        #switch = Switch((1003, 412), self.playerGroup)
+        #switch1 = SwitchOut((940, 412), self.playerGroup)
+        #switch.attach(door)
+        #switch.attach(switch1)
+        #switch1.attach(door)
+        #letter.attach(door)
 
         elevator = Elevator(self.playerGroup, (1018, 2021))
-        self.addToGroup([glasses, labcoat, letter, door, switch, switch1, elevator], "objectsGroup")
+        self.addToGroup([glasses, labcoat, elevator], "objectsGroup")
 
         # Foreground
         occlude = Occlude()
