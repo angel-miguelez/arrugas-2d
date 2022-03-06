@@ -23,7 +23,7 @@ class MainMenu(Menu):
         self._menu.add.button('Quit', pygame_menu.events.EXIT)  # button to exit the game
 
         self._startGame = False  # flag to know when to stop the main menu music
-        self.playMusic("main_menu.wav", "sound.menu_music_volume")
+        self.playMusic("main_menu2.wav", "sound.menu_music_volume")
 
     def onEnterScene(self):
         super().onEnterScene()
