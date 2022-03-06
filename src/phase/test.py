@@ -128,6 +128,7 @@ class PhaseTest(PlayablePhase):
             self.addToGroup(basic2, "npcGroup")
             basic2.setPlayer(self.player, (int(data[0]), int(data[1])))
             self.player.attach(basic2)
+
         elif data[2] == "Normal2":
             normal2 = Normal2([int(data[0]), int(data[1])], self.playerGroup)
             self.addToGroup(normal2, "npcGroup")
