@@ -41,6 +41,18 @@ class Enemy(Character, Entity):
         if isinstance(collided, Player):
             Director().pop(fade=True)
 
+    def remove(self):
+        """
+        Removes the object from all the groups of the scene, so it disappears completely
+        """
+
+        scene = Director().getCurrentScene()
+        scene.removeFromGroup(self, "npcGroup")
+
+
+        self._player.detach(self)
+
+
 class Basic0(Enemy):
     """
     Worm enemy, it only stands and updates its animation
@@ -112,6 +124,8 @@ class Basic1(Enemy):
     def updateObserver(self, subject):
         super().updateObserver(subject)
         self.targetOffset -= pygame.math.Vector2(self.offset)  # update the target pos
+
+
 
 
 class Basic2(Enemy):
@@ -213,7 +227,9 @@ class Advanced2(Enemy):
                     self.deathcounter += 1
                     self.posture = 5
 
-        #if self.deathcounter==30: self.remove() #CAMBIAR 
+        if self.deathcounter==30: 
+            self.remove() #CAMBIAR 
+            return -self.speed, 0
 
         if self.activated:
             if self.movement==RIGHT:
