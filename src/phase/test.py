@@ -60,7 +60,7 @@ class PhaseTest(PlayablePhase):
 
         waypoints = [(320, 400), (500, 400)]
         spawn = [500, 400]
-        basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints)
+        basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
         self.addToGroup(basic1, "npcGroup")
 
         basic2 = Basic2([1000, 500], self.playerGroup, self.level.getWalls())
