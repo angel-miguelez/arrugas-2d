@@ -1,5 +1,5 @@
 tile_size = 32 #Tile size used as a base to construct the map
-room_num = 7 #Number of rooms to pick from
+room_num = 9 #Number of rooms to pick from
 
 """
     The following variable consist of a list of strings that sets the layout for the map
@@ -20,6 +20,7 @@ room_num = 7 #Number of rooms to pick from
     'T' -> tracking enemy (Normal2)
     'I' -> dragon enemy (Advanced2)
     'C' -> letter
+    'E' -> elevator
 
     For now we're using the same sprite for each type of wall
 
@@ -30,6 +31,10 @@ room_num = 7 #Number of rooms to pick from
 
 #This is the basic layout for the first level were you spawn in your room
 basic_layout = [
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
     '                                                                       ',
     '            JXXXXXXXXK                                                 ',
     '            LFFFFFFFFR                                                 ',
@@ -50,6 +55,11 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
     '                      GFFFFFFFFH                                       ',
     '                      DFFFFFFFFD                                       ',
     '                      KFFFFFFFFJ                                       ',
@@ -63,6 +73,12 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFH                                       ',
     '                      LFFFFFFFFD                                       ',
     '                      LFFFFFFFFJ                                       ',
@@ -75,6 +91,13 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFH                                       ',
     '                      LFFFFFFFFD                                       ',
     '                      LFFFFFFFFJ                                       ',
@@ -88,7 +111,7 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFF                                       ',
+    '                      LFFFFFFFFE                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      HXXXXXXXXG                                       ',
@@ -252,5 +275,37 @@ rooms = [
         'XFFFFFFX             ',
         'XFFFFFFX             ',
         'XXXXXXXX             ',
+    ],
+    [
+        'XXXXXXXXXXXXXXXXXX ',
+        'XFFFFFFFFFFFFFFFFX ',
+        'XFFFFFFFFFFFFFFFFX ',
+        'XFFFFFFFFFFFFFFFFX ',
+        'XFFFFXXXXXXXXXXXXX ',
+        'XFFFFXXXXXXXXXXXXXX',
+        'XCFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFD',
+        'XFFFFFFFFFFFFFFFFFX',
+        'XFFFFXXXXXXXXXXXXXX',
+        'XFFFFXXXXXXXXXXXXX ',
+        'XFFFFFFFFFFFFFFFFX ',
+        'XFFFFFFFFFFFFFFFFX ',
+        'XFFFFFFFFFFFFFFFFX ',
+        'XXXXXXXXXXXXXXXXXX ',
+    ],
+    [
+        'XXXXXXXXXXXXXXXXXXXXX',
+        'XFCFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFD',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFXXXXXXXXXXXXXXXXX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XXXXXXXXXXXXXXXXFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XFFFFFFFFFFFFFFFFFFFX',
+        'XXXXXXXXXXXXXXXXXXXXX',
     ],
 ]

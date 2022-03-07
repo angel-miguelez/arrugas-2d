@@ -73,6 +73,9 @@ class Level(Observer):
         #Array for letters, room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
         self.letters = []
 
+        #Coordinates to place the elevator on
+        self.elevator = (0, 0)
+
         self.setupLevel(level_data)
 
     def setPlayer(self, player):
@@ -252,9 +255,14 @@ class Level(Observer):
         difference = (self._playerPosX -
                       self._playerSpawnX, self._playerPosY - self._playerSpawnY)
 
+        #Update elevator position based on the player spawn
+        self.elevator = self.elevator[0] + difference[0], self.elevator[1] + difference[1]
+
+        #Update walls and floor position based on the player spawn
         self.walls.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
 
+        #Update enemies position based on the player spawn
         for groupIndex, enemyGroup in enumerate(self.enemies):
             if enemyGroup == []:
                 pass
@@ -267,6 +275,7 @@ class Level(Observer):
             
             self.enemies[groupIndex] = enemyGroup
 
+        #Update switches, doors and letters position based on the player spawn
         for switchIndex, switch in enumerate(self.switches):
             data = switch.split()
             letter = self.letters[switchIndex]
@@ -340,12 +349,18 @@ class Level(Observer):
 
                 #Check to see if we have to add a player tile
                 if cell == 'P':
-                    #Later on this will draw a floor tile
-
                     self._playerSpawnX = x
                     self._playerSpawnY = y
 
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                
+                #Check to see if we have to add a player tile
+                if cell == 'E':
+                    #Set floor tile
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+
+                    #Get elevator position
+                    self.elevator = (x + 64, y)
                 
                 #Check to see if we have a door
                 if cell == 'D':

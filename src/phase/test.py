@@ -66,9 +66,9 @@ class PhaseTest(PlayablePhase):
         self.addToGroup(basic2, "npcGroup")
         self.player.attach(basic2)
 
-        normal2 = Normal2([850, 800], self.playerGroup, self.level.walls)
-        self.addToGroup(normal2, "npcGroup")
-        self.player.attach(normal2)
+        #normal2 = Normal2([850, 800], self.playerGroup, self.level.walls)
+        #self.addToGroup(normal2, "npcGroup")
+        #self.player.attach(normal2)
 
         advanced2 = Advanced2([850, 800], self.playerGroup, self.level.walls)
         self.addToGroup(advanced2, "npcGroup")
@@ -98,7 +98,8 @@ class PhaseTest(PlayablePhase):
 
             self.addToGroup([letter, door, switch, switch1], "objectsGroup")
 
-        elevator = Elevator(self.playerGroup, (1018, 2021))
+        elevator = Elevator(
+            self.playerGroup, (self.level.elevator[0], self.level.elevator[1]))
         self.addToGroup([glasses, labcoat, elevator], "objectsGroup")
 
         # Foreground

@@ -13,7 +13,7 @@ from utils.resourcesmanager import ResourcesManager
 class Switch(Object, Subject):
 
     def __init__(self, position, playerGroup, room=None):
-        Object.__init__(self, "white_tile.jpg", position, playerGroup)
+        Object.__init__(self, "invisible_tile.png", position, playerGroup)
         Subject.__init__(self)
 
     def onCollisionEnter(self, collided):
@@ -23,7 +23,7 @@ class Switch(Object, Subject):
 class SwitchOut(Object, Subject):
 
     def __init__(self, position, playerGroup, room=None):
-        super().__init__( "white_tile.jpg", position, playerGroup)
+        super().__init__( "invisible_tile.png", position, playerGroup)
         Subject.__init__(self)
         self.room = room
         self.active = False
