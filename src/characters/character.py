@@ -133,10 +133,10 @@ class Character(pygame.sprite.Sprite, Interactive):
         if isinstance(collided, Tile):
             self.x, self.y = self.lastPos
             self.objectsEnterCollision.remove(collided)  # so if still moves to the same direction we can get it again
+        # If it has collided with an npc, it returns to the previous position
         if isinstance(collided, DialogueCharacter):
             self.x, self.y = self.lastPos
-            self.objectsEnterCollision.remove(collided)  # so if still moves to the same
-
+            self.objectsEnterCollision.remove(collided)  # so if still moves to the same direction we can get it again
     def pillEffect(self):
         self.speed = self.speed * 0.5
 
