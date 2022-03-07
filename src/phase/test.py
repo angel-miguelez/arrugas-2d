@@ -43,6 +43,7 @@ class PhaseTest(PlayablePhase):
         # NPC
         speaker = ElderCharacter((800, 400), self.playerGroup)
         nurse = NurseCharacter((800, 600), self.playerGroup)
+        self.player.addCollisionGroup(self.npcGroup)
         self.addToGroup([speaker, nurse], "npcGroup")
 
         # Enemies

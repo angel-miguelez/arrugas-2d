@@ -4,6 +4,7 @@ import pygame.key
 
 from game.interactive import Interactive
 from map.tiles import Tile
+from characters.npc import DialogueCharacter
 from utils.resourcesmanager import *
 from utils.observer import Subject
 
@@ -132,6 +133,9 @@ class Character(pygame.sprite.Sprite, Interactive):
         if isinstance(collided, Tile):
             self.x, self.y = self.lastPos
             self.objectsEnterCollision.remove(collided)  # so if still moves to the same direction we can get it again
+        if isinstance(collided, DialogueCharacter):
+            self.x, self.y = self.lastPos
+            self.objectsEnterCollision.remove(collided)  # so if still moves to the same
 
     def pillEffect(self):
         self.speed = self.speed * 0.5
