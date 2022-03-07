@@ -78,6 +78,24 @@ class Level(Observer):
 
         self.setupLevel(level_data)
 
+    def getEnemies(self):
+        return self.enemies
+
+    def getSwitches(self):
+        return self.switches
+    
+    def getLetters(self):
+        return self.letters
+    
+    def getElevator(self):
+        return self.elevator
+
+    def getWalls(self):
+        return self.walls
+    
+    def getFloor(self):
+        return self.floor
+
     def setPlayer(self, player):
         self._player = player
 

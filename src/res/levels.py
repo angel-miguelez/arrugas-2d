@@ -21,6 +21,8 @@ room_num = 9 #Number of rooms to pick from
     'I' -> dragon enemy (Advanced2)
     'C' -> letter
     'E' -> elevator
+    'A' -> labcoat
+    'B' -> glasses
 
     For now we're using the same sprite for each type of wall
 
