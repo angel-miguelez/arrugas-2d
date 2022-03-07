@@ -182,6 +182,7 @@ class Advanced2(Enemy):
     def __init__(self, position, playerGroup, wallsGroup):
         Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, playerGroup, wallsGroup, (32, 32), 0.2, 5)
 
+        self.deathcounter=0
         self.activated = False
         self.destruction = False
 
@@ -200,23 +201,44 @@ class Advanced2(Enemy):
                 if not self.destruction:
                     self.posture = 1
                 else:
+                    self.deathcounter += 1
                     self.posture = 2
             else:
                 if not self.destruction:
                     self.posture = 4
                 else:
+                    self.deathcounter += 1
                     self.posture = 5
 
+        #if self.deathcounter==30: self.remove() #CAMBIAR 
+
+        if self.activated:
+            if self.movement==RIGHT:
+                return self.speed, 0
+            else: return -self.speed, 0
+
         # If the player is not close enough, the enemy is inactive
-        if abs(self._player.rect.center[1] - self.position[1]) > 5 and not self.activated:
+        elif abs(self._player.rect.center[1] - self.position[1]) > 5 and not self.activated:
             self.movement = IDLE
             return 0, 0
 
         # Otherwise, it tries to hit the player moving horizontally
-        self.activated = True
-        if self._player.rect.center[0] > self.x:
-            self.movement = RIGHT
-            return self.speed, 0
         else:
-            self.movement = LEFT
-            return -self.speed, 0
+            self.activated = True
+            if self._player.rect.center[0] > self.x:
+                self.movement = RIGHT
+                return self.speed, 0
+            else:
+                self.movement = LEFT
+                return -self.speed, 0
+
+    def onCollisionEnter(self, collided):
+        Character.onCollisionEnter(self, collided)
+
+        if isinstance(collided, Tile):
+            self.destruction=True
+            self.position = self.lastPos  
+
+        if isinstance(collided, Player):
+            self.destruction=True
+            Director().pop(fade=True)
