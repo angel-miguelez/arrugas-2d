@@ -18,7 +18,7 @@ class MainMenu(Menu):
     def __init__(self):
         super().__init__("Arrugas")
 
-        self._menu.add.button('Play', self.onStartGame)  # button to start the game
+        self._menu.add.button('Continue', self.onStartGame)  # button to start the game
         self._menu.add.button('Configuration', self.onOpenConfigurationMenu)  # button to edit the configuration
         self._menu.add.button('Quit', pygame_menu.events.EXIT)  # button to exit the game
 
