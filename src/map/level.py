@@ -190,6 +190,17 @@ class Level(Observer):
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic1")
 
+                #Check to see if we have to add a Basic0 enemy
+                if room_cell == 'Q':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+
+                    enemyGroup.append(str(x) + " " + str(y) + " Basic12")
+
                 #Check to see if we have to add a Basic1 enemy
                 if room_cell == 'W':
                     
