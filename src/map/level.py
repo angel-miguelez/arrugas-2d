@@ -179,7 +179,7 @@ class Level(Observer):
                     Also we have to create a group only for enemies
                 """
 
-                #Check to see if we have to add a Basic0 enemy
+                #Check to see if we have to add a Basic1 enemy
                 if room_cell == 'R':
                     
                     #Calculate position for the tile
@@ -201,7 +201,7 @@ class Level(Observer):
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic12")
 
-                #Check to see if we have to add a Basic1 enemy
+                #Check to see if we have to add a Basic0 enemy
                 if room_cell == 'W':
                     
                     #Calculate position for the tile
