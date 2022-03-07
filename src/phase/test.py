@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
 
+import random
+
 import pygame
 
 from effects.occlusion import Occlude
+from game.director import Director
 
 from map.level import Level
 
 from characters.npc import ElderCharacter, NurseCharacter
 from characters.character import Player
 from characters.enemy import Basic0, Basic1, Normal2, Basic2, Basic4, Advanced2
-from objects.door import Door, Switch, SwitchOut
+from objects.door import Door, Switch
 from objects.elevator import Elevator
 
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
 from objects.letter import Letter
+from phase.intro02 import Scene02Intro
 from phase.playable import PlayablePhase
 
 from res.levels import *
@@ -63,17 +67,17 @@ class PhaseTest(PlayablePhase):
         basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
         self.addToGroup(basic1, "npcGroup")
 
-        basic2 = Basic2([1000, 500], self.playerGroup, self.level.getWalls())
-        self.addToGroup(basic2, "npcGroup")
-        self.player.attach(basic2)
+        # basic2 = Basic2([1000, 500], self.playerGroup, self.level.getWalls())
+        # self.addToGroup(basic2, "npcGroup")
+        # self.player.attach(basic2)
 
         #normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls())
         #self.addToGroup(normal2, "npcGroup")
         #self.player.attach(normal2)
         
-        basic4 = Basic4([450, 330], self.playerGroup, self.level.getWalls())
-        self.addToGroup(basic4, "npcGroup")
-        self.player.attach(basic4)
+        # basic4 = Basic4([450, 330], self.playerGroup, self.level.getWalls())
+        # self.addToGroup(basic4, "npcGroup")
+        # self.player.attach(basic4)
 
         advanced2 = Advanced2([850, 800], self.playerGroup, self.level.getWalls())
         self.addToGroup(advanced2, "npcGroup")
@@ -83,28 +87,41 @@ class PhaseTest(PlayablePhase):
         glasses = Glasses(self.playerGroup, (500, 300))
         labcoat = LabCoat(self.playerGroup, (600, 500))
 
-        #Adding the doors and switches to the scene
-        for switch in self.level.getSwitches():
+        password = [random.randrange(0, 10) for _ in range(0, 4)]  # random number between 0000-9999
+
+        # Adding the doors and switches to the scene
+        lettersCreated = 0
+        totalSwitches = len(self.level.getSwitches())
+
+        for idx, switch in enumerate(self.level.getSwitches()):
             aux = switch.split()
             data = [int(numeric_string) for numeric_string in aux]
-            
+
             door = Door((data[0], data[1]), self.playerGroup)
-            switch = Switch((data[2], data[3]), self.playerGroup)
+            switch = Switch("invisible_tile.png", (data[2], data[3]), self.playerGroup, "enter", visible=False)
             if data[4]:
-                switch1 = SwitchOut((data[0] - 8, data[1]), self.playerGroup)
+                switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
             else:
-                switch1 = SwitchOut((data[0] + 8, data[1]), self.playerGroup)
-                
-            letter = Letter(self.playerGroup, (data[5], data[6]), (400, 300))
+                switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
+
+            remainingLoops = totalSwitches - idx - 1
+            remainingLetters = 4 - lettersCreated
+            if remainingLetters == 0:
+                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
+            elif remainingLetters == remainingLoops or random.random() >= 0.5:
+                letterOrSwitch = Letter((data[5], data[6]), self.playerGroup, password[lettersCreated])
+                lettersCreated += 1
+            else:
+                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
+
             switch.attach(door)
             switch.attach(switch1)
             switch1.attach(door)
-            letter.attach(door)
+            letterOrSwitch.attach(door)
+            self.addToGroup([letterOrSwitch, door, switch, switch1], "objectsGroup")
+        assert lettersCreated == 4
 
-            self.addToGroup([letter, door, switch, switch1], "objectsGroup")
-
-        elevator = Elevator(
-            self.playerGroup, (self.level.getElevator()[0], self.level.getElevator()[1]))
+        elevator = Elevator(password, self.playerGroup, (self.level.getElevator()[0], self.level.getElevator()[1]))
         self.addToGroup([glasses, labcoat, elevator], "objectsGroup")
 
         # Foreground
@@ -163,3 +180,7 @@ class PhaseTest(PlayablePhase):
     def onExitScene(self):
         super().onExitScene()
         pygame.mixer.music.stop()
+
+    def finish(self):
+        scene02 = Scene02Intro()
+        Director().change(scene02, fade=True)

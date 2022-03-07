@@ -16,8 +16,9 @@
         "sound_effects_volume": 0.72
     },
     "dialogue": {
-        "font": "Arial",
-        "font_size": 20,
+        "font": "cafe_bold.ttf",
+        "font_size": 16,
+        "lines_vertical_spacing": 16,
         "antialiasing": "True",
         "color": "(0, 0, 0)",
         "delay_between_chars": 30

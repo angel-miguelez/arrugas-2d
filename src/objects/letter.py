@@ -2,30 +2,30 @@
 
 from pygame.locals import *
 
+from game.dialogue import TextUI
 from game.director import Director
-
-from objects.object import Object
-from utils.observer import Subject
+from objects.door import Switch
 
 from utils.resourcesmanager import ResourcesManager
 
 
-class Letter(Object, Subject):
+class Letter(Switch):
     """
     Object with a message to the player
     """
 
-    def __init__(self, playerGroup, position, screenPosition, id="01"):
-        Subject.__init__(self)
+    def __init__(self, position, playerGroup, digit):
+        Switch.__init__(self, "closed_letter.png", position, playerGroup, lock=False, active=True)
 
-        self._player = playerGroup.sprites()[0]  # since playerGroup is a group with just the player
-        super().__init__("closed_letter.png", position, playerGroup)
-
-        self._screenPosition = screenPosition  # position of the letter on the screen when it is opened
         self._opened = False  # if the player has collided with it
         self.id = id  # image file of the letter opened
 
+        self.digit = TextUI("southernaire.ttf", 200, (400, 250), (0, 0, 0))
+        self.digit.setText(str(digit))
+
     def onCollisionEnter(self, collided):
+        super().onCollisionEnter(collided)
+
         ResourcesManager.loadSound("turn_page.wav").play()
         self._player.disableEvents()  # so the player has to close the letter before moving again
         self.open()
@@ -36,9 +36,9 @@ class Letter(Object, Subject):
         to catch them itself.
         """
 
-        self.position = self._screenPosition
+        self.position = (400, 300)
 
-        self.image = ResourcesManager.loadImage(f"letter{self.id}.png", transparency=True)
+        self.image = ResourcesManager.loadImage(f"letter_opened.png", transparency=True)
         self.rect = self.image.get_rect()
         self.rect.center = self.position
 
@@ -48,6 +48,7 @@ class Letter(Object, Subject):
         scene = Director().getCurrentScene()
         scene.removeFromGroup(self, "objectsGroup")
         scene.addToGroup(self, "foregroundGroup")
+        scene.addToGroup(self.digit, "uiGroup")
         scene.addToGroup(self, "objectsToEvent")
 
     def close(self):
@@ -57,6 +58,7 @@ class Letter(Object, Subject):
 
         self._opened = False
         self.remove()
+        Director().getCurrentScene().removeFromGroup(self.digit, "uiGroup")
         self.notify()
 
     def events(self, events):

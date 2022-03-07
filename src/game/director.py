@@ -121,13 +121,18 @@ class Director(metaclass=Singleton):
             self._endScene = True
             self._scenes.append(scene)
 
-    def change(self, scene):
+    def change(self, scene, fade=False):
         """
         Combines both pop of the current scene and push a new one
         """
 
-        self.pop()
-        self.push(scene)
+        if fade:
+            self.pop(fade)  # first do the fade effect
+            self._afterFadeCallback = self.change  # then do the real change
+            self._fadeCallbackArgs = scene
+        else:
+            self.pop()
+            self.push(scene)
 
     def getCurrentScene(self):
         """

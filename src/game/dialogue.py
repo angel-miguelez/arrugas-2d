@@ -92,7 +92,7 @@ class TextUI:
         self.antialiasing = antialiasing
         self.text = None
 
-        self.position = position  # position in the world
+        self.position = position
 
         self.active = False  # only rendered while active
 
@@ -135,7 +135,7 @@ class SimpleDialogueIntervention(TextUI, Subject):
         self.currentParagraph = 0  # position of the current paragraph in the text
         self.lines = []  # lines are elements of the paragraph separated by '\n'
         self.linesPosition = (212, 510)  # where the first char is drawn
-        self.linesSpacing = size * 0.8  # space between lines
+        self.linesSpacing = int(ConfManager.getValue("dialogue.lines_vertical_spacing"))  # space between lines
 
     def start(self):
         self.currentParagraph = -1

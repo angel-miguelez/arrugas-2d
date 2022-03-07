@@ -76,3 +76,9 @@ class PlayablePhase(Scene):
 
         for ui in self.uiGroup:
             ui.draw(surface)
+
+    def finish(self):
+        """
+        Pushes a new scene to the director when scene is finished
+        """
+        raise NotImplementedError("Scene finish not implemented.")

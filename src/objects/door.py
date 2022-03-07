@@ -2,42 +2,44 @@
 import pygame
 
 from characters.character import Player
-from game.director import Director
-from objects.letter import Letter
 from objects.object import Object
 
-from utils.observer import Subject, Observer
+from utils.observer import Subject
 from utils.resourcesmanager import ResourcesManager
 
 
 class Switch(Object, Subject):
 
-    def __init__(self, position, playerGroup, room=None):
-        Object.__init__(self, "invisible_tile.png", position, playerGroup)
+    def __init__(self, image, position, playerGroup, lock=True, visible=True, active=True):
+        Object.__init__(self, image, position, playerGroup)
         Subject.__init__(self)
+
+        self.lock = lock  # if the switch must lock or unlock something
+        self.activated = False  # if it has switched the state
+
+        self.visible = visible  # if it is visible (detect collisions)
+        self.active = active  # if the lock effect is active
 
     def onCollisionEnter(self, collided):
+
+        # If is visible, then the player can collide with it
+        if self.visible:
+            collided.x, collided.y = collided.lastPos
+            self.objectsEnterCollision.remove(collided)
+
+        # If it is not active or has been activated, it has no effect
+        if self.activated or not self.active:
+            return
+
+        self.activated = True
+        self.image = pygame.transform.flip(self.image, True, False)
         self.notify()
-        self.remove()
 
-class SwitchOut(Object, Subject):
-
-    def __init__(self, position, playerGroup, room=None):
-        super().__init__( "invisible_tile.png", position, playerGroup)
-        Subject.__init__(self)
-        self.room = room
-        self.active = False
-        
     def updateObserver(self, subject):
         Object.updateObserver(self, subject)
+
         if isinstance(subject, Switch):
             self.active = True
-
-    def onCollisionEnter(self, collided):
-       if self.active:
-            self.remove()
-            self.notify()
-
 
 
 class Door(Object):
@@ -61,15 +63,11 @@ class Door(Object):
         Object.updateObserver(self, subject)
 
         if isinstance(subject, Switch):
-            self._locked = True
-            self.close()
-        elif isinstance(subject, Letter):
-            self._locked = False
-            self.open()
-        elif isinstance(subject, SwitchOut):
-            self._locked = True
-            self.close()
-
+            self._locked = subject.lock
+            if subject.lock:
+                self.close()
+            else:
+                self.open()
 
     def open(self):
 

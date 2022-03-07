@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import random
-
 import pygame
 from pygame.locals import *
 
@@ -57,7 +55,7 @@ class CodeLock(pygame.sprite.Sprite):
         self.input.append(number)
 
         xPos = (len(self.input) - 1) * 170 + 100  # calculate the horizontal position of the number in the screen
-        ui = TextUI("Arial", 180, (xPos, 230), (0, 0, 0))
+        ui = TextUI("ds-digi.ttf", 180, (xPos, 200), (0, 0, 0))
         ui.setText(str(number))  # set the text to the number introduced
         self.numbers.append(ui)
 
@@ -85,10 +83,10 @@ class Elevator(Object):
     unlock the elevator
     """
 
-    def __init__(self, playerGroup, position):
+    def __init__(self, password, playerGroup, position):
         super().__init__("elevator.png", position, playerGroup)
 
-        password = [random.randrange(0, 10) for _ in range(0, 4)]  # random number between 0000-9999
+        self.password = password  # random number between 0000-9999
         self.codeLock = CodeLock(password)
         print("Password: ", password)
 
@@ -108,7 +106,6 @@ class Elevator(Object):
         scene.removeFromGroup(self, "objectsToEvents")
         scene.unpauseEvents()
 
-
     def events(self, events):
 
         for event in events:
@@ -123,6 +120,6 @@ class Elevator(Object):
 
                     if len(self.codeLock.input) == 4:  # if we have filled all the 4 numbers
                         if self.codeLock.enterPassword():  # if the password was correct, go the next scene
-                            Director().pop(fade=True)
+                            Director().getCurrentScene().finish()
                         else:  # otherwise, clear the password input to try again
                             self.codeLock.clear()
