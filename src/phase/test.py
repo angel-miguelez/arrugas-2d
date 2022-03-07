@@ -8,7 +8,7 @@ from map.level import Level
 
 from characters.npc import ElderCharacter, NurseCharacter
 from characters.character import Player
-from characters.enemy import Basic0, Basic1, Normal2, Basic2, Advanced2
+from characters.enemy import Basic0, Basic1, Normal2, Basic2, Basic4, Advanced2
 from objects.door import Door, Switch, SwitchOut
 from objects.elevator import Elevator
 
@@ -54,9 +54,9 @@ class PhaseTest(PlayablePhase):
         #         for enemy in enemyGroup:
         #             self.createEnemy(enemy)
 
-        basic0 = Basic0([450, 300], self.playerGroup, self.level.getWalls())
-        self.addToGroup(basic0, "npcGroup")
-        self.player.attach(basic0)
+        #basic0 = Basic0([450, 300], self.playerGroup, self.level.getWalls())
+        #self.addToGroup(basic0, "npcGroup")
+        #self.player.attach(basic0)
 
         waypoints = [(320, 400), (500, 400)]
         spawn = [500, 400]
@@ -70,6 +70,10 @@ class PhaseTest(PlayablePhase):
         #normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls())
         #self.addToGroup(normal2, "npcGroup")
         #self.player.attach(normal2)
+        
+        basic4 = Basic4([450, 330], self.playerGroup, self.level.getWalls())
+        self.addToGroup(basic4, "npcGroup")
+        self.player.attach(basic4)
 
         advanced2 = Advanced2([850, 800], self.playerGroup, self.level.getWalls())
         self.addToGroup(advanced2, "npcGroup")

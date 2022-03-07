@@ -51,6 +51,17 @@ class Enemy(Character, Entity):
 
 
         self._player.detach(self)
+        
+    def add(self, enemy, group):
+        """
+        Removes the object from all the groups of the scene, so it disappears completely
+        """
+
+        scene = Director().getCurrentScene()
+        scene.addToGroup(enemy, group)
+
+
+        self._player.attach(self)
 
 
 class Basic0(Enemy):
@@ -153,6 +164,30 @@ class Basic2(Enemy):
         super().updateImage()
 
 
+class Basic4(Enemy):
+    """
+    Worm enemy, it only stands and updates its animation
+    """
+
+    def __init__(self, position, playerGroup, wallsGroup, timeToShot = 120):
+        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, playerGroup, wallsGroup, (32, 32), 0.3, 7)
+        self.timeToShot = timeToShot; # time between 2 shots
+        self.counterToShot = 0; # counter time
+        self.playerGroup = playerGroup
+        self.wallsGroup = wallsGroup
+        
+    def move(self):
+        self.counterToShot += 1
+        if self.timeToShot == self.counterToShot:
+             self.counterToShot = 0
+             advanced2 = Advanced2([self.x, self.y], self.playerGroup, self.wallsGroup)
+             self.add(advanced2, "npcGroup")
+
+        print(self.counterToShot)
+        return 0, 0
+
+
+
 class Normal2(Enemy):
     """
     Enemy that follows the Player across the room
@@ -189,6 +224,8 @@ class Normal2(Enemy):
 
         self.movement = IDLE
         return 0, 0
+
+
 
 
 class Advanced2(Enemy):
