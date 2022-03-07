@@ -16,6 +16,7 @@ room_num = 9 #Number of rooms to pick from
     'G' -> bottom right intersection
     'W' -> worm enemy (Basic0)
     'R' -> rabbit enemy (Basic1)
+    'Q' -> crab enemy (Basic12)
     'M' -> magic range enemy (Basic2)
     'T' -> tracking enemy (Normal2)
     'I' -> dragon enemy (Advanced2)
