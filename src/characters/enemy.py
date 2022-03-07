@@ -58,8 +58,11 @@ class Basic1(Enemy):
     Ratt enemy, it moves from one point to another in loop
     """
 
-    def __init__(self, position, playerGroup, wallsGroup, waypoints):
-        Enemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), 0.3, 5)
+    def __init__(self, position, playerGroup, wallsGroup, waypoints, speed):
+        if(speed>=0.2):
+            Enemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), speed, 5)
+        else:
+            Enemy.__init__(self, 'B1.2.png', 'coordBasic1.2.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), speed, 5)
 
         self.waypoints = itertools.cycle(waypoints)  # points of reference to go from/to in loop
         self.target = next(self.waypoints)  # current point target
