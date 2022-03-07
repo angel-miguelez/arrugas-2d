@@ -163,7 +163,3 @@ class PhaseTest(PlayablePhase):
     def onExitScene(self):
         super().onExitScene()
         pygame.mixer.music.stop()
-
-    def update(self, *args):
-        super().update(*args)
-        # print(self.player.lastPos)

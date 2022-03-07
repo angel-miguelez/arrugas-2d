@@ -169,12 +169,13 @@ class Player(Character, Subject):
         self.speed *= 1.5
         self.animationDelay /= 1.5
 
-    def disableEvents(self):
-        self.eventsEnabled = False
-
-        # Stop the player
+    def stop(self):
         self.lastMovements = [IDLE]
         self.movement = IDLE
+
+    def disableEvents(self):
+        self.eventsEnabled = False
+        self.stop()
 
     def enableEvents(self):
         self.eventsEnabled = True

@@ -106,19 +106,3 @@ class Scene:
                 object.enableEvents()
 
         self.objectsToEvent = self.pausedEventsObjects.copy()  # recover the objects that were paused before
-
-    def pauseUpdate(self):
-        """
-        Stops updating the objects that needed to update in every frame by removing them from the list of objects
-        to update. They are saved in a separate list in case we want to resume later.
-        """
-
-        self.pausedUpdateObjects = self.objectsToUpdate.copy()  # save the objects being updated
-        self.objectsToUpdate = []  # clean the list of objects that need to update
-
-    def unpauseUpdate(self):
-        """
-        Resumes the updating of objects previously paused with pauseUpdate()
-        """
-
-        self.objectsToUpdate = self.pausedUpdateObjects.copy()  # recover the objects that were paused before

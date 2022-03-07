@@ -6,6 +6,7 @@ import sys
 
 from game.director import Director
 from game.scene import Scene
+from menu.pause import PauseScene
 
 
 class PlayablePhase(Scene):
@@ -46,6 +47,11 @@ class PlayablePhase(Scene):
             # Return to the previous scene
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 Director().pop()
+
+            # Pause the game
+            elif event.type == KEYDOWN and event.key == K_p:
+                self.playerGroup.sprites()[0].stop()
+                Director().push(PauseScene())
 
         for object in self.objectsToEvent:
             object.events(events)

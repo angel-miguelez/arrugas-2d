@@ -134,7 +134,7 @@ class ResourcesManager(object):
         # Otherwise, load it, and save it in the map of resources
         fullname = os.path.join(cls.ROOT_PATH, "font", name)
         try:
-            font = pygame.font.SysFont(fullname, size)
+            font = pygame.font.Font(fullname, size)
             cls.resources[id] = font
             return font
         except pygame.error:

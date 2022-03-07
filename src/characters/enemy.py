@@ -171,8 +171,8 @@ class Basic4(Enemy):
 
     def __init__(self, position, playerGroup, wallsGroup, timeToShot = 120):
         Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, playerGroup, wallsGroup, (32, 32), 0.3, 7)
-        self.timeToShot = timeToShot; # time between 2 shots
-        self.counterToShot = 0; # counter time
+        self.timeToShot = timeToShot # time between 2 shots
+        self.counterToShot = 0  # counter time
         self.playerGroup = playerGroup
         self.wallsGroup = wallsGroup
         
@@ -183,7 +183,6 @@ class Basic4(Enemy):
              advanced2 = Advanced2([self.x, self.y], self.playerGroup, self.wallsGroup)
              self.add(advanced2, "npcGroup")
 
-        print(self.counterToShot)
         return 0, 0
 
 
