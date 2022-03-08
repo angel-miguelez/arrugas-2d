@@ -166,7 +166,7 @@ class Basic2(Enemy):
 
 class Basic4(Enemy):
     """
-    Worm enemy, it only stands and updates its animation
+    Tree that generates bats
     """
 
     def __init__(self, position, playerGroup, wallsGroup, timeToShot = 120, delayConsecutiveShots = 30, treeSprite = 1):
@@ -174,12 +174,14 @@ class Basic4(Enemy):
         self.timeToShot = timeToShot # time between 2 shots
         self.delayConsecutiveShots = delayConsecutiveShots # time between 2 shots
         self.counterToShot = 0  # counter time
+        
         self.playerGroup = playerGroup
         self.wallsGroup = wallsGroup
-        self.posture = treeSprite
+        self.posture = treeSprite # 2 types of trees that are by parameter
         
     def move(self):
         self.counterToShot += 1
+        # Generate first bats on every direction
         if self.timeToShot == self.counterToShot:
              bat1 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, RIGHT)
              bat2 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, LEFT)
@@ -187,6 +189,7 @@ class Basic4(Enemy):
              bat4 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, DOWN)
              self.add([bat1, bat2, bat3, bat4], "npcGroup")
 
+        # Generate second bats on every direction with some delay
         if (self.timeToShot + self.delayConsecutiveShots) == self.counterToShot:
              self.counterToShot = 0
              bat1 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, RIGHT)
@@ -201,7 +204,7 @@ class Basic4(Enemy):
 
 class Bat(Enemy):
     """
-    Bird that runs against the Player when it walks by its side
+    Bat enemy that runs on one direction
     """
 
     def __init__(self, position, playerGroup, wallsGroup, direction):
@@ -210,11 +213,12 @@ class Bat(Enemy):
         self.destruction = False
         
     def move(self):
+        # If the bat hits with a wall
         if self.destruction == True: 
-            self.remove() #CAMBIAR 
+            self.remove() # delete the enemy 
             return 0, 0
 
-        # If the enemy is not active, set an IDLE sprite looking to a specific direction
+        # Depending on the direction, the bat will move on one of them
         if self.direction == LEFT:
             self.posture = 0
             return -self.speed, 0
@@ -231,10 +235,12 @@ class Bat(Enemy):
     def onCollisionEnter(self, collided):
         Character.onCollisionEnter(self, collided)
 
+        # If collide with a tile, its set to dissapear
         if isinstance(collided, Tile):
             self.destruction=True
             self.position = self.lastPos
 
+        # If collide with player, game ends
         if isinstance(collided, Player):
             Director().pop(fade=True)
 
