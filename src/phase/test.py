@@ -83,13 +83,9 @@ class PhaseTest(PlayablePhase):
         self.addToGroup(advanced2, "npcGroup")
         self.player.attach(advanced2)
 
-        # Objects
-        glasses = Glasses(self.playerGroup, (500, 300))
-        labcoat = LabCoat(self.playerGroup, (600, 500))
-
         password = [random.randrange(0, 10) for _ in range(0, 4)]  # random number between 0000-9999
 
-        # Adding the doors and switches to the scene
+        # Adding the doors, switches and letters with the code to the scene
         lettersCreated = 0
         totalSwitches = len(self.level.getSwitches())
 
@@ -119,14 +115,35 @@ class PhaseTest(PlayablePhase):
             switch1.attach(door)
             letterOrSwitch.attach(door)
             self.addToGroup([letterOrSwitch, door, switch, switch1], "objectsGroup")
+
         assert lettersCreated == 4
 
         elevator = Elevator(password, self.playerGroup, (self.level.getElevator()[0], self.level.getElevator()[1]))
-        self.addToGroup([glasses, labcoat, elevator], "objectsGroup")
+        self.addToGroup(elevator, "objectsGroup")
 
-        # Foreground
+        #Create occlude effect
         occlude = Occlude()
-        glasses.attach(occlude)
+
+        #Set threshold for item spawn
+        threshold = 0.1
+
+        #Add all the objects to the scene
+        for object in self.level.getObjects():
+            data = object.split()
+            
+            if data[2] == "Labcoat":
+                if random.random() <= threshold:
+                    labcoat = LabCoat(self.playerGroup, (int(data[0]), int(data[1])))
+                    self.addToGroup(labcoat, "objectsGroup")
+            elif data[2] == "Glasses":
+                if random.random() <= threshold:
+                    glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
+                    self.addToGroup(glasses, "objectsGroup")
+
+                    #Link glasses with the effect so that it can disappear when picked up
+                    glasses.attach(occlude)
+        
+        #Add the effect to the foreground
         self.addToGroup(occlude, "foregroundGroup")
 
         # GUI elements

@@ -73,6 +73,9 @@ class Level(Observer):
         #Array for letters, room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
         self.letters = []
 
+        #Array for objects
+        self.objects = []
+
         #Coordinates to place the elevator on
         self.elevator = (0, 0)
 
@@ -95,6 +98,9 @@ class Level(Observer):
     
     def getFloor(self):
         return self.floor
+    
+    def getObjects(self):
+        return self.objects
 
     def setPlayer(self, player):
         self._player = player
@@ -190,7 +196,7 @@ class Level(Observer):
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic1")
 
-                #Check to see if we have to add a Basic0 enemy
+                #Check to see if we have to add a Basic12 enemy
                 if room_cell == 'Q':
                     
                     #Calculate position for the tile
@@ -243,10 +249,7 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_5, (x, y), self.floor)
 
-                    #Create the enemy and add it to the group of enemies of that room
-                    #normal2 = Normal2([x, y], self.player)
-                    # normal2.addCollisionGroup(self.walls)
-                    #enemyGroup.add(normal2)
+                    enemyGroup.append(str(x) + " " + str(y) + " Normal2")
                 
                 #Check to see if we have to add a letter in the room
                 if room_cell == 'C':
@@ -258,6 +261,28 @@ class Level(Observer):
 
                     #Store letter position to add on the scene
                     self.letters.append(str(x) + " " + str(y))
+                
+                #Check to see if we have to add a labcoat in the room
+                if room_cell == 'A':
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+
+                    #Store letter position to add on the scene
+                    self.objects.append(str(x) + " " + str(y) + " Labcoat")
+                
+                #Check to see if we have to add glasses in the room
+                if room_cell == 'B':
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+
+                    #Store letter position to add on the scene
+                    self.objects.append(str(x) + " " + str(y) + " Glasses")
 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
@@ -319,6 +344,15 @@ class Level(Observer):
                 str(int(data2[1]) + difference[1] + 16)
 
             self.switches[switchIndex] = switch
+        
+        #Update objects position based on the player spawn
+        for objectIndex, object in enumerate(self.objects):
+            data = object.split()
+
+            object = str(int(data[0]) + difference[0] + 16) + \
+                " " + str(int(data[1]) + difference[1] + 16) + " " + data[2]
+
+            self.objects[objectIndex] = object
 
     def setupLevel(self, layout):
         inside = False
@@ -432,7 +466,7 @@ class Level(Observer):
                     inside = not inside  # Complement of current value
                     
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
-            
+
         self.__setupPlayerSpawn()
         
 
