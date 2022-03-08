@@ -169,22 +169,74 @@ class Basic4(Enemy):
     Worm enemy, it only stands and updates its animation
     """
 
-    def __init__(self, position, playerGroup, wallsGroup, timeToShot = 120):
-        Enemy.__init__(self, 'B0.png', 'coordBasic0.txt', [7], position, playerGroup, wallsGroup, (32, 32), 0.3, 7)
+    def __init__(self, position, playerGroup, wallsGroup, timeToShot = 120, delayConsecutiveShots = 30, treeSprite = 1):
+        Enemy.__init__(self, 'blueTree.png', 'coordBlueTree.txt', [1, 1], position, playerGroup, wallsGroup, (42, 42), 0.3, 7)
         self.timeToShot = timeToShot # time between 2 shots
+        self.delayConsecutiveShots = delayConsecutiveShots # time between 2 shots
         self.counterToShot = 0  # counter time
         self.playerGroup = playerGroup
         self.wallsGroup = wallsGroup
+        self.posture = treeSprite
         
     def move(self):
         self.counterToShot += 1
         if self.timeToShot == self.counterToShot:
+             bat1 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, RIGHT)
+             bat2 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, LEFT)
+             bat3 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, UP)
+             bat4 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, DOWN)
+             self.add([bat1, bat2, bat3, bat4], "npcGroup")
+
+        if (self.timeToShot + self.delayConsecutiveShots) == self.counterToShot:
              self.counterToShot = 0
-             advanced2 = Advanced2([self.x, self.y], self.playerGroup, self.wallsGroup)
-             self.add(advanced2, "npcGroup")
+             bat1 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, RIGHT)
+             bat2 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, LEFT)
+             bat3 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, UP)
+             bat4 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, DOWN)
+             self.add([bat1, bat2, bat3, bat4], "npcGroup")
 
         return 0, 0
 
+
+
+class Bat(Enemy):
+    """
+    Bird that runs against the Player when it walks by its side
+    """
+
+    def __init__(self, position, playerGroup, wallsGroup, direction):
+        Enemy.__init__(self, 'Bat.png', 'coordBat.txt', [4, 4, 4, 4], position, playerGroup, wallsGroup, (32, 32), 0.2, 5)
+        self.direction = direction
+        self.destruction = False
+        
+    def move(self):
+        if self.destruction == True: 
+            self.remove() #CAMBIAR 
+            return 0, 0
+
+        # If the enemy is not active, set an IDLE sprite looking to a specific direction
+        if self.direction == LEFT:
+            self.posture = 0
+            return -self.speed, 0
+        if self.direction == RIGHT:
+            self.posture = 1
+            return self.speed, 0
+        if self.direction == UP:
+            self.posture = 2
+            return 0, -self.speed
+        if self.direction == DOWN:
+            self.posture = 3
+            return 0, self.speed
+
+    def onCollisionEnter(self, collided):
+        Character.onCollisionEnter(self, collided)
+
+        if isinstance(collided, Tile):
+            self.destruction=True
+            self.position = self.lastPos
+
+        if isinstance(collided, Player):
+            Director().pop(fade=True)
 
 
 class Normal2(Enemy):
