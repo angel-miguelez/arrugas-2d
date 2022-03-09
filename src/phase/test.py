@@ -38,7 +38,7 @@ class PhaseTest(PlayablePhase):
         #self.level = Level(basic_layout_2, 400, 300)  # Setup map structure for second level
 
         # Player
-        self.player = Player((400, 300), 0.3)
+        self.player = Player((400, 300), 0.2)
         self.player.attach(self.level)
         self.player.addCollisionGroup(self.level.getWalls())
         self.addToGroup(self.player, "playerGroup")
@@ -62,8 +62,8 @@ class PhaseTest(PlayablePhase):
         #self.addToGroup(basic0, "npcGroup")
         #self.player.attach(basic0)
 
-        waypoints = [(320, 400), (500, 400)]
-        spawn = [500, 400]
+        waypoints = [(0, 400), (2000, 400)]
+        spawn = [500, 405]
         basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
         self.addToGroup(basic1, "npcGroup")
 
@@ -84,6 +84,8 @@ class PhaseTest(PlayablePhase):
         self.player.attach(advanced2)
 
         password = [random.randrange(0, 10) for _ in range(0, 4)]  # random number between 0000-9999
+        elevator = Elevator(password, self.playerGroup, (self.level.getElevator()[0], self.level.getElevator()[1]))
+        self.addToGroup(elevator, "objectsGroup")
 
         # Adding the doors, switches and letters with the code to the scene
         lettersCreated = 0
@@ -94,7 +96,7 @@ class PhaseTest(PlayablePhase):
             data = [int(numeric_string) for numeric_string in aux]
 
             door = Door((data[0], data[1]), self.playerGroup)
-            switch = Switch("invisible_tile.png", (data[2], data[3]), self.playerGroup, "enter", visible=False)
+            switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, "enter", visible=False)
             if data[4]:
                 switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
             else:
@@ -105,7 +107,9 @@ class PhaseTest(PlayablePhase):
             if remainingLetters == 0:
                 letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
             elif remainingLetters == remainingLoops or random.random() >= 0.5:
-                letterOrSwitch = Letter((data[5], data[6]), self.playerGroup, password[lettersCreated])
+                digit = password[random.randrange(0, len(password))]
+                password.remove(digit)
+                letterOrSwitch = Letter((data[5], data[6]), self.playerGroup, digit)
                 lettersCreated += 1
             else:
                 letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
@@ -117,9 +121,6 @@ class PhaseTest(PlayablePhase):
             self.addToGroup([letterOrSwitch, door, switch, switch1], "objectsGroup")
 
         assert lettersCreated == 4
-
-        elevator = Elevator(password, self.playerGroup, (self.level.getElevator()[0], self.level.getElevator()[1]))
-        self.addToGroup(elevator, "objectsGroup")
 
         #Create occlude effect
         occlude = Occlude()
@@ -188,7 +189,6 @@ class PhaseTest(PlayablePhase):
             a2 = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
             self.addToGroup(a2, "npcGroup")
             self.player.attach(a2)
-
 
     def onEnterScene(self):
         super().onEnterScene()

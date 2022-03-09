@@ -12,7 +12,7 @@ from utils.resourcesmanager import ResourcesManager
 
 class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
     """
-    Character whose only behaviour is to speak when the characters collides with it
+    Character whose only behaviour is to speak when the characters collide with it
     """
 
     def __init__(self, image, text, position, playerGroup):
@@ -36,6 +36,9 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
     def onCollisionEnter(self, collided):
         Interactive.onCollisionEnter(self, collided)
 
+        collided.x, collided.y = collided.lastPos
+        self.objectsEnterCollision.remove(collided)  # so if still moves to the same direction we can get it again
+
         dialogue = Dialogue()
 
         # Parse the dialogue file and create as many interventions as needed
@@ -47,8 +50,6 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
             dialogue.add(intervention)
 
         dialogue.start()  # start the dialogue
-        
-
 
 
 class ElderCharacter(DialogueCharacter):
@@ -65,6 +66,7 @@ class ElderCharacter(DialogueCharacter):
         dialg = f"elder0{r}.txt"  # get a random dialogue
 
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+
 
 class NurseCharacter(DialogueCharacter):
     """
