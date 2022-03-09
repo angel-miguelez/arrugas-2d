@@ -50,13 +50,19 @@ class PhaseTest(PlayablePhase):
         self.player.addCollisionGroup(self.npcGroup)
         self.addToGroup([speaker, nurse], "npcGroup")
 
+        self.enemies = []
+
         # Enemies
-        # for enemyGroup in self.level.getEnemies():
-        #     if enemyGroup == []:
-        #         pass
-        #     else:
-        #         for enemy in enemyGroup:
-        #             self.createEnemy(enemy)
+        for enemyGroupString in self.level.getEnemies():
+            if enemyGroupString == []:
+                pass
+            else:
+                enemyGroup = []
+                for enemyString in enemyGroupString:
+                    enemy = self.createEnemy(enemyString)
+                    enemyGroup.append(enemy)
+                
+                self.enemies.append(enemyGroup)
 
         #basic0 = Basic0([450, 300], self.playerGroup, self.level.getWalls())
         #self.addToGroup(basic0, "npcGroup")
@@ -155,40 +161,43 @@ class PhaseTest(PlayablePhase):
 
     def createEnemy(self, enemy):
         data = enemy.split()
+        enemy = NULL
 
         if data[2] == "Basic0":
-            basic0 = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(basic0, "npcGroup")
-            self.player.attach(basic0)
+            enemy = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
 
         elif data[2] == "Basic1":
             waypoints = [(320, 400), (500, 400)]
             spawn = [int(data[0]), int(data[1])]
-            basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.3)
-            self.addToGroup(basic1, "npcGroup")
-            self.player.attach(basic1)
+            enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.3)
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
 
         elif data[2] == "Basic12":
             waypoints = [(320, 400), (500, 400)]
             spawn = [int(data[0]), int(data[1])]
-            basic12 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.1)
-            self.addToGroup(basic12, "npcGroup")
-            self.player.attach(basic12)
+            enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.1)
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
 
         elif data[2] == "Basic2":
-            basic2 = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(basic2, "npcGroup")
-            self.player.attach(basic2)
+            enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
 
         elif data[2] == "Normal2":
-            normal2 = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(normal2, "npcGroup")
-            self.player.attach(normal2)
+            enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
 
         elif data[2] == "Advanced2":
-            a2 = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(a2, "npcGroup")
-            self.player.attach(a2)
+            enemy = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
+        
+        return enemy
 
     def onEnterScene(self):
         super().onEnterScene()
