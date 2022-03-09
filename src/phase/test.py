@@ -52,6 +52,7 @@ class PhaseTest(PlayablePhase):
 
         self.enemies = []
         self.objects = []
+        self.lettersAndSwitches = []
 
         # Enemies
         for enemyGroupString in self.level.getEnemies():
@@ -127,6 +128,8 @@ class PhaseTest(PlayablePhase):
             letterOrSwitch.attach(door)
             self.addToGroup([letterOrSwitch, door, switch, switch1], "objectsGroup")
 
+            self.lettersAndSwitches.append(letterOrSwitch)
+
         assert lettersCreated == 4
 
         #Create occlude effect
@@ -172,8 +175,7 @@ class PhaseTest(PlayablePhase):
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
         self.addToGroup([self.player], "objectsToEvent")
 
-        print(self.enemies)
-        print(self.objects)
+        print(self.lettersAndSwitches)
 
     def createEnemy(self, enemy):
         data = enemy.split()
