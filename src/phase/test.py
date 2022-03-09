@@ -69,18 +69,18 @@ class PhaseTest(PlayablePhase):
         #self.addToGroup(basic0, "npcGroup")
         #self.player.attach(basic0)
 
-        waypoints = [(0, 400), (2000, 400)]
-        spawn = [500, 405]
-        basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
-        self.addToGroup(basic1, "npcGroup")
+        #waypoints = [(0, 400), (2000, 400)]
+        #spawn = [500, 405]
+        #basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
+        #self.addToGroup(basic1, "npcGroup")
 
         # basic2 = Basic2([1000, 500], self.playerGroup, self.level.getWalls())
         # self.addToGroup(basic2, "npcGroup")
         # self.player.attach(basic2)
 
-        normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls(), 0.1)
-        self.addToGroup(normal2, "npcGroup")
-        self.player.attach(normal2)
+        #normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls(), 0.1)
+        #self.addToGroup(normal2, "npcGroup")
+        #self.player.attach(normal2)
         
         #basic4 = Basic4([450, 330], self.playerGroup, self.level.getWalls())
         #self.addToGroup(basic4, "npcGroup")
@@ -199,6 +199,11 @@ class PhaseTest(PlayablePhase):
             self.player.attach(enemy)
 
         elif data[2] == "Basic2":
+            enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
+        
+        elif data[2] == "Basic4":
             enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
             self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
