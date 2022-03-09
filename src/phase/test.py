@@ -51,6 +51,7 @@ class PhaseTest(PlayablePhase):
         self.addToGroup([speaker, nurse], "npcGroup")
 
         self.enemies = []
+        self.objects = []
 
         # Enemies
         for enemyGroupString in self.level.getEnemies():
@@ -138,22 +139,29 @@ class PhaseTest(PlayablePhase):
         self._glassesBool = False
 
         #Add all the objects to the scene
-        for object in self.level.getObjects():
-            data = object.split()
-            
-            if data[2] == "Labcoat":
-                if random.random() <= threshold:
-                    labcoat = LabCoat(self.playerGroup, (int(data[0]), int(data[1])))
-                    self.addToGroup(labcoat, "objectsGroup")
-            elif data[2] == "Glasses":
-                if not self._glassesBool:
-                    if random.random() <= threshold:
-                        self._glassesBool = True
-                        glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
-                        self.addToGroup(glasses, "objectsGroup")
+        for objectGroupString in self.level.getObjects():
+            objectGroup = []
 
-                        #Link glasses with the effect so that it can disappear when picked up
-                        glasses.attach(occlude)
+            for objectString in objectGroupString:
+                data = objectString.split()
+                
+                if data[2] == "Labcoat":
+                    if random.random() <= threshold:
+                        labcoat = LabCoat(self.playerGroup, (int(data[0]), int(data[1])))
+                        objectGroup.append(labcoat)
+                        self.addToGroup(labcoat, "objectsGroup")
+                elif data[2] == "Glasses":
+                    if not self._glassesBool:
+                        if random.random() <= threshold:
+                            self._glassesBool = True
+                            glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
+                            objectGroup.append(glasses)
+                            self.addToGroup(glasses, "objectsGroup")
+
+                            #Link glasses with the effect so that it can disappear when picked up
+                            glasses.attach(occlude)
+            
+            self.objects.append(objectGroup)
         
         #Add the effect to the foreground
         self.addToGroup(occlude, "foregroundGroup")
@@ -163,6 +171,9 @@ class PhaseTest(PlayablePhase):
         # Register objects to update and event methods
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
         self.addToGroup([self.player], "objectsToEvent")
+
+        print(self.enemies)
+        print(self.objects)
 
     def createEnemy(self, enemy):
         data = enemy.split()

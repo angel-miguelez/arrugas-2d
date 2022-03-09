@@ -135,8 +135,9 @@ class Level(Observer):
         row_index = layout_door_pos[0]
         col = layout_door_pos[1]
 
-        #enemyGroup = pygame.sprite.Group() #We're generating a group of enemies for each room
+        #We divided the enemies depending on the room the spawn in
         enemyGroup = []
+        objectGroup = []
 
         #Get the door position in the room
         for room_row_index, room_row in enumerate(room):
@@ -282,7 +283,7 @@ class Level(Observer):
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
 
                     #Store letter position to add on the scene
-                    self.objects.append(str(x) + " " + str(y) + " Labcoat")
+                    objectGroup.append(str(x) + " " + str(y) + " Labcoat")
                 
                 #Check to see if we have to add glasses in the room
                 if room_cell == 'B':
@@ -293,7 +294,7 @@ class Level(Observer):
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
 
                     #Store letter position to add on the scene
-                    self.objects.append(str(x) + " " + str(y) + " Glasses")
+                    objectGroup.append(str(x) + " " + str(y) + " Glasses")
 
                 #Check to see if we have to add a floor tile
                 if room_cell == 'D':
@@ -315,6 +316,7 @@ class Level(Observer):
                 start_row += 1
 
         self.enemies.append(enemyGroup)
+        self.objects.append(objectGroup)
 
     def __setupPlayerSpawn(self):
         difference = (self._playerPosX -
@@ -357,13 +359,17 @@ class Level(Observer):
             self.switches[switchIndex] = switch
         
         #Update objects position based on the player spawn
-        for objectIndex, object in enumerate(self.objects):
-            data = object.split()
+        for objectGroupIndex, objectGroup in enumerate(self.objects):
+            for objectIndex, object in enumerate(objectGroup):
+                data = object.split()
 
-            object = str(int(data[0]) + difference[0] + 16) + \
-                " " + str(int(data[1]) + difference[1] + 16) + " " + data[2]
+                object = str(int(data[0]) + difference[0] + 16) + \
+                    " " + str(int(data[1]) + difference[1] + 16) + " " + data[2]
+                
+                objectGroup[objectIndex] = object
 
-            self.objects[objectIndex] = object
+
+            self.objects[objectGroupIndex] = objectGroup
 
     def setupLevel(self, layout):
         inside = False
