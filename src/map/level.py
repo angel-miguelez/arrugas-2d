@@ -437,7 +437,7 @@ class Level(Observer):
                             break
                     
                     #Get the room from the list of rooms based on the random number
-                    room = rooms[num]
+                    room = rooms_1[num]
 
                     if inside:
                         insideInt = 1
