@@ -77,9 +77,9 @@ class PhaseTest(PlayablePhase):
         # self.addToGroup(basic2, "npcGroup")
         # self.player.attach(basic2)
 
-        #normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls())
-        #self.addToGroup(normal2, "npcGroup")
-        #self.player.attach(normal2)
+        normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls(), 0.1)
+        self.addToGroup(normal2, "npcGroup")
+        self.player.attach(normal2)
         
         basic4 = Basic4([450, 330], self.playerGroup, self.level.getWalls())
         self.addToGroup(basic4, "npcGroup")
@@ -192,8 +192,13 @@ class PhaseTest(PlayablePhase):
             self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
-        elif data[2] == "Normal2":
-            enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+        elif data[2] == "Normal21":
+            enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.15)
+            self.addToGroup(enemy, "npcGroup")
+            self.player.attach(enemy)
+            
+        elif data[2] == "Normal22":
+            enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.1)
             self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 

@@ -240,7 +240,7 @@ class Level(Observer):
 
                     enemyGroup.append(str(x) + " " + str(y) + " Advanced2")
 
-                #Check to see if we have to add a Basic3 enemy
+                #Check to see if we have to add a Normal2 fast enemy
                 if room_cell == 'T':
                     
                     #Calculate position for the tile
@@ -249,7 +249,18 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_5, (x, y), self.floor)
 
-                    enemyGroup.append(str(x) + " " + str(y) + " Normal2")
+                    enemyGroup.append(str(x) + " " + str(y) + " Normal21")
+                
+                #Check to see if we have to add a Normal2 slow enemy
+                if room_cell == 't':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+                    
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_5, (x, y), self.floor)
+
+                    enemyGroup.append(str(x) + " " + str(y) + " Normal22")
                 
                 #Check to see if we have to add a letter in the room
                 if room_cell == 'C':
