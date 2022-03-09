@@ -134,6 +134,9 @@ class PhaseTest(PlayablePhase):
         #Set threshold for item spawn
         threshold = 0.1
 
+        #We only spawn the glasses once
+        self._glassesBool = False
+
         #Add all the objects to the scene
         for object in self.level.getObjects():
             data = object.split()
@@ -143,12 +146,14 @@ class PhaseTest(PlayablePhase):
                     labcoat = LabCoat(self.playerGroup, (int(data[0]), int(data[1])))
                     self.addToGroup(labcoat, "objectsGroup")
             elif data[2] == "Glasses":
-                if random.random() <= threshold:
-                    glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
-                    self.addToGroup(glasses, "objectsGroup")
+                if not self._glassesBool:
+                    if random.random() <= threshold:
+                        self._glassesBool = True
+                        glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
+                        self.addToGroup(glasses, "objectsGroup")
 
-                    #Link glasses with the effect so that it can disappear when picked up
-                    glasses.attach(occlude)
+                        #Link glasses with the effect so that it can disappear when picked up
+                        glasses.attach(occlude)
         
         #Add the effect to the foreground
         self.addToGroup(occlude, "foregroundGroup")
@@ -161,7 +166,7 @@ class PhaseTest(PlayablePhase):
 
     def createEnemy(self, enemy):
         data = enemy.split()
-        enemy = NULL
+        enemy = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
 
         if data[2] == "Basic0":
             enemy = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
