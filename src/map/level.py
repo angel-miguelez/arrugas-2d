@@ -262,6 +262,17 @@ class Level(Observer):
 
                     enemyGroup.append(str(x) + " " + str(y) + " Normal22")
                 
+                #Check to see if we have to add a Basic4 slow enemy
+                if room_cell == 'a':
+                    
+                    #Calculate position for the tile
+                    (x, y) = self.__calculatePos(aux_x, start_row)
+                    
+                    #Creating tile and adding it to the group
+                    self.__setSprite(_FLOOR_5, (x, y), self.floor)
+
+                    enemyGroup.append(str(x) + " " + str(y) + " Basic4")
+                
                 #Check to see if we have to add a letter in the room
                 if room_cell == 'C':
                     #Calculate position for the tile
