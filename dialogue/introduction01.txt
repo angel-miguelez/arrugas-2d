@@ -1,11 +1,11 @@
 @elder.png
-¡Hombre! Por fin despiertas. Veo que no hubo suerte esta vez 
-tampoco. ¿Qué tal la cabeza?
+¡Hombre! Por fin despiertas. Veo que no hubo suerte
+esta vez tampoco. ¿Qué tal la cabeza?
 @character_avatar.png
 ¿Quién eres? ¿Qué hago aquí?
 @elder.png
-Siempre lo mismo... ¿No te acuerdas ni de 
-cómo se respira verdad?
+Siempre lo mismo... ¿No te acuerdas ni
+de cómo se respira verdad?
 #
-Prueba a mover un poco las piernas con UP_KEY,DOWN_KEY,
-RIGHT_KEY,LEFT_KEY a ver si por lo menos puedes andar.
+Prueba a mover un poco las piernas con UP, DOWN,
+RIGHT, LEFT a ver si por lo menos puedes andar.
