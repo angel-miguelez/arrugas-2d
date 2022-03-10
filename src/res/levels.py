@@ -34,6 +34,22 @@ room_num = 9 #Number of rooms to pick from
     how to do it
 """
 
+moveStartPhase=[
+    '            JXXXXXXXXK                                                 ',
+    '            LFFFFFFFFR                                                 ',
+    '            LFFFFFFFFR                                                 ',
+    '            LFPFFFFFFR                                                 ',
+    '            LFFFFFFFFR                                                 ',
+    '            LFFFFFFFFH                                                 ',
+    '            LFFFFFFFFX                                                 ',
+    '            LFFFFFFFFJ                                                 ',
+    '            LFFFFFFFFR                                                 ',
+    '            LFFFFFFFFR                                                 ',
+    '            LFFFFFFFFR                                                 ',
+    '            LFFFCFFFFR                                                 ',
+    '            HXXXXXXXXG                                                 ',
+]
+
 #This is the basic layout for the first level were you spawn in your room
 basic_layout = [
     '                                                                       ',
