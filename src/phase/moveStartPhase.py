@@ -15,6 +15,7 @@ from phase.playable import PlayablePhase
 
 from res.levels import *
 from phase.sceneDialog2 import SceneDialog2
+from objects.door import Switch
 
 
 class MoveStartPhase(PlayablePhase):
@@ -36,17 +37,17 @@ class MoveStartPhase(PlayablePhase):
         self.addToGroup(self.player, "playerGroup")
         self.level.setPlayer(self.player)
 
-    #    for idx, switch in enumerate(self.level.getSwitches()):
-    #        aux = switch.split()
-    #        data = [int(numeric_string) for numeric_string in aux]
-    #        switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, "enter", visible=False)
-    #        if data[4]:
-    #            switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
-    #        else:
-    #            switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
+        for idx, switch in enumerate(self.level.getSwitches()):
+            aux = switch.split()
+            data = [int(numeric_string) for numeric_string in aux]
+            switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, "enter", visible=False)
+            if data[4]:
+               switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
+            else:
+                switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
 
-    #        switch.attach(switch1)
-    #        self.addToGroup([switch], "objectsGroup")
+            switch.attach(switch1)
+            self.addToGroup([switch], "objectsGroup")
 
         #Create occlude effect
         occlude = Occlude()
