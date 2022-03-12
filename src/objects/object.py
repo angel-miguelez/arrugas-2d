@@ -55,4 +55,4 @@ class InstaUseObject(Object):
         for callback in self.callbacks:
             callback()
 
-        self.remove()
+        self.deactivate()
