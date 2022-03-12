@@ -255,8 +255,11 @@ class Normal2(Enemy):
     Enemy that follows the Player across the room
     """
 
-    def __init__(self, position, playerGroup, wallsGroup):
-        Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), 0.1, 10)
+    def __init__(self, position, playerGroup, wallsGroup, speed):
+        if(speed>=0.15):
+            Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
+        else:
+            Enemy.__init__(self, 'N2.2.png', 'coordNormal2.1.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
         self.area = 300  # area of vision of the enemy
         self._stopDistance = 5
 

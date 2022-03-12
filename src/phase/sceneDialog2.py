@@ -6,22 +6,20 @@ from game.director import Director
 from phase.cinematic import CinematicPhase
 from utils.resourcesmanager import ResourcesManager
 
+from phase.phase1 import Phase1
 
-class Scene02Intro(CinematicPhase):
-    """
-    Introduction of the second scene, where the nurses have captured the player
-    """
+class SceneDialog2(CinematicPhase):
 
     def __init__(self):
 
         super().__init__()
-
-        self.backgroundImage = ResourcesManager.loadImage("corridor_background.jpg")
+        self.backgroundImage = ResourcesManager.loadImage("intro.jpg")
 
         self.dialogue = Dialogue()
 
         # Parse the dialogue file and create as many interventions as needed
-        interventions = ResourcesManager.loadDialogue("captura.txt")
+        interventions = ResourcesManager.loadDialogue("introduction02.txt")
+        
         for interv in interventions:
             intervention = DynamicDialogueIntervention()
             intervention.setAvatar(interv[0])
@@ -32,7 +30,9 @@ class Scene02Intro(CinematicPhase):
 
         super().update(*args)
         if self.dialogue.finished:
-            Director().pop(fade=True)
+            nextscene = Phase1()
+            Director().push(nextscene, fade=True)
+            
 
     def onEnterScene(self):
         self.dialogue.start()  # start the dialogue

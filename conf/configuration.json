@@ -16,7 +16,7 @@
         "sound_effects_volume": 0.72
     },
     "dialogue": {
-        "font": "cafe_bold.ttf",
+        "font": "fuente.ttf",
         "font_size": 16,
         "lines_vertical_spacing": 16,
         "antialiasing": "True",

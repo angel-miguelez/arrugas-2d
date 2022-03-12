@@ -7,7 +7,8 @@ from game.director import Director
 from menu.settings import SettingsMenu
 from menu.menu import Menu
 
-from phase.test import PhaseTest
+from phase.sceneDialog1 import SceneDialog1
+
 
 
 class MainMenu(Menu):
@@ -46,8 +47,8 @@ class MainMenu(Menu):
 
         self.playMusic("button2.wav", "sound.menu_music_volume")
         self._startGame = True
-        phase1 = PhaseTest()
-        Director().push(phase1, fade=True)
+        nextscene = SceneDialog1()
+        Director().push(nextscene, fade=True)
 
     def onOpenConfigurationMenu(self):
         """
