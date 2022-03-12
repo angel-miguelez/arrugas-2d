@@ -15,7 +15,7 @@ class Letter(Switch):
     """
 
     def __init__(self, position, playerGroup, digit):
-        Switch.__init__(self, "closed_letter.png", position, playerGroup, lock=False, active=True)
+        Switch.__init__(self, "closed_letter.png", position, playerGroup, [], lock=False, active=True)
 
         self._opened = False  # if the player has collided with it
         self.id = id  # image file of the letter opened
@@ -24,8 +24,11 @@ class Letter(Switch):
         self.digit.setText(str(digit))
 
     def onCollisionEnter(self, collided):
-        super().onCollisionEnter(collided)
 
+        if self._opened:
+            return
+
+        super().onCollisionEnter(collided)
         ResourcesManager.loadSound("turn_page.wav").play()
         self._player.disableEvents()  # so the player has to close the letter before moving again
         self.open()
@@ -57,7 +60,7 @@ class Letter(Switch):
         """
 
         self._opened = False
-        self.remove()
+        self.deactivate()
         Director().getCurrentScene().removeFromGroup(self.digit, "uiGroup")
         self.notify()
 
@@ -68,3 +71,4 @@ class Letter(Switch):
             if event.type == KEYDOWN and event.key == K_SPACE:
                 self._player.enableEvents()
                 self.close()
+

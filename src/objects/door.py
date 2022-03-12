@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import pygame
 
-from characters.character import Player
 from objects.object import Object
 
 from utils.observer import Subject
@@ -10,15 +10,19 @@ from utils.resourcesmanager import ResourcesManager
 
 class Switch(Object, Subject):
 
-    def __init__(self, image, position, playerGroup, lock=True, visible=True, active=True):
+    def __init__(self, image, position, playerGroup, entitiesToUpdate, lock=True, visible=True, active=True, addEntities=False):
         Object.__init__(self, image, position, playerGroup)
         Subject.__init__(self)
 
         self.lock = lock  # if the switch must lock or unlock something
         self.activated = False  # if it has switched the state
 
-        self.visible = visible  # if it is visible (detect collisions)
+        self.visible = visible  # if it is visible (the player cannot step over it)
         self.active = active  # if the lock effect is active
+
+        self.entities = entitiesToUpdate  # activate or desactivate entities
+
+        self.addEntities = addEntities
 
     def onCollisionEnter(self, collided):
 
@@ -33,6 +37,13 @@ class Switch(Object, Subject):
 
         self.activated = True
         self.image = pygame.transform.flip(self.image, True, False)
+
+        for entity in self.entities:
+            if self.addEntities:
+                entity.activate()
+            else:
+                entity.deactivate()
+
         self.notify()
 
     def updateObserver(self, subject):

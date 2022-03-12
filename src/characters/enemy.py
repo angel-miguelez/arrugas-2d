@@ -60,8 +60,15 @@ class Enemy(Character, Entity):
         scene = Director().getCurrentScene()
         scene.addToGroup(enemy, group)
 
-
         self._player.attach(self)
+
+    def activate(self):
+        super().activate()
+        Director().getCurrentScene().addToGroup(self, "npcGroup")
+
+    def deactivate(self):
+        super().activate()
+        Director().getCurrentScene().removeFromGroup(self, "npcGroup")
 
 
 class Basic0(Enemy):
@@ -135,8 +142,6 @@ class Basic1(Enemy):
     def updateObserver(self, subject):
         super().updateObserver(subject)
         self.targetOffset -= pygame.math.Vector2(self.offset)  # update the target pos
-
-
 
 
 class Basic2(Enemy):

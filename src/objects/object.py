@@ -29,19 +29,17 @@ class Object(pygame.sprite.Sprite, Entity, Interactive):
         pygame.sprite.Sprite.update(self, *args)
         self.updateCollisions(self, *args)
 
-    def remove(self):
-        """
-        Removes the object from all the groups of the scene, so it disappears completely
-        """
+    def activate(self):
+        super().activate()
+        Director().getCurrentScene().addToGroup(self, "objectsGroup")
 
+    def deactivate(self):
+        super().deactivate()
         scene = Director().getCurrentScene()
         scene.removeFromGroup(self, "objectsGroup")
         scene.removeFromGroup(self, "objectsToEvent")
-        scene.removeFromGroup(self, "objectsToUpdate")
         scene.removeFromGroup(self, "foregroundGroup")
         scene.removeFromGroup(self, "uiGroup")
-
-        self._player.detach(self)
 
 
 class InstaUseObject(Object):

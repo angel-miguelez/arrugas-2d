@@ -58,12 +58,13 @@ class PhaseTest(PlayablePhase):
         #         for enemy in enemyGroup:
         #             self.createEnemy(enemy)
 
-        #basic0 = Basic0([450, 300], self.playerGroup, self.level.getWalls())
-        #self.addToGroup(basic0, "npcGroup")
-        #self.player.attach(basic0)
+        basic0 = Basic0([1075, 400], self.playerGroup, self.level.getWalls())
+        self.player.attach(basic0)
 
-        waypoints = [(0, 400), (2000, 400)]
-        spawn = [500, 405]
+        letter = Letter((1065, 350), self.playerGroup, 1)
+
+        waypoints = [(320, 400), (500, 400)]
+        spawn = [500, 400]
         basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
         self.addToGroup(basic1, "npcGroup")
 
@@ -95,24 +96,32 @@ class PhaseTest(PlayablePhase):
             aux = switch.split()
             data = [int(numeric_string) for numeric_string in aux]
 
-            door = Door((data[0], data[1]), self.playerGroup)
-            switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, "enter", visible=False)
-            if data[4]:
-                switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
+            if idx == 0:
+                door = Door((data[0], data[1]), self.playerGroup)
+                switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, [basic0, letter], visible=False, addEntities=True)
+                if data[4]:
+                    switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, [basic0, letter], active=False, visible=False)
+                else:
+                    switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, [basic0, letter], active=False, visible=False)
             else:
-                switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
+                door = Door((data[0], data[1]), self.playerGroup)
+                switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, [], visible=False, addEntities=True)
+                if data[4]:
+                    switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, [], active=False, visible=False)
+                else:
+                    switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, [], active=False, visible=False)
 
             remainingLoops = totalSwitches - idx - 1
             remainingLetters = 4 - lettersCreated
             if remainingLetters == 0:
-                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
+                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, [], lock=False)
             elif remainingLetters == remainingLoops or random.random() >= 0.5:
                 digit = password[random.randrange(0, len(password))]
                 password.remove(digit)
                 letterOrSwitch = Letter((data[5], data[6]), self.playerGroup, digit)
                 lettersCreated += 1
             else:
-                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
+                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, [], lock=False)
 
             switch.attach(door)
             switch.attach(switch1)
@@ -189,6 +198,7 @@ class PhaseTest(PlayablePhase):
             a2 = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
             self.addToGroup(a2, "npcGroup")
             self.player.attach(a2)
+
 
     def onEnterScene(self):
         super().onEnterScene()

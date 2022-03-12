@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-#from characters.personaje2 import Player
+from game.director import Director
 from utils.observer import Observer
 
 
@@ -35,3 +35,12 @@ class Entity(Observer):
 
         if hasattr(self, "rect"):
             self.rect.center = self.position
+
+    def activate(self):
+        scene = Director().getCurrentScene()
+        scene.addToGroup(self, "objectsToUpdate")
+
+    def deactivate(self):
+        scene = Director().getCurrentScene()
+        scene.removeFromGroup(self, "objectsToUpdate")
+        self._player.detach(self)

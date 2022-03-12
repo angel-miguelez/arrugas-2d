@@ -14,14 +14,16 @@ class Subject:
         """
         Attach an observer to the subject.
         """
-        self.__observers.append(observer)
+        if observer not in self.__observers:
+            self.__observers.append(observer)
 
     def detach(self, observer: Observer) -> None:
         """
         Detach an observer from the subject.
         """
 
-        self.__observers.remove(observer)
+        if observer in self.__observers:
+            self.__observers.remove(observer)
 
     def notify(self) -> None:
         """

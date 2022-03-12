@@ -2,6 +2,7 @@
 
 import pygame.key
 
+from game.director import Director
 from game.interactive import Interactive
 from map.tiles import Tile
 from characters.npc import DialogueCharacter
