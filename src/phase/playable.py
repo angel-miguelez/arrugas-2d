@@ -149,9 +149,9 @@ class GamePhase(PlayablePhase):
         elif data[2] == "Basic4":
             enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
         elif data[2] == "Normal21":
-            enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.15)
-        elif data[2] == "Normal22":
             enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.1)
+        elif data[2] == "Normal22":
+            enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.05)
         elif data[2] == "Advanced2":
             enemy = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
 

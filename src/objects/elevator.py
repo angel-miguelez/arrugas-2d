@@ -55,7 +55,7 @@ class CodeLock(pygame.sprite.Sprite):
         self.input.append(number)
 
         xPos = (len(self.input) - 1) * 170 + 100  # calculate the horizontal position of the number in the screen
-        ui = TextUI("ds-digi.ttf", 180, (xPos, 200), (0, 0, 0))
+        ui = TextUI("ds-digi.TTF", 180, (xPos, 200), (0, 0, 0))
         ui.setText(str(number))  # set the text to the number introduced
         self.numbers.append(ui)
 
