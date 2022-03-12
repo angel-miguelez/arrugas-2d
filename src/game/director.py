@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import copy
 
 import pygame
 
@@ -133,6 +134,14 @@ class Director(metaclass=Singleton):
         else:
             self.pop()
             self.push(scene)
+
+    def reset(self, fade=True):
+        """
+        Loads the current level again
+        """
+        scene = copy.copy(self.getCurrentScene())
+        scene.__init__()
+        self.change(scene, fade=fade)
 
     def getCurrentScene(self):
         """

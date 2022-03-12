@@ -3,11 +3,12 @@
 import pygame.mouse
 import pygame_menu
 
+from conf.metainfo import MetainfoManager
 from game.director import Director
 from menu.settings import SettingsMenu
 from menu.menu import Menu
 
-from phase.sceneDialog1 import SceneDialog1
+from phase.history import SceneDialog1, SceneDialog2
 
 
 class MainMenu(Menu):
@@ -46,7 +47,7 @@ class MainMenu(Menu):
 
         self.playMusic("button2.wav", "sound.menu_music_volume")
         self._startGame = True
-        Director().push(SceneDialog1(), fade=True)
+        Director().push(SceneDialog2() if MetainfoManager.isTutorialDone() else SceneDialog1(), fade=True)
 
     def onOpenConfigurationMenu(self):
         """

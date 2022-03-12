@@ -8,6 +8,7 @@ import sys
 
 from characters.character import Player
 from characters.enemy import Advanced2, Normal2, Basic2, Basic1, Basic0
+from conf.metainfo import MetainfoManager
 from effects.occlusion import Occlude
 from game.director import Director
 from game.scene import Scene
@@ -42,6 +43,7 @@ class PlayablePhase(Scene):
 
     def onEnterScene(self):
         pygame.mouse.set_visible(False)
+        MetainfoManager.saveCheckpoint(self)
 
     def onExitScene(self):
         pass
@@ -239,7 +241,8 @@ class GamePhase(PlayablePhase):
             door = Door((data[0], data[1]), self.playerGroup)
             letterOrSwitch.attach(door)  # open the door when picking the letter or pushing the switch
 
-            insideSwitch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, entities, visible=False, addEntities=True)
+            offset = ((data[4] * 45) - 22)
+            insideSwitch = Switch("invisible_tile.png", (data[2] + offset, data[3]), self.playerGroup, entities, visible=False, addEntities=True)
 
             offset = - ((data[4] * 100) - 50)  # move the outside switch to the left or right 50px
             outsideSwitch = Switch("invisible_tile.png", (data[0] + offset, data[1]), self.playerGroup, entities, active=False, visible=False)

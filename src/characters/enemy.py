@@ -39,7 +39,7 @@ class Enemy(Character, Entity):
             self.position = self.lastPos  # the (x,y) of Character must be consistent with position of Entity
 
         if isinstance(collided, Player):
-            Director().pop(fade=True)
+            Director().reset(fade=True)
 
     def remove(self):
         """
