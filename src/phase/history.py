@@ -49,7 +49,9 @@ class SceneDialog2(DialoguePhase):
     time he tries to escape from the residence
     """
     def __init__(self):
-        super().__init__(eval(f"{MetainfoManager.getLastCheckpoint()}"), "intro.jpg", "introduction02.txt")
+        checkpoint = MetainfoManager.getLastCheckpoint()
+        scene = Phase1 if checkpoint is None else eval(MetainfoManager.getLastCheckpoint())
+        super().__init__(scene, "intro.jpg", "introduction02.txt")
 
 
 class Phase1(GamePhase):
