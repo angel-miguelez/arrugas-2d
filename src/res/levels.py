@@ -1,5 +1,7 @@
 tile_size = 32 #Tile size used as a base to construct the map
-room_num = 9 #Number of rooms to pick from
+room_num_1 = 9 # Number of rooms for the first set of rooms to pick from
+room_num_2 = 8  # Number of rooms for the second set of rooms to pick from
+room_num_3 = 7  # Number of rooms for the third set of rooms to pick from
 
 """
     The following variable consist of a list of strings that sets the layout for the map
@@ -156,6 +158,25 @@ basic_layout_2 = [
     '                                                                       ',
     '                                                                       ',
     '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
     '                      JXXXXXXXXK                                       ',
     '                      GFFFFFFFFR                                       ',
     '                      DFPFFFFFFR                                       ',
@@ -227,6 +248,11 @@ basic_layout_2 = [
 ]
 
 basic_layout_3 = [
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
+    '                                                                       ',
     '                                                                       ',
     '                                                                       ',
     '                                                                       ',
@@ -408,12 +434,12 @@ rooms_1 = [
         'XXXXXXXXXXXXXXXXXXXXX',
     ],
 ]
-rooms2 = [
+rooms_2 = [
     [
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         'XFFFFCFFFFFXIFFFFFFFFFFFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFD',
         'XFFFFFFFFFFXIFFFFFFFFFFFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFX',
-        'XFFFFFFFFFFXFFFFFFFFFxFFFFFFFFFFFXFFFFFFFFFxFFFFFFFFFX',
+        'XFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFX',
         'XFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFFFXFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFFFXFFFFFFFFFXFFFFFFFFFX',
         'XIFFFFFFFFFFFFFFFFFFFXIFFFFFFFFFFFFFFFFFFFFXFFFFFFFFFX',
@@ -470,7 +496,7 @@ rooms2 = [
         'XXXXXXXXXXXXXXXXXXXXX',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX',
-        'XFFFFFFFFFFFFFFFFFFFX',
+        'XCFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFD',
         'XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX',
@@ -530,9 +556,9 @@ rooms2 = [
         'XFFFFFFFWFFFWFFFFFFFX',
         'XFFFFFFFWFFFWFFFFFFFX',
         'XXXXXXXXXXXXXXXXXXXXX',
-    ],
+    ]
 ]
-rooms3 = [
+rooms_3 = [
     [
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         'XIFFFFFFFFFFFFFFFFFFFFFFFFWFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFX',
@@ -639,7 +665,7 @@ rooms3 = [
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     ],
     [
-        'XXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXX', 'XXXXXXXXXXXXXXXXXXXXX', 
+        'XXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXX', 
         'XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFFFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFFFFFFX    XFFFFFaFFFFFFFFFFFFFX',
         'XFFXFFFFFFFFFFFFFFFFXXXXXXFFFFFFFFaFFFFFFFFFFXXXXXXFFFFFFFFFFFFFFFFFFFX',
@@ -648,4 +674,5 @@ rooms3 = [
         'XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFaFFFFX',
         'XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFFFFFFX    XFFFFFFFFFFFFFFFFFFFX',
         'XXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXX', 
-    ]]
+    ]
+]

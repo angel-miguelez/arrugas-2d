@@ -15,7 +15,7 @@ class Phase2(GamePhase):
     """
 
     def __init__(self):
-        super().__init__(Phase3, basic_layout_2)
+        super().__init__(Phase3, basic_layout_2, rooms_2)
 
     def onEnterScene(self):
         super().onEnterScene()
