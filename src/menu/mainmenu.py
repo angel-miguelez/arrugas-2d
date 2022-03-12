@@ -10,6 +10,7 @@ from menu.menu import Menu
 
 from phase.history import SceneDialog1, SceneDialog2
 
+backgroundColorText = (100,100,100)
 
 class MainMenu(Menu):
     """
@@ -19,9 +20,9 @@ class MainMenu(Menu):
     def __init__(self):
         super().__init__("Arrugas")
 
-        self._menu.add.button('Continue', self.onStartGame)  # button to start the game
-        self._menu.add.button('Configuration', self.onOpenConfigurationMenu)  # button to edit the configuration
-        self._menu.add.button('Quit', pygame_menu.events.EXIT)  # button to exit the game
+        self._menu.add.button('Continue', self.onStartGame, background_color = backgroundColorText)  # button to start the game
+        self._menu.add.button('Configuration', self.onOpenConfigurationMenu, background_color = backgroundColorText)  # button to edit the configuration
+        self._menu.add.button('Quit', pygame_menu.events.EXIT, background_color = backgroundColorText)  # button to exit the game
 
         self._startGame = False  # flag to know when to stop the main menu music
         self.playMusic("main_menu2.wav", "sound.menu_music_volume")

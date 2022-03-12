@@ -10,6 +10,8 @@ from game.director import Director
 from menu.menu import Menu
 
 
+backgroundColorText = (100, 100, 100)
+
 class SettingsMenu(Menu):
     """
     Class which holds the configuration menu and allows the user to edit it
@@ -28,7 +30,7 @@ class SettingsMenu(Menu):
         self._menu.add.vertical_margin(30)
         self._loadVolumeSettings()  # load the music and sound effects volumes and create buttons to edit them
         self._menu.add.vertical_margin(30)
-        self.returnButton = self._menu.add.button('return', Director().pop)  # button to return to the main menu
+        self.returnButton = self._menu.add.button('return', Director().pop, background_color = backgroundColorText)  # button to return to the main menu
 
 
     def onExitScene(self):
@@ -83,7 +85,7 @@ class SettingsMenu(Menu):
             keyName = self._conf.getBind(fieldName, code=False)
 
             self._bindings[f"{fieldName}"] = keyName
-            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding, fieldName)
+            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding, fieldName, background_color = backgroundColorText)
             self._dynamicButtonsTitle[fieldName] = f"Move {bind}: "
 
     def _editVolume(self, value, field):
@@ -104,14 +106,14 @@ class SettingsMenu(Menu):
         menuVolume = int(float(ConfManager.getValue("sound.menu_music_volume") * 100))
         self._menu.add.range_slider('Menu volume', menuVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.menu_music_volume")
+                                    onchange=self._editVolume, field="sound.menu_music_volume", background_color = backgroundColorText)
 
         gameVolume = int(float(ConfManager.getValue("sound.game_music_volume") * 100))
         self._menu.add.range_slider('Game volume', gameVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.game_music_volume")
+                                    onchange=self._editVolume, field="sound.game_music_volume", background_color = backgroundColorText)
 
         soundEffectsVolume = int(float(ConfManager.getValue("sound.sound_effects_volume") * 100))
         self._menu.add.range_slider('Sound effects volume', soundEffectsVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.sound_effects_volume")
+                                    onchange=self._editVolume, field="sound.sound_effects_volume", background_color = backgroundColorText)
