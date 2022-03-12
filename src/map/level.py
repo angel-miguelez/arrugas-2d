@@ -22,7 +22,7 @@ _FLOOR_4 = 10
 _FLOOR_5 = 11
 
 class Level(Observer):
-    def __init__(self, level_data, posx, posy):
+    def __init__(self, level_data, rooms, posx, posy):
         #Load the image
         self.sheet = ResourcesManager.loadImage("Room_Builder_free_32x32.png", -1)
         self.sheet = self.sheet.convert_alpha()
@@ -62,7 +62,8 @@ class Level(Observer):
 
         self.worldShiftX = posx
         self.worldShiftY = posy
-        self.levels = np.zeros((room_num), dtype=bool)
+        self.rooms = rooms
+        self.levels = np.zeros((len(self.rooms)), dtype=bool)
 
         #Enemy array, for room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
         self.enemies = []
@@ -175,16 +176,6 @@ class Level(Observer):
 
                     #Creating tile and adding it to the group
                     self.__setSprite(_FLOOR_2, (x, y), self.floor)
-                
-                """
-                    For the automatic enemy generation we should take into account the orientation
-                    that the room is generated in, if originally the enemies were on the top-right corner
-                    if the room is generated on the right side of the corridor then the enemy would be on
-                    the bottom left corner, so depending on the value of the already calculated orientation
-                    variable there should be different behaviours
-                    
-                    Also we have to create a group only for enemies
-                """
 
                 #Check to see if we have to add a Basic1 enemy
                 if room_cell == 'R':
@@ -352,6 +343,9 @@ class Level(Observer):
                     enemyGroup[enemyIndex] = enemy
             
             self.enemies[groupIndex] = enemyGroup
+        
+        print("Switches: " + str(len(self.switches)))
+        print("Letters: " + str(len(self.letters)))
 
         #Update switches, doors and letters position based on the player spawn
         for switchIndex, switch in enumerate(self.switches):
@@ -459,13 +453,13 @@ class Level(Observer):
 
                     #Get the room we want to add
                     while True:
-                        num = np.random.randint(0, room_num)
+                        num = np.random.randint(0, len(self.rooms))
                         if self.levels[num] == False:
                             self.levels[num] = True
                             break
                     
                     #Get the room from the list of rooms based on the random number
-                    room = rooms_1[num]
+                    room = self.rooms[num]
 
                     if inside:
                         insideInt = 1

@@ -14,7 +14,7 @@ class Phase1(GamePhase):
     """
 
     def __init__(self):
-        super().__init__(Capture, basic_layout)
+        super().__init__(Capture, basic_layout, rooms_1)
 
     def onEnterScene(self):
         super().onEnterScene()
