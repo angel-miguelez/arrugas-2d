@@ -237,7 +237,7 @@ class Normal2(Enemy):
 
     def __init__(self, position, playerGroup, wallsGroup, speed):
 
-        if speed >= 0.15:
+        if speed >= 0.1:
             Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
         else:
             Enemy.__init__(self, 'N2.2.png', 'coordNormal2.1.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
