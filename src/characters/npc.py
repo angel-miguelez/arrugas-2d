@@ -111,3 +111,13 @@ class NurseCharacter(DialogueCharacter):
         image = "npc/nurse.png"
         dialg = "nurse01.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+        
+class Television(DialogueCharacter):
+    """
+    Television character
+    """
+
+    def __init__(self, position, playerGroup):
+        image = "npc/television.png"
+        dialg = "television01.txt"
+        DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
