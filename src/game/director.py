@@ -2,6 +2,7 @@
 import copy
 
 import pygame
+from pygame.locals import *
 
 from conf.configuration import ConfManager
 
@@ -16,9 +17,8 @@ class Director(metaclass=Singleton):
     def __init__(self):
 
         # Init the window
-        pygame.display.set_caption("Arrugas-2D")
         self._HEIGHT, self._WIDTH = (800, 600)
-        self.screen = pygame.display.set_mode((self._HEIGHT, self._WIDTH))
+        self.screen = pygame.display.set_mode((self._HEIGHT, self._WIDTH), NOFRAME)
 
         # Init the sound system
         pygame.mixer.pre_init(44100, 16, 2, 4096)
@@ -78,7 +78,7 @@ class Director(metaclass=Singleton):
 
             scene.draw(self.screen)  # draw on the screen
 
-            if self._fading:  # start the transition effect
+            if self._fading:  # do the transition effect
                 self._fade(self.time, self.screen)
 
             pygame.display.flip()

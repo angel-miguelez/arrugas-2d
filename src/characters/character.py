@@ -171,13 +171,6 @@ class Player(Character, Subject):
         self.lastMovements = [IDLE]
         self.movement = IDLE
 
-    def disableEvents(self):
-        self.eventsEnabled = False
-        self.stop()
-
-    def enableEvents(self):
-        self.eventsEnabled = True
-
     def move(self):
 
         xShift, yShift = (0, 0)

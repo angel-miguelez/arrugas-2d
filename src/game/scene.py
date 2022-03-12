@@ -19,7 +19,6 @@ class Scene:
         self.objectsToUpdate = []  # objects that need to be updated
 
         self.pausedEventsObjects = []
-        self.pausedUpdateObjects = []
 
     def events(self, *args):
         """

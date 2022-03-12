@@ -41,33 +41,12 @@ class Enemy(Character, Entity):
         if isinstance(collided, Player):
             Director().reset(fade=True)
 
-    def remove(self):
-        """
-        Removes the object from all the groups of the scene, so it disappears completely
-        """
-
-        scene = Director().getCurrentScene()
-        scene.removeFromGroup(self, "npcGroup")
-
-
-        self._player.detach(self)
-        
-    def add(self, enemy, group):
-        """
-        Removes the object from all the groups of the scene, so it disappears completely
-        """
-
-        scene = Director().getCurrentScene()
-        scene.addToGroup(enemy, group)
-
-        self._player.attach(self)
-
     def activate(self):
         super().activate()
         Director().getCurrentScene().addToGroup(self, "npcGroup")
 
     def deactivate(self):
-        super().activate()
+        super().deactivate()
         Director().getCurrentScene().removeFromGroup(self, "npcGroup")
 
 
@@ -89,7 +68,7 @@ class Basic1(Enemy):
     """
 
     def __init__(self, position, playerGroup, wallsGroup, waypoints, speed):
-        if(speed>=0.2):
+        if speed >= 0.2:
             Enemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), speed, 5)
         else:
             Enemy.__init__(self, 'B1.2.png', 'coordBasic1.2.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), speed, 5)
@@ -127,6 +106,7 @@ class Basic1(Enemy):
                 dir.normalize_ip()
                 vel = dir * (distance / self.targetRadius * self.speed)
             except ValueError:
+                print(dir)
                 vel = pygame.math.Vector2(0, 0)
 
         # Otherwise, move with max speed
@@ -135,6 +115,7 @@ class Basic1(Enemy):
                 dir.normalize_ip()
                 vel = dir * self.speed
             except ValueError:
+                print(dir)
                 vel = pygame.math.Vector2(0, 0)
 
         # If the enemy has stuck in a position due to collisions or other events
@@ -180,8 +161,9 @@ class Basic4(Enemy):
     Tree that generates bats
     """
 
-    def __init__(self, position, playerGroup, wallsGroup, timeToShot = 120, delayConsecutiveShots = 30, treeSprite = 1):
+    def __init__(self, position, playerGroup, wallsGroup, timeToShot=120, delayConsecutiveShots=30, treeSprite=1):
         Enemy.__init__(self, 'blueTree.png', 'coordBlueTree.txt', [1, 1], position, playerGroup, wallsGroup, (42, 42), 0.3, 7)
+
         self.timeToShot = timeToShot # time between 2 shots
         self.delayConsecutiveShots = delayConsecutiveShots # time between 2 shots
         self.counterToShot = 0  # counter time
@@ -192,25 +174,21 @@ class Basic4(Enemy):
         
     def move(self):
         self.counterToShot += 1
+
+        scene = Director().getCurrentScene()
+
         # Generate first bats on every direction
         if self.timeToShot == self.counterToShot:
-             bat1 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, RIGHT)
-             bat2 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, LEFT)
-             bat3 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, UP)
-             bat4 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, DOWN)
-             self.add([bat1, bat2, bat3, bat4], "npcGroup")
+            [scene.addToGroup(Bat([self.x, self.y], self.playerGroup, self.wallsGroup, dir), "npcGroup")
+             for dir in [UP, DOWN, LEFT, RIGHT]]
 
         # Generate second bats on every direction with some delay
         if (self.timeToShot + self.delayConsecutiveShots) == self.counterToShot:
              self.counterToShot = 0
-             bat1 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, RIGHT)
-             bat2 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, LEFT)
-             bat3 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, UP)
-             bat4 = Bat([self.x, self.y], self.playerGroup, self.wallsGroup, DOWN)
-             self.add([bat1, bat2, bat3, bat4], "npcGroup")
+             [scene.addToGroup(Bat([self.x, self.y], self.playerGroup, self.wallsGroup, dir), "npcGroup")
+              for dir in [UP, DOWN, LEFT, RIGHT]]
 
         return 0, 0
-
 
 
 class Bat(Enemy):
@@ -224,9 +202,10 @@ class Bat(Enemy):
         self.destruction = False
         
     def move(self):
+
         # If the bat hits with a wall
-        if self.destruction == True: 
-            self.remove() # delete the enemy 
+        if self.destruction:
+            self.remove()  # delete the enemy
             return 0, 0
 
         # Depending on the direction, the bat will move on one of them
@@ -244,16 +223,11 @@ class Bat(Enemy):
             return 0, self.speed
 
     def onCollisionEnter(self, collided):
-        Character.onCollisionEnter(self, collided)
+        super().onCollisionEnter(collided)
 
         # If collide with a tile, its set to dissapear
         if isinstance(collided, Tile):
-            self.destruction=True
-            self.position = self.lastPos
-
-        # If collide with player, game ends
-        if isinstance(collided, Player):
-            Director().pop(fade=True)
+            self.destruction = True
 
 
 class Normal2(Enemy):
@@ -262,7 +236,8 @@ class Normal2(Enemy):
     """
 
     def __init__(self, position, playerGroup, wallsGroup, speed):
-        if(speed>=0.15):
+
+        if speed >= 0.15:
             Enemy.__init__(self, 'N2.2.png', 'coordNormal2.2.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
         else:
             Enemy.__init__(self, 'N2.2.png', 'coordNormal2.1.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
@@ -295,8 +270,6 @@ class Normal2(Enemy):
 
         self.movement = IDLE
         return 0, 0
-
-
 
 
 class Advanced2(Enemy):
@@ -335,14 +308,15 @@ class Advanced2(Enemy):
                     self.deathcounter += 1
                     self.posture = 5
 
-        if self.deathcounter==30: 
-            self.remove() #CAMBIAR 
+        if self.deathcounter == 30:
+            self.deactivate()
             return -self.speed, 0
 
         if self.activated:
-            if self.movement==RIGHT:
+            if self.movement == RIGHT:
                 return self.speed, 0
-            else: return -self.speed, 0
+            else:
+                return -self.speed, 0
 
         # If the player is not close enough, the enemy is inactive
         elif abs(self._player.rect.center[1] - self.position[1]) > 5 and not self.activated:
@@ -360,12 +334,6 @@ class Advanced2(Enemy):
                 return -self.speed, 0
 
     def onCollisionEnter(self, collided):
-        Character.onCollisionEnter(self, collided)
+        super().onCollisionEnter(collided)
+        self.destruction = True
 
-        if isinstance(collided, Tile):
-            self.destruction=True
-            self.position = self.lastPos  
-
-        if isinstance(collided, Player):
-            self.destruction=True
-            Director().pop(fade=True)

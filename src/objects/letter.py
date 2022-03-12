@@ -29,8 +29,6 @@ class Letter(Switch):
             return
 
         super().onCollisionEnter(collided)
-        ResourcesManager.loadSound("turn_page.wav").play()
-        self._player.disableEvents()  # so the player has to close the letter before moving again
         self.open()
 
     def open(self):
@@ -46,13 +44,19 @@ class Letter(Switch):
         self.rect.center = self.position
 
         self._opened = True
+        ResourcesManager.loadSound("turn_page.wav").play()
 
         # Change group to the foreground one, so it is always visible
         scene = Director().getCurrentScene()
+
+        scene.removeFromGroup(self._player, "objectsToEvent")
+        self._player.stop()
+
         scene.removeFromGroup(self, "objectsGroup")
         scene.addToGroup(self, "foregroundGroup")
         scene.addToGroup(self.digit, "uiGroup")
         scene.addToGroup(self, "objectsToEvent")
+
 
     def close(self):
         """
@@ -60,8 +64,12 @@ class Letter(Switch):
         """
 
         self._opened = False
+
+        scene = Director().getCurrentScene()
+        scene.removeFromGroup(self.digit, "uiGroup")
+        scene.addToGroup(self._player, "objectsToEvent")
+
         self.deactivate()
-        Director().getCurrentScene().removeFromGroup(self.digit, "uiGroup")
         self.notify()
 
     def events(self, events):
@@ -69,6 +77,5 @@ class Letter(Switch):
         for event in events:
 
             if event.type == KEYDOWN and event.key == K_SPACE:
-                self._player.enableEvents()
                 self.close()
 
