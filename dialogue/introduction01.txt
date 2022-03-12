@@ -7,5 +7,6 @@ esta vez tampoco. ¿Qué tal la cabeza?
 Siempre lo mismo... ¿No te acuerdas ni
 de cómo se respira verdad?
 #
-Prueba a mover un poco las piernas con W, A, S,
-D a ver si por lo menos puedes andar.
+Prueba a mover un poco las piernas con:
+UP, LEFT, DOWN RIGHT 
+a ver si por lo menos puedes andar.
