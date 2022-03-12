@@ -22,7 +22,22 @@ _FLOOR_4 = 10
 _FLOOR_5 = 11
 
 class Level(Observer):
-    def __init__(self, level_data, rooms, posx, posy):
+    def __init__(self, level, posx, posy):
+
+        #Depending on the level variable we get passed on by parameters we choose the correct layout, rooms and floor tile
+        if level == 1:
+            level_data = basic_layout
+            rooms = rooms_1
+            self.floor_type = _FLOOR_2
+        elif level == 2:
+            level_data = basic_layout_2
+            rooms = rooms_2
+            self.floor_type = _FLOOR_1
+        elif level == 3:
+            level_data = basic_layout_3
+            rooms = rooms_3
+            self.floor_type = _FLOOR_5
+
         #Load the image
         self.sheet = ResourcesManager.loadImage("Room_Builder_free_32x32.png", -1)
         self.sheet = self.sheet.convert_alpha()
@@ -175,7 +190,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                 #Check to see if we have to add a Basic1 enemy
                 if room_cell == 'R':
@@ -184,7 +199,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic1")
 
@@ -195,7 +210,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_1, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic12")
 
@@ -206,7 +221,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_3, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic0")
                 
@@ -217,7 +232,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_4, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic2")
                 
@@ -228,7 +243,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_3, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Advanced2")
 
@@ -239,7 +254,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_5, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Normal21")
                 
@@ -250,7 +265,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_5, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Normal22")
                 
@@ -261,7 +276,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_5, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic4")
                 
@@ -271,7 +286,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     #Store letter position to add on the scene
                     self.letters.append(str(x) + " " + str(y))
@@ -282,7 +297,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     #Store letter position to add on the scene
                     objectGroup.append(str(x) + " " + str(y) + " Labcoat")
@@ -293,7 +308,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     #Store letter position to add on the scene
                     objectGroup.append(str(x) + " " + str(y) + " Glasses")
@@ -305,7 +320,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                 if orientation:
                     aux_x -= 1
@@ -343,9 +358,6 @@ class Level(Observer):
                     enemyGroup[enemyIndex] = enemy
             
             self.enemies[groupIndex] = enemyGroup
-        
-        print("Switches: " + str(len(self.switches)))
-        print("Letters: " + str(len(self.letters)))
 
         #Update switches, doors and letters position based on the player spawn
         for switchIndex, switch in enumerate(self.switches):
@@ -394,7 +406,7 @@ class Level(Observer):
                 #Check to see if we have to add a floor tile
                 if cell == 'F':
 
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
                 
                 #Check to see if we have to add a left wall tile
                 if cell == 'L':
@@ -437,12 +449,12 @@ class Level(Observer):
                     self._playerSpawnX = x
                     self._playerSpawnY = y
 
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
                 
                 #Check to see if we have to add a player tile
                 if cell == 'E':
                     #Set floor tile
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
                     #Get elevator position
                     self.elevator = (x + 64, y)
@@ -487,7 +499,7 @@ class Level(Observer):
                 
                     inside = not inside  # Complement of current value
                     
-                    self.__setSprite(_FLOOR_2, (x, y), self.floor)
+                    self.__setSprite(self.floor_type, (x, y), self.floor)
 
         self.__setupPlayerSpawn()
         

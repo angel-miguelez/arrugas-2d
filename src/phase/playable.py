@@ -93,10 +93,10 @@ class PlayablePhase(Scene):
 
 class GamePhase(PlayablePhase):
 
-    def __init__(self, nextScene, levelLayout, rooms):
+    def __init__(self, nextScene, level):
         super().__init__(nextScene)
 
-        self.level = Level(levelLayout, rooms, 400, 300)  # Setup map structure
+        self.level = Level(level, 400, 300)  # Setup map structure
         self.nextScene = nextScene  # scene to load when this one is finished
 
         # Initialize the player

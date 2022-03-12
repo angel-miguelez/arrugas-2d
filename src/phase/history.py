@@ -60,7 +60,7 @@ class Phase1(GamePhase):
     """
 
     def __init__(self):
-        super().__init__(Capture, basic_layout, rooms_1)
+        super().__init__(Capture, 1)
 
     def onEnterScene(self):
         super().onEnterScene()
@@ -86,7 +86,7 @@ class Phase2(GamePhase):
     """
 
     def __init__(self):
-        super().__init__(Phase3, basic_layout_2, rooms_2)
+        super().__init__(Phase3, 2)
 
     def onEnterScene(self):
         super().onEnterScene()
@@ -103,7 +103,7 @@ class Phase3(GamePhase):
     """
 
     def __init__(self):
-        super().__init__(FinalScene, basic_layout_3, rooms_3)
+        super().__init__(FinalScene, 3)
 
     def onEnterScene(self):
         super().onEnterScene()
