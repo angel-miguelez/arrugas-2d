@@ -10,7 +10,6 @@ from menu.menu import Menu
 from phase.sceneDialog1 import SceneDialog1
 
 
-
 class MainMenu(Menu):
     """
     Class which holds the main menu of the game
@@ -47,8 +46,7 @@ class MainMenu(Menu):
 
         self.playMusic("button2.wav", "sound.menu_music_volume")
         self._startGame = True
-        nextscene = SceneDialog1()
-        Director().push(nextscene, fade=True)
+        Director().push(SceneDialog1(), fade=True)
 
     def onOpenConfigurationMenu(self):
         """

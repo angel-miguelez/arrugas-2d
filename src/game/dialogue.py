@@ -145,7 +145,7 @@ class SimpleDialogueIntervention(TextUI, Subject):
 
         for event in events:
 
-            if event.type == KEYDOWN and event.key == K_SPACE:
+            if event.type == KEYDOWN and (event.key in (K_SPACE, K_RETURN)):
 
                 if self.done:
                     self.notify()  # notify when all the text has been rendered
@@ -223,7 +223,7 @@ class DynamicDialogueIntervention(SimpleDialogueIntervention):
     def events(self, events):
 
         for event in events:
-            if event.type == KEYDOWN and event.key == K_SPACE:
+            if event.type == KEYDOWN and (event.key in (K_SPACE, K_RETURN)):
 
                 if self.done:  # all paragraphs rendered
                     self.notify()

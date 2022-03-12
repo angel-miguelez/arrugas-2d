@@ -2,6 +2,7 @@
 
 import pygame
 
+from game.director import Director
 from utils.resourcesmanager import ResourcesManager
 
 
@@ -10,7 +11,9 @@ class Scene:
     Class that represents a scene of the game, which could be a menu, a game map...
     """
 
-    def __init__(self):
+    def __init__(self, nextScene=None):
+
+        self.nextScene = nextScene  # scene to be loaded when this one is finished
 
         self.objectsToEvent = []  # objects that need to catch events
         self.objectsToUpdate = []  # objects that need to be updated
@@ -47,6 +50,15 @@ class Scene:
         Method called right after the scene loop is finished by the director
         """
         raise NotImplemented("onExit method not implemented.")
+
+    def finish(self):
+        """
+        Method to load the next scene after this one is finished
+        """
+        if self.nextScene is None:
+            Director().pop(fade=True)
+        else:
+            Director().change(self.nextScene(), fade=True)
 
     def playMusic(self, file, volume=1):
         """
