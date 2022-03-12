@@ -8,9 +8,10 @@ from game.director import Director
 from menu.settings import SettingsMenu
 from menu.menu import Menu
 
-from phase.history import SceneDialog1, SceneDialog2
+from phase.history import SceneDialog2, Tutorial
 
-backgroundColorText = (100,100,100)
+backgroundColorText = (100, 100, 100)
+
 
 class MainMenu(Menu):
     """
@@ -51,7 +52,7 @@ class MainMenu(Menu):
 
         self.playMusic("button2.wav", "sound.menu_music_volume")
         self._startGame = True
-        Director().push(SceneDialog2() if MetainfoManager.isTutorialDone() else SceneDialog1(), fade=True)
+        Director().push(SceneDialog2() if MetainfoManager.isTutorialDone() else Tutorial(), fade=True)
 
     def onOpenConfigurationMenu(self):
         """

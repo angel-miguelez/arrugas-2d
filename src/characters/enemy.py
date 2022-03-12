@@ -123,13 +123,19 @@ class Basic1(Enemy):
 
         # If we're approaching the target, we slow down
         elif distance <= self.targetRadius:
-            dir.normalize_ip()
-            vel = dir * (distance / self.targetRadius * self.speed)
+            try:
+                dir.normalize_ip()
+                vel = dir * (distance / self.targetRadius * self.speed)
+            except ValueError:
+                vel = pygame.math.Vector2(0, 0)
 
         # Otherwise, move with max speed
         else:
-            dir.normalize_ip()
-            vel = dir * self.speed
+            try:
+                dir.normalize_ip()
+                vel = dir * self.speed
+            except ValueError:
+                vel = pygame.math.Vector2(0, 0)
 
         # If the enemy has stuck in a position due to collisions or other events
         if self._lastDistance == distance:
