@@ -30,8 +30,9 @@ class SettingsMenu(Menu):
         self._menu.add.vertical_margin(30)
         self._loadVolumeSettings()  # load the music and sound effects volumes and create buttons to edit them
         self._menu.add.vertical_margin(30)
-        self.returnButton = self._menu.add.button('return', Director().pop, background_color = backgroundColorText)  # button to return to the main menu
-
+        self.returnButton = self._menu.add.button('return', Director().pop,
+                                                  font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
+                                                  selection_color=(0, 0, 0))  # button to return to the main menu
 
     def onExitScene(self):
         super().onExitScene()
@@ -85,7 +86,9 @@ class SettingsMenu(Menu):
             keyName = self._conf.getBind(fieldName, code=False)
 
             self._bindings[f"{fieldName}"] = keyName
-            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding, fieldName, background_color = backgroundColorText)
+            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding, fieldName,
+                                                                         font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
+                                                                         selection_color=(0, 0, 0))
             self._dynamicButtonsTitle[fieldName] = f"Move {bind}: "
 
     def _editVolume(self, value, field):
@@ -106,14 +109,20 @@ class SettingsMenu(Menu):
         menuVolume = int(float(ConfManager.getValue("sound.menu_music_volume") * 100))
         self._menu.add.range_slider('Menu volume', menuVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.menu_music_volume", background_color = backgroundColorText)
+                                    onchange=self._editVolume, field="sound.menu_music_volume",
+                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
+                                    selection_color=(0, 0, 0))
 
         gameVolume = int(float(ConfManager.getValue("sound.game_music_volume") * 100))
         self._menu.add.range_slider('Game volume', gameVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.game_music_volume", background_color = backgroundColorText)
+                                    onchange=self._editVolume, field="sound.game_music_volume",
+                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
+                                    selection_color=(0, 0, 0))
 
         soundEffectsVolume = int(float(ConfManager.getValue("sound.sound_effects_volume") * 100))
         self._menu.add.range_slider('Sound effects volume', soundEffectsVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.sound_effects_volume", background_color = backgroundColorText)
+                                    onchange=self._editVolume, field="sound.sound_effects_volume",
+                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
+                                    selection_color=(0, 0, 0))
