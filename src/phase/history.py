@@ -1,57 +1,90 @@
 # -*- coding: utf-8 -*-
 
 import pygame
+from pygame.locals import *
 
+from characters.npc import ElderTutorialCharacter
 from conf.configuration import ConfManager
 from conf.metainfo import MetainfoManager
+from objects.door import Door
 from phase.cinematic import DialoguePhase
 from phase.playable import GamePhase
 from res.levels import *
+from utils.observer import Observer, Subject
 
 
-class SceneDialog1(DialoguePhase):
+class Tutorial(GamePhase, Observer):
 
     def __init__(self):
+        super().__init__(SceneDialog2, basic_layout, rooms_1)
 
-        super().__init__(SceneDialog2, "intro.jpg", "introduction01.txt")
+        # Add a door so the player cannot explore the level yet (since it is the same as Phase1)
+        door = Door((635, 412), self.playerGroup)
+        door._locked = True
+        self.objectsGroup.add(door)
 
-        # Update the text to put the player movement bindings in the tutorial text
-        paragraphWithKeys = self.dialogue.interventions[-1].text[-1]
-        playerBindings = [pygame.key.name(code) for code in ConfManager.getPlayerMovementBinds()]
+        # Partner who explains the player how to move
+        self.partner = ElderTutorialCharacter((500, 300), self.playerGroup)
+        self.npcGroup.add(self.partner)
 
-        for idx, line in enumerate(paragraphWithKeys):
-            line = line.replace("UP", f"[{playerBindings[0]}]")
-            line = line.replace("LEFT", f"[{playerBindings[3]}]")
-            line = line.replace("DOWN", f"[{playerBindings[1]}]")
-            line = line.replace("RIGHT", f"[{playerBindings[2]}]")
-            paragraphWithKeys[idx] = line
+        self.movedInDir = [False, False, False, False]  # check that the player know how to move in every direction
+        self.lastPos = self.player.lastPos
+        self.player.attach(self)
 
-        self.dialogue.interventions[-1].text[-1] = paragraphWithKeys
+    def update(self, *args):
+
+        # If the player has moved in all directions, finish the tutorial
+        if all(self.movedInDir):
+            self.finish()
+
+        super().update(*args)
+
+    def onEnterScene(self):
+        super().onEnterScene()
+
+        # Provoke a fake collision, to trigger the dialogue
+        self.partner.objectsEnterCollision.append(self.player)  # consistency with the collision system
+        self.partner.onCollisionEnter(self.player)
 
     def onExitScene(self):
         super().onExitScene()
         MetainfoManager.setTutorialDone()
 
+    def updateObserver(self, subject: Subject):
 
-class MoveStartPhase(GamePhase):
-    """
-    Tutorial to learn how to move the player
-    """
+        x, y = subject.getPos()
 
-    def __init__(self):
+        if y < self.lastPos[1]:
+            self.movedInDir[0] = True
+        elif y > self.lastPos[1]:
+            self.movedInDir[1] = True
 
-        super().__init__(SceneDialog2, moveStartPhase)
+        if x < self.lastPos[0]:
+            self.movedInDir[2] = True
+        elif x > self.lastPos[0]:
+            self.movedInDir[3] = True
+
+        self.lastPos = x, y
 
 
 class SceneDialog2(DialoguePhase):
     """
-    Scene that appears after starting the game from the menu. The partner of Tomas remebers him how it is not the first
+    Scene that appears after starting the game from the menu. The partner of Tomas remembers him how it is not the first
     time he tries to escape from the residence
     """
+
     def __init__(self):
         checkpoint = MetainfoManager.getLastCheckpoint()
-        scene = Phase1 if checkpoint is None else eval(MetainfoManager.getLastCheckpoint())
-        super().__init__(scene, "intro.jpg", "introduction02.txt")
+
+        # Sanity check, because if no checkpoint is available, the menu would have loaded the Tutorial
+        if checkpoint is None:
+            checkpoint = "Tutorial"
+
+        # If the tutorial has been done, load Phase1
+        elif checkpoint == "Tutorial":
+            checkpoint = "Phase1"
+
+        super().__init__(eval(checkpoint), "intro.jpg", "introduction02.txt")
 
 
 class Phase1(GamePhase):
