@@ -55,7 +55,7 @@ class CodeLock(pygame.sprite.Sprite):
         self.input.append(number)
 
         xPos = (len(self.input) - 1) * 170 + 100  # calculate the horizontal position of the number in the screen
-        ui = TextUI("ds-digi.TTF", 180, (xPos, 200), (0, 0, 0))
+        ui = TextUI("ds-digi.ttf", 180, (xPos, 200), (0, 0, 0))
         ui.setText(str(number))  # set the text to the number introduced
         self.numbers.append(ui)
 
@@ -86,8 +86,8 @@ class Elevator(Object):
     def __init__(self, password, playerGroup, position):
         super().__init__("elevator.png", position, playerGroup)
 
-        self.password = password  # random number between 0000-9999
-        self.codeLock = CodeLock(password)
+        self.password = password.copy()  # random number between 0000-9999
+        self.codeLock = CodeLock(self.password)
         print("Password: ", password)
 
     def onCollisionEnter(self, collided):

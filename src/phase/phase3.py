@@ -52,179 +52,143 @@ class Phase3(PlayablePhase):
 
         self.enemies = []
         self.objects = []
-        self.lettersAndSwitches = []
 
         # Enemies
         for enemyGroupString in self.level.getEnemies():
-            if enemyGroupString == []:
-                pass
-            else:
-                enemyGroup = []
-                for enemyString in enemyGroupString:
-                    enemy = self.createEnemy(enemyString)
-                    enemyGroup.append(enemy)
-                
-                self.enemies.append(enemyGroup)
+            enemyGroup = []
+            for enemyString in enemyGroupString:
+                enemy = self.createEnemy(enemyString)
+                enemyGroup.append(enemy)
 
-        #basic0 = Basic0([450, 300], self.playerGroup, self.level.getWalls())
-        #self.addToGroup(basic0, "npcGroup")
-        #self.player.attach(basic0)
-
-        #waypoints = [(0, 400), (2000, 400)]
-        #spawn = [500, 405]
-        #basic1 = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.2)
-        #self.addToGroup(basic1, "npcGroup")
-
-        # basic2 = Basic2([1000, 500], self.playerGroup, self.level.getWalls())
-        # self.addToGroup(basic2, "npcGroup")
-        # self.player.attach(basic2)
-
-        #normal2 = Normal2([850, 800], self.playerGroup, self.level.getWalls(), 0.1)
-        #self.addToGroup(normal2, "npcGroup")
-        #self.player.attach(normal2)
-        
-        #basic4 = Basic4([450, 330], self.playerGroup, self.level.getWalls())
-        #self.addToGroup(basic4, "npcGroup")
-        #self.player.attach(basic4)
-
-        advanced2 = Advanced2([850, 800], self.playerGroup, self.level.getWalls())
-        self.addToGroup(advanced2, "npcGroup")
-        self.player.attach(advanced2)
+            self.enemies.append(enemyGroup)
 
         password = [random.randrange(0, 10) for _ in range(0, 4)]  # random number between 0000-9999
         elevator = Elevator(password, self.playerGroup, (self.level.getElevator()[0], self.level.getElevator()[1]))
         self.addToGroup(elevator, "objectsGroup")
 
+        # Add the effect to the foreground
+        occlude = Occlude()
+        self.addToGroup(occlude, "foregroundGroup")
+
+        # Set threshold for item spawn
+        threshold = 0.1
+
+        # We only spawn the glasses once
+        self._glassesBool = False
+
+        # Add all the objects to the scene
+        for objectGroupString in self.level.getObjects():
+            objectGroup = []
+
+            for objectString in objectGroupString:
+                data = objectString.split()
+
+                if data[2] == "Labcoat" and random.random() <= threshold:
+                    labcoat = LabCoat(self.playerGroup, (int(data[0]), int(data[1])))
+                    objectGroup.append(labcoat)
+                    # self.addToGroup(labcoat, "objectsGroup")
+                elif data[2] == "Glasses" and not self._glassesBool and random.random() <= threshold:
+                    self._glassesBool = True
+                    glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
+                    objectGroup.append(glasses)
+                    # self.addToGroup(glasses, "objectsGroup")
+
+                    # Link glasses with the effect so that it can disappear when picked up
+                    glasses.attach(occlude)
+
+            self.objects.append(objectGroup)
+
         # Adding the doors, switches and letters with the code to the scene
         lettersCreated = 0
         totalSwitches = len(self.level.getSwitches())
-
         for idx, switch in enumerate(self.level.getSwitches()):
             aux = switch.split()
             data = [int(numeric_string) for numeric_string in aux]
 
-            door = Door((data[0], data[1]), self.playerGroup)
-            switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, "enter", visible=False)
-            if data[4]:
-                switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
-            else:
-                switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, "exit", active=False, visible=False)
-
             remainingLoops = totalSwitches - idx - 1
             remainingLetters = 4 - lettersCreated
             if remainingLetters == 0:
-                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
+                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, [], lock=False)
             elif remainingLetters == remainingLoops or random.random() >= 0.5:
                 digit = password[random.randrange(0, len(password))]
                 password.remove(digit)
                 letterOrSwitch = Letter((data[5], data[6]), self.playerGroup, digit)
                 lettersCreated += 1
             else:
-                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, lock=False)
+                letterOrSwitch = Switch("switch.png", (data[5], data[6]), self.playerGroup, [], lock=False)
+
+            door = Door((data[0], data[1]), self.playerGroup)
+            letterOrSwitch.attach(door)
+
+            entities = self.enemies[idx] + self.objects[idx] + [letterOrSwitch]
+
+            switch = Switch("white_tile.jpg", (data[2], data[3]), self.playerGroup, entities, visible=False,
+                            addEntities=True)
+            if data[4]:
+                switch1 = Switch("invisible_tile.png", (data[0] - 50, data[1]), self.playerGroup, entities,
+                                 active=False, visible=False)
+            else:
+                switch1 = Switch("invisible_tile.png", (data[0] + 50, data[1]), self.playerGroup, entities,
+                                 active=False, visible=False)
 
             switch.attach(door)
             switch.attach(switch1)
             switch1.attach(door)
-            letterOrSwitch.attach(door)
-            self.addToGroup([letterOrSwitch, door, switch, switch1], "objectsGroup")
 
-            self.lettersAndSwitches.append(letterOrSwitch)
+            self.addToGroup([door, switch, switch1], "objectsGroup")
 
-        assert lettersCreated == 4
-
-        #Create occlude effect
-        occlude = Occlude()
-
-        #Set threshold for item spawn
-        threshold = 0.1
-
-        #We only spawn the glasses once
-        self._glassesBool = False
-
-        #Add all the objects to the scene
-        for objectGroupString in self.level.getObjects():
-            objectGroup = []
-
-            for objectString in objectGroupString:
-                data = objectString.split()
-                
-                if data[2] == "Labcoat":
-                    if random.random() <= threshold:
-                        labcoat = LabCoat(self.playerGroup, (int(data[0]), int(data[1])))
-                        objectGroup.append(labcoat)
-                        self.addToGroup(labcoat, "objectsGroup")
-                elif data[2] == "Glasses":
-                    if not self._glassesBool:
-                        if random.random() <= threshold:
-                            self._glassesBool = True
-                            glasses = Glasses(self.playerGroup, (int(data[0]), int(data[1])))
-                            objectGroup.append(glasses)
-                            self.addToGroup(glasses, "objectsGroup")
-
-                            #Link glasses with the effect so that it can disappear when picked up
-                            glasses.attach(occlude)
-            
-            self.objects.append(objectGroup)
-        
-        #Add the effect to the foreground
-        self.addToGroup(occlude, "foregroundGroup")
-
-        # GUI elements
+        assert lettersCreated == 4  # sanity check
 
         # Register objects to update and event methods
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
         self.addToGroup([self.player], "objectsToEvent")
 
-        print(self.lettersAndSwitches)
-
     def createEnemy(self, enemy):
         data = enemy.split()
-        enemy = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
 
         if data[2] == "Basic0":
             enemy = Basic0([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
         elif data[2] == "Basic1":
             waypoints = [(320, 400), (500, 400)]
             spawn = [int(data[0]), int(data[1])]
             enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.3)
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
         elif data[2] == "Basic12":
             waypoints = [(320, 400), (500, 400)]
             spawn = [int(data[0]), int(data[1])]
             enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.1)
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
         elif data[2] == "Basic2":
             enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
-        
+
         elif data[2] == "Basic4":
             enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
         elif data[2] == "Normal21":
             enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.15)
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
-            
+
         elif data[2] == "Normal22":
             enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.1)
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
         elif data[2] == "Advanced2":
             enemy = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
-            self.addToGroup(enemy, "npcGroup")
+            # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
-        
+
         return enemy
 
     def onEnterScene(self):
