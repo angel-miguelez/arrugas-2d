@@ -151,14 +151,16 @@ class Phase1(PlayablePhase):
             self.player.attach(enemy)
 
         elif data[2] == "Basic1":
-            waypoints = [(320, 400), (500, 400)]
+            offset = 180
+            waypoints = [(int(data[0])-offset, int(data[1])), (int(data[0]), int(data[1]))]
             spawn = [int(data[0]), int(data[1])]
             enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.3)
             # self.addToGroup(enemy, "npcGroup")
             self.player.attach(enemy)
 
         elif data[2] == "Basic12":
-            waypoints = [(320, 400), (500, 400)]
+            offset = 180
+            waypoints = [(int(data[0])-offset, int(data[1])), (int(data[0]), int(data[1]))]
             spawn = [int(data[0]), int(data[1])]
             enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.1)
             # self.addToGroup(enemy, "npcGroup")
