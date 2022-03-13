@@ -16,7 +16,7 @@ from utils.observer import Observer, Subject
 class Tutorial(GamePhase, Observer):
 
     def __init__(self):
-        super().__init__(SceneDialog2, basic_layout, rooms_1)
+        super().__init__(SceneDialog2, 1)
 
         # Add a door so the player cannot explore the level yet (since it is the same as Phase1)
         door = Door((635, 412), self.playerGroup)
