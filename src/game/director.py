@@ -5,6 +5,7 @@ import pygame
 from pygame.locals import *
 
 from conf.configuration import ConfManager
+from conf.metainfo import MetainfoManager
 
 from utils.singleton import Singleton
 
@@ -38,6 +39,8 @@ class Director(metaclass=Singleton):
         self._fadeCounter = 0  # time that the transition has being active
 
         self.time = 0  # time since last update, public variable
+        
+        self.deathCounter = int(MetainfoManager.getDeathCounter()) # number of deaths of the player on the current game
 
     def _fade(self, time, surface):
         """
@@ -139,6 +142,8 @@ class Director(metaclass=Singleton):
         """
         Loads the current level again
         """
+        self.deathCounter += 1 # adds one death to the counter
+        MetainfoManager.saveDeathCounter(str(self.deathCounter))
         scene = copy.copy(self.getCurrentScene())
         scene.__init__()
         self.change(scene, fade=fade)
@@ -149,3 +154,11 @@ class Director(metaclass=Singleton):
         """
 
         return self._scenes[-1]
+        
+        
+    def getDeathCounter(self):
+        """
+        Returns the current number of deaths
+        """
+
+        return self.deathCounter

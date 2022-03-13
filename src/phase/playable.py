@@ -19,6 +19,7 @@ from objects.elevator import Elevator
 from objects.glasses import Glasses
 from objects.labcoat import LabCoat
 from objects.letter import Letter
+from objects.deathCounter import DeathCounter
 
 
 class PlayablePhase(Scene):
@@ -98,6 +99,8 @@ class GamePhase(PlayablePhase):
 
         self.level = Level(level, 400, 300)  # Setup map structure
         self.nextScene = nextScene  # scene to load when this one is finished
+        self.deathCounter = Director().getDeathCounter() # get current death counter
+        print(self.deathCounter)
 
         # Initialize the player
         self.player = Player((400, 300), 0.2)
@@ -106,6 +109,9 @@ class GamePhase(PlayablePhase):
 
         self.player.addCollisionGroup(self.level.getWalls())
         self.addToGroup(self.player, "playerGroup")
+        
+        death = DeathCounter(self.deathCounter)
+        self.addToGroup(death, "uiGroup")  # add the UI object to the scene
 
         # Create the vision occlusion effect
         self.occlude = Occlude()

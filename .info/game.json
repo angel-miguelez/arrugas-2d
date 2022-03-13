@@ -1,4 +1,5 @@
 {
-    "lastCheckpoint": "Phase2",
-    "tutorialDone": true
+    "lastCheckpoint": "Phase1",
+    "tutorialDone": true,
+    "deathCounter": "1"
 }

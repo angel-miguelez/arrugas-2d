@@ -58,6 +58,13 @@ class MetainfoManager(object):
         Returns the last scene played
         """
         return cls.getValue("lastCheckpoint")
+        
+    @classmethod
+    def getDeathCounter(cls):
+        """
+        Returns the number of deaths
+        """
+        return cls.getValue("deathCounter")
 
     @classmethod
     def saveCheckpoint(cls, scene):
@@ -66,6 +73,15 @@ class MetainfoManager(object):
         """
         cls.data["lastCheckpoint"] = type(scene).__name__
         cls.save()
+    
+    @classmethod
+    def saveDeathCounter(cls, deathCounter):
+        """
+        Saves the number of deaths
+        """
+        cls.data["deathCounter"] = deathCounter
+        cls.save()
+
 
     @classmethod
     def isTutorialDone(cls):
