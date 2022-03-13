@@ -40,6 +40,10 @@ class MainMenu(Menu):
     def onEnterScene(self):
         super().onEnterScene()
 
+        tutorialDone = MetainfoManager.isTutorialDone()
+        startButton = self._menu.get_widget("start")
+        startButton.set_title("Continue" if tutorialDone else 'New Game')
+
         # If the player returns from the game, instead from a submenu, set again the menu music
         if self._startGame:
             self._startGame = False
@@ -59,18 +63,6 @@ class MainMenu(Menu):
         self.playMusic("button2.wav", "sound.menu_music_volume")
         self._startGame = True
         Director().push(SceneDialog2() if MetainfoManager.isTutorialDone() else Tutorial(), fade=True)
-
-
-class BackAction(MenuAction):
-
-    def __init__(self, conf):
-        super().__init__(0)
-        conf.save()
-
-    def __eq__(self, other: 'MenuAction') -> bool:
-        if isinstance(other, MenuAction):
-            return self._action == other._action
-        return False
 
 
 class SettingsMenu:
