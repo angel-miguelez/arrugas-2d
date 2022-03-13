@@ -3,21 +3,21 @@
 #
 ¡Por fin libre!
 #
-Por fin podré volver a mi casa, lejos de esta
-apestosa residencia y de ese estúpido compañero
-que tenía.
+Por fin podré volver a mi casa, y
+ver a mi familia.
 @elder.png
-Así que finalmente conseguiste escapar, eh?
+Finalmente lo lograste...
 @character_avatar.png
 ¡¡¡ !!!
 #
-¿De donde has salido?
+¿De dónde has salido?
 #
 ¿Cómo has conseguido escapar?
 @elder.png
-Yo siempre te acompañaré a donde vayas, al fin
-y al cabo vivo dentro de tu cabeza.
+¿Cómo lo has conseguido tú?
 @character_avatar.png
 ...
 @elder.png
-Deja que te guíe a tu casa.
+Es difícil que nuestros caminos se separen.
+#
+Anda, te acompaño a casa.
