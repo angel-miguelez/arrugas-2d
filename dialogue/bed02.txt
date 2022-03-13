@@ -1,0 +1,3 @@
+@character_avatar.png
+Esta es la cama de (compañero)... creo
+que no debería perder el tiempo aquí.

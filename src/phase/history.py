@@ -3,7 +3,7 @@
 import pygame
 from pygame.locals import *
 
-from characters.npc import ElderTutorialCharacter,Television
+from characters.npc import ElderTutorialCharacter, Television, Bed01, Bed02
 from conf.configuration import ConfManager
 from conf.metainfo import MetainfoManager
 from objects.door import Door
@@ -95,7 +95,9 @@ class Phase1(GamePhase):
     def __init__(self):
         super().__init__(Capture, 1)
         television = Television((500, 240), self.playerGroup)
-        self.npcGroup.add(television)
+        bed01 = Bed01((400, 540), self.playerGroup)
+        bed02 = Bed02((600, 540), self.playerGroup)
+        self.npcGroup.add([television, bed01, bed02])
 
     def onEnterScene(self):
         super().onEnterScene()

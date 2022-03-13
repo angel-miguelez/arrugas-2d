@@ -119,7 +119,7 @@ class NurseCharacter(DialogueCharacter):
         image = "npc/nurse.png"
         dialg = "nurse01.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
-        
+ 
 class Television(DialogueCharacter):
     """
     Television character
@@ -129,3 +129,24 @@ class Television(DialogueCharacter):
         image = "npc/television.png"
         dialg = "television01.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+        
+class Bed01(DialogueCharacter):
+    """
+    Bed character
+    """
+
+    def __init__(self, position, playerGroup):
+        image = "npc/bed01.png"
+        dialg = "bed01.txt"
+        DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+        
+class Bed02(DialogueCharacter):
+    """
+    Bed character
+    """
+
+    def __init__(self, position, playerGroup):
+        image = "npc/bed02.png"
+        dialg = "bed02.txt"
+        DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+
