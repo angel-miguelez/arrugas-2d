@@ -7,12 +7,14 @@ from characters.character import *
 from utils.observer import *
 from utils.resourcesmanager import *
 
+#Different walls
 _LEFTWALL = 0
 _RIGHTWALL = 1
 _INTERSECTION_TOPRIGHT = 2
 _INTERSECTION_TOPLEFT = 3
 _INTERSECTION_BOTTOMLEFT = 4
 _INTERSECTION_BOTTOMRIGHT = 5
+
 #This is changed as a test the cords of the coordInterior.txt should be 32 160 32 64
 _FRONTWALL = 6
 _FLOOR_1 = 7
@@ -21,6 +23,12 @@ _FLOOR_3 = 9
 _FLOOR_4 = 10
 _FLOOR_5 = 11
 
+#Decoration
+_SMALL_CARPET_1 = 12
+_SMALL_CARPET_2 = 13
+_SMALL_CARPET_3 = 14
+_PLANT = 15
+
 class Level(Observer):
     def __init__(self, level, posx, posy):
 
@@ -28,24 +36,33 @@ class Level(Observer):
         if level == 1:
             level_data = basic_layout
             rooms = rooms_1
-            self.floor_type = _FLOOR_2
+            self.floorType = _FLOOR_2
+            self.doorCarpet = _SMALL_CARPET_1
         elif level == 2:
             level_data = basic_layout_2
             rooms = rooms_2
-            self.floor_type = _FLOOR_1
+            self.floorType = _FLOOR_1
+            self.doorCarpet = _SMALL_CARPET_2
         elif level == 3:
             level_data = basic_layout_3
             rooms = rooms_3
-            self.floor_type = _FLOOR_5
+            self.floorType = _FLOOR_5
+            self.doorCarpet = _SMALL_CARPET_3
 
-        #Load the image
+        #Load the images
         self.sheet = ResourcesManager.loadImage("Room_Builder_free_32x32.png", -1)
         self.sheet = self.sheet.convert_alpha()
+
+        self.sheet2 = ResourcesManager.loadImage(
+            "Interiors_free_32x32.png", -1)
+        self.sheet2 = self.sheet2.convert_alpha()
 
         # Group of tiles that form the walls of the map
         self.walls = pygame.sprite.Group()
         # Group of tiles that form the floor of the map
         self.floor = pygame.sprite.Group()
+        #Group of tiles that form the decorations with no hitbox
+        self.noHitboxDecorations = pygame.sprite.Group()
 
         #self._player = Player((400, 300))
         self._player = Player((400, 300), 0.2)
@@ -95,7 +112,12 @@ class Level(Observer):
         #Coordinates to place the elevator on
         self.elevator = (0, 0)
 
+        #Setup map
         self.setupLevel(level_data)
+        self.addDecorations(level_data)
+        
+        #Adjust the positions of the elements in the map based on the player spawn position
+        self.__setupPlayerSpawn()
 
     def getEnemies(self):
         return self.enemies
@@ -128,7 +150,18 @@ class Level(Observer):
         #Get the sprite from the sprite sheet
         aux = pygame.Rect(
             spriteCoords[0], spriteCoords[1], spriteCoords[2], spriteCoords[3])
-        image = self.sheet.subsurface(aux)
+        
+        if spriteType >= 12:
+            if spriteType <= 14:
+                #Carpet in front of the doors
+                image = self.sheet2.subsurface(aux)
+                image  = pygame.transform.rotate(image, 90)
+            else:
+                #The rest of the decorations
+                image = self.sheet2.subsurface(aux)
+        else:
+            #Tiles for map generation
+            image = self.sheet.subsurface(aux)
 
         #Create the tile and add it to the corresponding group
         tile = Tile((pos[0], pos[1]), image)
@@ -190,7 +223,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                 #Check to see if we have to add a Basic1 enemy
                 if room_cell == 'R':
@@ -199,7 +232,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic1")
 
@@ -210,7 +243,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic12")
 
@@ -221,7 +254,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic0")
                 
@@ -232,7 +265,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic2")
                 
@@ -243,7 +276,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Advanced2")
 
@@ -254,7 +287,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Normal21")
                 
@@ -265,7 +298,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Normal22")
                 
@@ -276,7 +309,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     enemyGroup.append(str(x) + " " + str(y) + " Basic4")
                 
@@ -286,7 +319,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     #Store letter position to add on the scene
                     self.letters.append(str(x) + " " + str(y))
@@ -297,7 +330,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     #Store letter position to add on the scene
                     objectGroup.append(str(x) + " " + str(y) + " Labcoat")
@@ -308,7 +341,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     #Store letter position to add on the scene
                     objectGroup.append(str(x) + " " + str(y) + " Glasses")
@@ -320,7 +353,7 @@ class Level(Observer):
                     (x, y) = self.__calculatePos(aux_x, start_row)
 
                     #Creating tile and adding it to the group
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                 if orientation:
                     aux_x -= 1
@@ -345,6 +378,7 @@ class Level(Observer):
         #Update walls and floor position based on the player spawn
         self.walls.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
+        self.noHitboxDecorations.update(difference[0], difference[1])
 
         #Update enemies position based on the player spawn
         for groupIndex, enemyGroup in enumerate(self.enemies):
@@ -388,6 +422,32 @@ class Level(Observer):
 
             self.objects[objectGroupIndex] = objectGroup
 
+    def addDecorations(self, layout):
+
+        #Iterate through the map layout in order to add the decorations
+        for row_index, row in enumerate(layout):
+            for col_index, cell in enumerate(row):
+                x = col_index * tile_size
+                y = row_index * tile_size
+
+                #Check to see if we have to add a small carpet
+                if cell == 'f':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    #If the tile directly to the right is a door or an elevetor then we adjust the position on the 'x' axis
+                    if layout[row_index][col_index+1] == 'D' or layout[row_index][col_index+1] == 'E':
+                        self.__setSprite(self.doorCarpet, (x-4, y-8), self.noHitboxDecorations)
+                    else:
+                        self.__setSprite(self.doorCarpet, (x, y-8), self.noHitboxDecorations)
+                
+                if cell == 'p':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_PLANT, (x, y), self.walls)
+
+
     def setupLevel(self, layout):
         inside = False
         
@@ -406,7 +466,7 @@ class Level(Observer):
                 #Check to see if we have to add a floor tile
                 if cell == 'F':
 
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
                 
                 #Check to see if we have to add a left wall tile
                 if cell == 'L':
@@ -449,12 +509,12 @@ class Level(Observer):
                     self._playerSpawnX = x
                     self._playerSpawnY = y
 
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
                 
                 #Check to see if we have to add a player tile
                 if cell == 'E':
                     #Set floor tile
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
+                    self.__setSprite(self.floorType, (x, y), self.floor)
 
                     #Get elevator position
                     self.elevator = (x + 64, y)
@@ -499,9 +559,7 @@ class Level(Observer):
                 
                     inside = not inside  # Complement of current value
                     
-                    self.__setSprite(self.floor_type, (x, y), self.floor)
-
-        self.__setupPlayerSpawn()
+                    self.__setSprite(self.floorType, (x, y), self.floor)
         
 
 
@@ -512,10 +570,9 @@ class Level(Observer):
             print("ERROR: No display surface to draw on.")
             exit(-1)
         else:    
-            self.walls.draw(self.display_surface) #Draw the walls of the map itself
             self.floor.draw(self.display_surface) #Draw the floor of the map itself
-            #for enemyGroup in self.enemies:
-            #    enemyGroup.draw(self.display_surface)  # Draw the enemies
+            self.noHitboxDecorations.draw(self.display_surface) #Draw the decorations with no hitbox
+            self.walls.draw(self.display_surface) #Draw the walls of the map itself
     
     def updateObserver(self, subject: Player):
         newPos = subject.getPos()
@@ -526,7 +583,5 @@ class Level(Observer):
         self.worldShiftY = newPos[1]
 
         self.walls.update(difference[0], difference[1])
+        self.noHitboxDecorations.update(difference[0], difference[1])
         self.floor.update(difference[0], difference[1])
-        
-        #for enemyGroup in self.enemies:
-        #    enemyGroup.update(difference[0], difference[1])
