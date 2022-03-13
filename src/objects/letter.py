@@ -49,7 +49,6 @@ class Letter(Switch):
         # Change group to the foreground one, so it is always visible
         scene = Director().getCurrentScene()
 
-        scene.removeFromGroup(self._player, "objectsToEvent")
         self._player.stop()
 
         scene.removeFromGroup(self, "objectsGroup")
@@ -67,7 +66,7 @@ class Letter(Switch):
 
         scene = Director().getCurrentScene()
         scene.removeFromGroup(self.digit, "uiGroup")
-        scene.addToGroup(self._player, "objectsToEvent")
+        self._player.eventsEnabled = True
 
         self.deactivate()
         self.notify()

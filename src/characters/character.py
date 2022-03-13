@@ -170,6 +170,7 @@ class Player(Character, Subject):
     def stop(self):
         self.lastMovements = [IDLE]
         self.movement = IDLE
+        self.eventsEnabled = False
 
     def move(self):
 

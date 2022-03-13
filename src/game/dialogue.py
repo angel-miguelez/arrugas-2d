@@ -40,7 +40,6 @@ class Dialogue(Observer):
             self.scene.removeFromGroup(self, "uiGroup")
             self.scene.removeFromGroup(self, "objectsToEvent")
             self.scene.removeFromGroup(self, "objectsToUpdate")
-            self.scene.unpauseEvents()
             self.finished = True
         else:
             self.interventions[self.currentIntervention].start()  # start the next intervention
@@ -61,8 +60,6 @@ class Dialogue(Observer):
         self.finished = False
 
         self.scene = Director().getCurrentScene()  # the scene where the dialogue is going to be played
-        self.scene.pauseEvents()  # the dialogue will be the only object receiving events
-
         self.scene.addToGroup(self, "uiGroup")
         self.scene.addToGroup(self, "objectsToEvent")
         self.scene.addToGroup(self, "objectsToUpdate")

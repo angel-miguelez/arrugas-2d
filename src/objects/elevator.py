@@ -92,7 +92,7 @@ class Elevator(Object):
 
     def onCollisionEnter(self, collided):
         scene = Director().getCurrentScene()
-        scene.pauseEvents()  # so the player has to enter the code before moving again
+        scene.player.stop()  # so the player has to enter the code before moving again
         scene.addToGroup(self, "objectsToEvent")  # to enter the password
         scene.addToGroup(self.codeLock, "foregroundGroup")  # display the current input
 
@@ -104,7 +104,7 @@ class Elevator(Object):
         self.codeLock.close()
         scene = Director().getCurrentScene()
         scene.removeFromGroup(self, "objectsToEvents")
-        scene.unpauseEvents()
+        scene.player.eventsEnabled = True
 
     def events(self, events):
 

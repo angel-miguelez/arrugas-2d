@@ -18,8 +18,6 @@ class Scene:
         self.objectsToEvent = []  # objects that need to catch events
         self.objectsToUpdate = []  # objects that need to be updated
 
-        self.pausedEventsObjects = []
-
     def events(self, *args):
         """
         Manages pygame events
@@ -93,27 +91,3 @@ class Scene:
         group = getattr(self, groupName, None)
         if group is not None and object in group:
             group.remove(object)
-
-    def pauseEvents(self):
-        """
-        Removes all the current objects receiving events from the event method. They are save in
-        pausedEventsObjects to resume them later.
-        """
-
-        for object in self.objectsToEvent:
-            if hasattr(object, "disableEvents"):  # if the object has to change something when events are disabled
-                object.disableEvents()
-
-        self.pausedEventsObjects = self.objectsToEvent.copy()  # save the objects receiving events
-        self.objectsToEvent = []  # clean the list that receives events
-
-    def unpauseEvents(self):
-        """
-        Returns the events to the objects that have been disabled before with pauseEvents()
-        """
-
-        for object in self.pausedEventsObjects:
-            if hasattr(object, "enableEvents"):  # if the object has to change something when events are enabled
-                object.enableEvents()
-
-        self.objectsToEvent = self.pausedEventsObjects.copy()  # recover the objects that were paused before
