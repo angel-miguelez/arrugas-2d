@@ -20,7 +20,7 @@ class Letter(Switch):
         self._opened = False  # if the player has collided with it
         self.id = id  # image file of the letter opened
 
-        self.digit = TextUI("southernaire.ttf", 200, (400, 250), (0, 0, 0))
+        self.digit = TextUI("southernaire.ttf", 200, (415, 330), (0, 0, 0))
         self.digit.setText(str(digit))
 
     def onCollisionEnter(self, collided):

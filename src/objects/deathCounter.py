@@ -27,7 +27,7 @@ class DeathCounter():
         print(self.rect)
         self.rect.center = (xPos, yPos)
         
-        self.ui = TextUI("ds-digi.TTF", 56, (xPos+50, yPos-25), (255, 255, 255))
+        self.ui = TextUI("ds-digi.TTF", 56, (xPos+100, yPos), (255, 255, 255))
         self.ui.setText("x "+str(deathCounter))  # set the text to the number introduced
     
     def draw(self, surface):

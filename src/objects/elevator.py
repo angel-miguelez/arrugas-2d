@@ -20,9 +20,9 @@ class CodeLock(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         # Load the sprite common fields
-        self.image = ResourcesManager.loadImage("code_lock.png", transparency=True)
+        self.image = ResourcesManager.loadImage("password_panels.png", transparency=True)
         self.rect = self.image.get_rect()
-        self.rect.center = (400, 300)
+        self.rect.center = (400, 500)
 
         self.password = password
         self.numbers = []  # TextUI elements
@@ -54,8 +54,8 @@ class CodeLock(pygame.sprite.Sprite):
 
         self.input.append(number)
 
-        xPos = (len(self.input) - 1) * 170 + 100  # calculate the horizontal position of the number in the screen
-        ui = TextUI("ds-digi.TTF", 180, (xPos, 200), (0, 0, 0))
+        xPos = (len(self.input) - 1) * 150 + 175  # calculate the horizontal position of the number in the screen
+        ui = TextUI("ds-digi.TTF", 60, (xPos, 497), (10, 203, 0))
         ui.setText(str(number))  # set the text to the number introduced
         self.numbers.append(ui)
 
@@ -86,15 +86,17 @@ class Elevator(Object):
     def __init__(self, password, playerGroup, position):
         super().__init__("elevator.png", position, playerGroup)
 
-        self.password = password.copy()  # random number between 0000-9999
+        self.password = password.copy()
         self.codeLock = CodeLock(self.password)
         print("Password: ", password)
 
     def onCollisionEnter(self, collided):
         scene = Director().getCurrentScene()
-        scene.player.stop()  # so the player has to enter the code before moving again
         scene.addToGroup(self, "objectsToEvent")  # to enter the password
         scene.addToGroup(self.codeLock, "foregroundGroup")  # display the current input
+
+        scene.player.stop()  # so the player has to enter the code before moving again
+        collided.x, collided.y = collided.lastPos  # cannot get through the object
 
     def close(self):
         """

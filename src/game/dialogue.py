@@ -89,15 +89,19 @@ class TextUI:
         self.antialiasing = antialiasing
         self.text = None
 
-        self.position = position
-
-        self.active = False  # only rendered while active
+        self.position = position  # center of the object
 
     def setText(self, text):
         """
         Updates the text
         """
         self.text = self.font.render(text, self.antialiasing, self.color)
+        rect = self.text.get_rect()
+
+        # Adjust the position to satisfy that the center is the same. Useful to have texts
+        # of different sizes in the same position
+        x, y = (self.position[0] - rect.width / 2, self.position[1] - rect.height / 2)
+        self.position = (x, y)
 
     def draw(self, surface):
         surface.blit(self.text, self.position)
