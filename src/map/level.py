@@ -97,6 +97,9 @@ class Level(Observer):
         self.rooms = rooms
         self.levels = np.zeros((len(self.rooms)), dtype=bool)
 
+        # NPC array, they are all in the corridor (no inside the rooms)
+        self.npc = []
+
         #Enemy array, for room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
         self.enemies = []
 
@@ -118,6 +121,9 @@ class Level(Observer):
         
         #Adjust the positions of the elements in the map based on the player spawn position
         self.__setupPlayerSpawn()
+
+    def getNPC(self):
+        return self.npc
 
     def getEnemies(self):
         return self.enemies
@@ -560,7 +566,19 @@ class Level(Observer):
                     inside = not inside  # Complement of current value
                     
                     self.__setSprite(self.floorType, (x, y), self.floor)
-        
+
+                elif cell == 'N':
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    x, y = self.__calculatePos(col_index, row_index)
+                    self.npc.append(f"{x} {y} Nurse")
+
+                elif cell == 'O':
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    x, y = self.__calculatePos(col_index, row_index)
+                    self.npc.append(f"{x} {y} Elder")
+
 
 
     def draw(self, surface):

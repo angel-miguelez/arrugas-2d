@@ -8,6 +8,7 @@ import sys
 
 from characters.character import Player
 from characters.enemy import Advanced2, Normal2, Basic2, Basic1, Basic0
+from characters.npc import NurseCharacter, ElderCharacter
 from conf.metainfo import MetainfoManager
 from effects.occlusion import Occlude
 from game.director import Director
@@ -126,6 +127,9 @@ class GamePhase(PlayablePhase):
         enemies = self._createEnemies(self.level.getEnemies())
         objects = self._createObjects(self.level.getObjects())
         self._createSwitches(self.level.getSwitches(), enemies, objects, password)
+
+        # Initialize the NPC in the corridor
+        self._createNPC(self.level.getNPC())
 
         # Register objects to update and event methods
         self.addToGroup([self.player, self.objectsGroup, self.npcGroup], "objectsToUpdate")
@@ -258,3 +262,17 @@ class GamePhase(PlayablePhase):
             insideSwitch.attach(outsideSwitch)  # activate the switch from outside after entering the room
 
             self.addToGroup([door, insideSwitch, outsideSwitch], "objectsGroup")
+
+    def _createNPC(self, data):
+        """
+        Creates the list of npc in the corridor based on the level data
+        """
+
+        for npcInfo in data:
+            npcInfo = npcInfo.split(" ")
+            x, y, npcType = int(npcInfo[0]), int(npcInfo[1]), npcInfo[2]
+
+            if npcType == "Nurse":
+                self.playerGroup.add(NurseCharacter((x, y), self.playerGroup))
+            elif npcType == "Elder":
+                self.playerGroup.add(ElderCharacter((x, y), self.playerGroup))
