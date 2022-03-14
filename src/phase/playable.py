@@ -273,6 +273,6 @@ class GamePhase(PlayablePhase):
             x, y, npcType = int(npcInfo[0]), int(npcInfo[1]), npcInfo[2]
 
             if npcType == "Nurse":
-                self.playerGroup.add(NurseCharacter((x, y), self.playerGroup))
+                self.npcGroup.add(NurseCharacter((x, y), self.playerGroup))
             elif npcType == "Elder":
-                self.playerGroup.add(ElderCharacter((x, y), self.playerGroup))
+                self.npcGroup.add(ElderCharacter((x, y), self.playerGroup))
