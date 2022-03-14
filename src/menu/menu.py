@@ -21,10 +21,10 @@ class Menu(Scene):
 
         mytheme = pygame_menu.themes.THEME_GREEN.copy()
         myimage = pygame_menu.baseimage.BaseImage(
-            image_path='../img/ground3.jpg',
+            image_path='../img/ground.jpg',
             drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL,
         )
-        mytitle=pygame_menu.widgets.MENUBAR_STYLE_UNDERLINE_TITLE
+        mytitle=pygame_menu.widgets.MENUBAR_STYLE_NONE
         mytheme.title_bar_style=mytitle
         mytheme.background_color = myimage
         #mytheme.selection_effect=Theme.widget_selection_effect

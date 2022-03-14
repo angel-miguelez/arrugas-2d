@@ -15,7 +15,9 @@ from menu.menu import Menu
 
 from phase.history import SceneDialog2, Tutorial
 
-backgroundColorText = (100, 100, 100)
+backgroundColorText = (118, 118, 118)
+font_shad_color=(0, 0, 0)
+sel_color=(255, 255, 255)
 
 
 class MainMenu(Menu):
@@ -24,15 +26,15 @@ class MainMenu(Menu):
     """
 
     def __init__(self):
-        super().__init__("Arrugas")
+        super().__init__("")
 
-        self._menu.add.button('New game', self.onStartGame, button_id="start",
-                              font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0), selection_color=(0, 0, 0))  # button to start the game
+        self._menu.add.button('Empezar', self.onStartGame, button_id="start", font_color=backgroundColorText,
+                              font_shadow=True, font_shadow_offset=1,  font_shadow_color=font_shad_color, selection_color=sel_color)  # button to start the game
         settingsSubMenu = SettingsMenu(self._menu.get_theme())
-        self._menu.add.button('Configuration', SettingsMenu(self._menu.get_theme())._menu,
-                              font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0), selection_color=(0, 0, 0))  # button to edit the configuration
-        self._menu.add.button('Quit', pygame_menu.events.EXIT,
-                              font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0), selection_color=(0, 0, 0))  # button to exit the game
+        self._menu.add.button('Ajustes', SettingsMenu(self._menu.get_theme())._menu, font_color=backgroundColorText,
+                              font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)  # button to edit the configuration
+        self._menu.add.button('Salir', pygame_menu.events.EXIT, font_color=backgroundColorText,
+                              font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)  # button to exit the game
 
         self._startGame = False  # flag to know when to stop the main menu music
         self.playMusic("main_menu2.wav", "sound.menu_music_volume")
@@ -42,7 +44,7 @@ class MainMenu(Menu):
 
         tutorialDone = MetainfoManager.isTutorialDone()
         startButton = self._menu.get_widget("start")
-        startButton.set_title("Continue" if tutorialDone else 'New Game')
+        startButton.set_title("Continuar" if tutorialDone else 'Empezar')
 
         # If the player returns from the game, instead from a submenu, set again the menu music
         if self._startGame:
@@ -72,20 +74,26 @@ class SettingsMenu:
 
     def __init__(self, theme):
 
+        myimage = pygame_menu.baseimage.BaseImage(
+            image_path='../img/ground2.jpg',
+            drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL,
+        )
+
         self._conf = ConfManager()  # get the instance of the ConfManager
 
         self._bindings = {}  # mapping from the configuration field name to its value e.g. {"player.movement.up" : "w"}
         self._dynamicButtonsBinds = {}  # mapping from the configuration field name to the button object
         self._dynamicButtonsTitle = {}  # mapping from the configuration field name to the button title
 
-        self._menu = pygame_menu.Menu("Settings", 800, 600, theme=theme)
+        theme.background_color = myimage
+
+        self._menu = pygame_menu.Menu(" ", 800, 600, theme=theme)
         self._loadPlayerMovementBindings()  # load the player movement bindings and create buttons to edit them
         self._menu.add.vertical_margin(30)
         self._loadVolumeSettings()  # load the music and sound effects volumes and create buttons to edit them
         self._menu.add.vertical_margin(30)
-        self.returnButton = self._menu.add.button('return', self.saveAndReturn, self._menu, self._conf,
-                                                  font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
-                                                  selection_color=(0, 0, 0))  # button to return to the main menu
+        self.returnButton = self._menu.add.button('Volver', self.saveAndReturn, self._menu, self._conf, font_color=backgroundColorText,
+                                                  font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)  # button to return to the main menu
 
     def saveAndReturn(self, menu, conf):
         conf.save()
@@ -139,10 +147,19 @@ class SettingsMenu:
             keyName = self._conf.getBind(fieldName, code=False)
 
             self._bindings[f"{fieldName}"] = keyName
-            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Move {bind}: '{keyName}'", self._editBinding, fieldName,
-                                                                         font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
-                                                                         selection_color=(0, 0, 0))
-            self._dynamicButtonsTitle[fieldName] = f"Move {bind}: "
+            
+            if bind=="up":
+                movimiento="arriba"
+            elif bind=="down":
+                movimiento="abajo"
+            elif bind=="right":
+                movimiento="derecha"
+            else: movimiento="izquierda"
+
+
+            self._dynamicButtonsBinds[fieldName] = self._menu.add.button(f"Mover {movimiento}: '{keyName}'", self._editBinding, fieldName, font_color=backgroundColorText,
+                                                                         font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)
+            self._dynamicButtonsTitle[fieldName] = f"Mover {movimiento}: "
 
     def _editVolume(self, value, field):
         """
@@ -160,22 +177,19 @@ class SettingsMenu:
         """
 
         menuVolume = int(float(ConfManager.getValue("sound.menu_music_volume") * 100))
-        self._menu.add.range_slider('Menu volume', menuVolume, (0, 100), 1,
+        self._menu.add.range_slider('Menu', menuVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.menu_music_volume",
-                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
-                                    selection_color=(0, 0, 0))
+                                    onchange=self._editVolume, field="sound.menu_music_volume", font_color=backgroundColorText,
+                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)
 
         gameVolume = int(float(ConfManager.getValue("sound.game_music_volume") * 100))
-        self._menu.add.range_slider('Game volume', gameVolume, (0, 100), 1,
+        self._menu.add.range_slider('Juego', gameVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.game_music_volume",
-                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
-                                    selection_color=(0, 0, 0))
+                                    onchange=self._editVolume, field="sound.game_music_volume", font_color=backgroundColorText,
+                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)
 
         soundEffectsVolume = int(float(ConfManager.getValue("sound.sound_effects_volume") * 100))
-        self._menu.add.range_slider('Sound effects volume', soundEffectsVolume, (0, 100), 1,
+        self._menu.add.range_slider('Sonidos', soundEffectsVolume, (0, 100), 1,
                                     value_format=lambda x: str(int(x)),
-                                    onchange=self._editVolume, field="sound.sound_effects_volume",
-                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=(200, 30, 0),
-                                    selection_color=(0, 0, 0))
+                                    onchange=self._editVolume, field="sound.sound_effects_volume", font_color=backgroundColorText,
+                                    font_shadow=True, font_shadow_offset=1, font_shadow_color=font_shad_color, selection_color=sel_color)
