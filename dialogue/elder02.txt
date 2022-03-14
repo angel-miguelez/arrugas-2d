@@ -1,7 +1,9 @@
 @elder.png
-Escuché que te intestaste escapar de nuevo de la residencia.
+Escuché que te intestaste escapar de nuevo de la 
+residencia.
 @character_avatar.png
 ¡Cállate!
 @elder.png
-Ha, ha, ha!
-Vaya, parece que alguien se ha levantado con el pie izquierdo...
+¡Ja, ja, ja!
+Parece que alguien se ha levantado con el pie 
+izquierdo.

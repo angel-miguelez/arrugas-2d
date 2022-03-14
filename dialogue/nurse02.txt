@@ -1,0 +1,9 @@
+@nurse.png
+¡Hombre! 
+#
+Tú otra vez, Tomás
+@character_avatar.png
+¿Y tú quien eres?
+@nurse.png
+Vaya, me empieza a preocupar que pierdas
+la memoria tan a menudo...

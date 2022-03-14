@@ -1,8 +1,8 @@
 @nurse.png
-You seem a little bit tired. Have you been
-resting well these days?
+Pareces un poco cansado. ¿Has descansado
+bien estos días?
 @character_avatar.png
 ...
 @nurse.png
-I may reduce the dosis of pills, they cannot
-be that healthy...
+Deberíamos reducir aún más la dosis de píldoras.
+Parece que os tienen el cerebro atrofiado.

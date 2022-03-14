@@ -73,12 +73,9 @@ class ElderCharacter(DialogueCharacter):
         image = f"npc/elder0{r}.png"  # get a random image
 
         if dialogue is None:
-            r = random.randint(1, 4)
-            dialg = f"elder0{r}.txt"  # get a random dialogue
-        else:
-            dialg = dialogue
+            dialogue = f"elder0{random.randint(1, 5)}.txt"  # get a random dialogue
 
-        DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+        DialogueCharacter.__init__(self, image, dialogue, position, playerGroup)
 
 
 class ElderTutorialCharacter(ElderCharacter):
@@ -115,11 +112,15 @@ class NurseCharacter(DialogueCharacter):
     Simple nurse character
     """
 
-    def __init__(self, position, playerGroup):
+    def __init__(self, position, playerGroup, dialogue=None):
         image = "npc/nurse.png"
-        dialg = "nurse01.txt"
-        DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
- 
+
+        if dialogue is None:
+            dialogue = f"nurse0{random.randint(1, 4)}.txt"  # get a random dialogue
+
+        DialogueCharacter.__init__(self, image, dialogue, position, playerGroup)
+
+
 class Television(DialogueCharacter):
     """
     Television character
@@ -129,7 +130,8 @@ class Television(DialogueCharacter):
         image = "npc/television.png"
         dialg = "television01.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
-        
+
+
 class Bed01(DialogueCharacter):
     """
     Bed character
@@ -139,7 +141,8 @@ class Bed01(DialogueCharacter):
         image = "npc/bed01.png"
         dialg = "bed01.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
-        
+
+
 class Bed02(DialogueCharacter):
     """
     Bed character
