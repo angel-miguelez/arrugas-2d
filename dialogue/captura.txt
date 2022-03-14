@@ -1,11 +1,12 @@
 @nurse.png
-¡YA ESTÁ BIEN! Es la última vez que intentas
-marcharte. 
+¡YA ESTÁ BIEN!
+#
+Es la última vez que intentas marcharte. 
 #
 ¡GUARDIAS! Trasladad a Tomás a la 303.
 @character_avatar.png
 Lo siento mucho señorita pero no pienso
 subir a mi habitación.
 @nurse.png
-Oh claro que subirás. Pero tranquilo que no vas
+Claro que subirás... Pero tranquilo, no vas
 a volver a tu habitación antigua.

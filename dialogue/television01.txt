@@ -1,14 +1,16 @@
 @television.png
-Estamos viviendo un momento histórico!
+¡Estamos viviendo un momento histórico!
 #
-El estallido de la tercera guerra mundial es un 
+¡El estallido de la tercera guerra mundial es un 
 hecho tras la conquista total de Ucrania!
-@character_avatar.png
-Me pregunto si aquel joven con el que jugaba 
-a la pelota estará bien...
-@television.png
+#
 Los primeros soldados españoles ya han sido 
 enviados al frente.
 #
-Hasta aquí la transmisión!
-No compren demasiado aceite...
+En otro orden del día, sigue sin haber avances
+en la vacuna contra la pandemia mundial que
+transforma a los animales mamíferos en nazis. 
+@character_avatar.png
+...
+#
+Pobres vacas.
