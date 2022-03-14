@@ -97,7 +97,7 @@ class Level(Observer):
         self.rooms = rooms
         self.levels = np.zeros((len(self.rooms)), dtype=bool)
 
-        # NPC array, they are all in the corridor (no inside the rooms)
+        # NPC array, they are all in the corridor (not inside the rooms)
         self.npc = []
 
         #Enemy array, for room number 1 the enemies would be located on the 0 position of the array so roomNumber - 1
@@ -427,6 +427,15 @@ class Level(Observer):
 
 
             self.objects[objectGroupIndex] = objectGroup
+        
+        #Update npc's position based on the player spawn
+        for npcIndex, npc in enumerate(self.npc):
+            data = npc.split()
+
+            npc = str(int(data[0]) + difference[0] + 16) + " " + \
+                str(int(data[1]) + difference[1] + 16) + " " + data[2]
+            
+            self.npc[npcIndex] = npc
 
     def addDecorations(self, layout):
 
@@ -570,13 +579,13 @@ class Level(Observer):
                 elif cell == 'N':
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    x, y = self.__calculatePos(col_index, row_index)
+                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Nurse")
 
                 elif cell == 'O':
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    x, y = self.__calculatePos(col_index, row_index)
+                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Elder")
 
 
