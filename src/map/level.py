@@ -43,7 +43,13 @@ _FRUIT3 = 27
 _ELEVATOR = 28
 _CAULDRON1 = 29
 _CAULDRON2 = 30
-_CAULDRON3 = 31
+_BED_TABLE = 31
+_BLUE_SOFA_LEFT = 32
+_BLUE_SOFA_RIGHT = 33
+_PURPLE_SOFA_LEFT = 34
+_PURPLE_SOFA_RIGHT = 35
+_RED_LAMP = 36
+_BLUE_LAMP = 37
 
 
 class Level(Observer):
@@ -584,7 +590,43 @@ class Level(Observer):
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    self.__setSprite(_CAULDRON3, (x, y), self.walls)
+                    self.__setSprite(_BED_TABLE, (x+10, y), self.walls)
+                
+                if cell == 'Y':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_BLUE_SOFA_RIGHT, (x-12, y), self.walls)
+                
+                if cell == 'y':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_BLUE_SOFA_LEFT, (x, y), self.walls)
+                
+                if cell == 'Z':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_PURPLE_SOFA_RIGHT, (x-12, y), self.walls)
+                
+                if cell == 'z':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_PURPLE_SOFA_LEFT, (x, y), self.walls)
+                    
+                if cell == 'V':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_RED_LAMP, (x, y), self.walls)
+                
+                if cell == 'v':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_BLUE_LAMP, (x, y), self.walls)
 
 
 
