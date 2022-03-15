@@ -7,7 +7,7 @@ from pygame.locals import *
 import sys
 
 from characters.character import Player
-from characters.enemy import Advanced2, Normal2, Basic2, Basic1, Basic0
+from characters.enemy import Advanced2, Normal2, Basic2, Basic1, Basic0, Basic4
 from characters.npc import NurseCharacter, ElderCharacter
 from conf.metainfo import MetainfoManager
 from effects.occlusion import Occlude
@@ -157,13 +157,15 @@ class GamePhase(PlayablePhase):
         elif data[2] == "Basic2":
             enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
         elif data[2] == "Basic4":
-            enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+            enemy = Basic4([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
         elif data[2] == "Normal21":
             enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.1)
         elif data[2] == "Normal22":
             enemy = Normal2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(), 0.05)
-        elif data[2] == "Advanced2":
-            enemy = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
+        elif data[2] == "Advanced2L":
+            enemy = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(),"LEFT")
+        elif data[2] == "Advanced2R":
+            enemy = Advanced2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls(),"RIGHT")
 
         self.player.attach(enemy)
 
