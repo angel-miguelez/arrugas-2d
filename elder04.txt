@@ -1,0 +1,5 @@
+@elder.png
+¿Has visto mis gafas? Las necesito para poder
+ver correctamente.
+@character_avatar.png
+Pregúntale a otra persona.
