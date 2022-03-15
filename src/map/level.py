@@ -41,6 +41,9 @@ _FRUIT1 = 25
 _FRUIT2 = 26
 _FRUIT3 = 27
 _ELEVATOR = 28
+_CAULDRON1 = 29
+_CAULDRON2 = 30
+_CAULDRON3 = 31
 
 
 class Level(Observer):
@@ -564,6 +567,24 @@ class Level(Observer):
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_ELEVATOR, (x, y-32), self.walls)
+                    
+                if cell == 'ñ':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_CAULDRON1, (x, y), self.walls)
+                
+                if cell == 'Ñ':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_CAULDRON2, (x, y), self.walls)
+                
+                if cell == 'w':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_CAULDRON3, (x, y), self.walls)
 
 
 

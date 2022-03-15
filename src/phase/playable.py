@@ -148,12 +148,12 @@ class GamePhase(PlayablePhase):
             offset = 180
             waypoints = [(int(data[0])-offset, int(data[1])), (int(data[0]), int(data[1]))]
             spawn = [int(data[0]), int(data[1])]
-            enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.3)
+            enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.15)
         elif data[2] == "Basic12":
             offset = 180
             waypoints = [(int(data[0])-offset, int(data[1])), (int(data[0]), int(data[1]))]
             spawn = [int(data[0]), int(data[1])]
-            enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.1)
+            enemy = Basic1(spawn, self.playerGroup, self.level.getWalls(), waypoints, 0.07)
         elif data[2] == "Basic2":
             enemy = Basic2([int(data[0]), int(data[1])], self.playerGroup, self.level.getWalls())
         elif data[2] == "Basic4":

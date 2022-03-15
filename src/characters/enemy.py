@@ -68,7 +68,7 @@ class Basic1(Enemy):
     """
 
     def __init__(self, position, playerGroup, wallsGroup, waypoints, speed):
-        if speed >= 0.2:
+        if speed >= 0.15:
             Enemy.__init__(self, 'B1.1.png', 'coordBasic1.1.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), speed, 5)
         else:
             Enemy.__init__(self, 'B1.2.png', 'coordBasic1.2.txt', [6,6], position, playerGroup, wallsGroup, (32, 32), speed, 5)

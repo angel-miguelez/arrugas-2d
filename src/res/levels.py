@@ -30,6 +30,8 @@ tile_size = 32 #Tile size used as a base to construct the map
     'm' -> library dark
     'N' -> nurse (NurseCharacter)
     'n' -> Bed01
+    'Ñ' -> cauldron1
+    'ñ' -> cauldron2
     'O' -> old man (ElderCharacter)
     'o' -> Bed02
     'P' -> player spawn.
@@ -46,6 +48,7 @@ tile_size = 32 #Tile size used as a base to construct the map
     'U' -> sofa right(brown)
     'W' -> worm enemy (Basic0)
     'X' -> bottom and top walls
+    'x' -> cauldron3
 """
 moveStartPhase=[
     '            JXXXXXXXXK                                                 ',
@@ -84,7 +87,7 @@ basic_layout = [
     '            LFFFFFFFFRLgFFFFFFhR                                       ',
     '            HXXXXXXXXGLuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFR                                       ',
+    '                      LÑFFFFFFñR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFNOFFFFFR                                       ',
@@ -94,7 +97,7 @@ basic_layout = [
     '                      LjFFFFFFgR                                       ',
     '                      LuFOFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      GFFFFFFFFH                                       ',
+    '                      GñFFFFFFÑH                                       ',
     '                      DfFFFFFFfD                                       ',
     '                      KFFFFFFFFJ                                       ',
     '                      LFFFFFFFFR                                       ',
@@ -103,7 +106,7 @@ basic_layout = [
     '                      LjFFFFFFhR                                       ',
     '                      LuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFR                                       ',
+    '                      LñFFFFFFÑR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFNFNFFFFR                                       ',
@@ -112,7 +115,7 @@ basic_layout = [
     '                      LjFFFFFFgR                                       ',
     '                      LuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFR                                       ',
+    '                      LÑFFFFFFñR                                       ',
     '                      LFFFFFFFFH                                       ',
     '                      LsFOOFFFfD                                       ',
     '                      LFFFFFFFFJ                                       ',
@@ -127,15 +130,15 @@ basic_layout = [
     '                      LhFFFFFFgR                                       ',
     '                      LuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFR                                       ',
+    '                      LñFFFFFFÑR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFNFR                                       ',
     '                      LsFFFFFFSR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LjFFFFFFFH                                       ',
+    '                      LjFFFFFFÑH                                       ',
     '                      LuFFFFFFfD                                       ',
     '                      LFFFFFFFFJ                                       ',
-    '                      LFFFFFFFFR                                       ',
+    '                      LÑFFFFFFFR                                       ',
     '                      GFFFFFFFFR                                       ',
     '                      DfFFFFFFFR                                       ',
     '                      KFFFFFFFFR                                       ',
