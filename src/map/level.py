@@ -692,6 +692,30 @@ class Level(Observer):
 
                     #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Elder")
+                
+                elif cell == 'k':
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    #x, y = self.__calculatePos(col_index, row_index)
+                    self.npc.append(f"{x} {y-10} Television")
+                
+                elif cell == 'n':
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    #x, y = self.__calculatePos(col_index, row_index)
+                    self.npc.append(f"{x} {y} Bed01")
+                
+                elif cell == 'o':
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    #x, y = self.__calculatePos(col_index, row_index)
+                    self.npc.append(f"{x} {y} Bed02")
+                  
+                elif cell == 'q':
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    #x, y = self.__calculatePos(col_index, row_index)
+                    self.npc.append(f"{x} {y} Mate")
 
 
 

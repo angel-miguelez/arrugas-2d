@@ -94,11 +94,11 @@ class Phase1(GamePhase):
 
     def __init__(self):
         super().__init__(Capture, 1)
-        television = Television((500, 240), self.playerGroup)
-        mate = Mate((384, 380), self.playerGroup)
-        bed01 = Bed01((400, 540), self.playerGroup)
-        bed02 = Bed02((600, 540), self.playerGroup)
-        self.npcGroup.add([television, bed01, bed02, mate])
+        #television = Television((500, 240), self.playerGroup)
+        #mate = Mate((384, 380), self.playerGroup)
+        #bed01 = Bed01((400, 540), self.playerGroup)
+        #bed02 = Bed02((600, 540), self.playerGroup)
+        #self.npcGroup.add([television, bed01, bed02, mate])
 
     def onEnterScene(self):
         super().onEnterScene()

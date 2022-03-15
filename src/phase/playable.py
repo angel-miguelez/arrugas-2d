@@ -8,7 +8,7 @@ import sys
 
 from characters.character import Player
 from characters.enemy import Advanced2, Normal2, Basic2, Basic1, Basic0, Basic4
-from characters.npc import NurseCharacter, ElderCharacter
+from characters.npc import NurseCharacter, ElderCharacter, Television, Bed01, Bed02, Mate
 from conf.metainfo import MetainfoManager
 from effects.occlusion import Occlude
 from game.director import Director
@@ -278,3 +278,11 @@ class GamePhase(PlayablePhase):
                 self.npcGroup.add(NurseCharacter((x, y), self.playerGroup))
             elif npcType == "Elder":
                 self.npcGroup.add(ElderCharacter((x, y), self.playerGroup))
+            elif npcType == "Television":
+                self.npcGroup.add(Television((x, y), self.playerGroup))
+            elif npcType == "Bed01":
+                self.npcGroup.add(Bed01((x, y), self.playerGroup))
+            elif npcType == "Bed02":
+                self.npcGroup.add(Bed02((x, y), self.playerGroup))
+            elif npcType == "Mate":
+                self.npcGroup.add(Mate((x, y), self.playerGroup))

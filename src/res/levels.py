@@ -23,15 +23,19 @@ tile_size = 32 #Tile size used as a base to construct the map
     'j' -> fruit3
     'J' -> top left intersection
     'K' -> top right intersection
+    'k' -> Television
     'L' -> left wall
     'l' -> library light
     'M' -> magic range enemy (Basic2)
     'm' -> library dark
     'N' -> nurse (NurseCharacter)
+    'n' -> Bed01
     'O' -> old man (ElderCharacter)
+    'o' -> Bed02
     'P' -> player spawn.
     'p' -> plant
     'Q' -> crab enemy (Basic12)
+    'q' -> Mate
     'R' -> right wall
     'R' -> rabbit enemy (Basic1)
     's' -> sofa left(grey)
@@ -43,7 +47,6 @@ tile_size = 32 #Tile size used as a base to construct the map
     'W' -> worm enemy (Basic0)
     'X' -> bottom and top walls
 """
-
 moveStartPhase=[
     '            JXXXXXXXXK                                                 ',
     '            LFFFFFFFFR                                                 ',
@@ -68,7 +71,7 @@ basic_layout = [
     '                                                                       ',
     '                                                                       ',
     '            JXXXXXXXXK                                                 ',
-    '            LmFFFFFlFR                                                 ',
+    '            LmFFkFFlFR                                                 ',
     '            LFFFFFFFFR                                                 ',
     '            LFPFFFFFFR                                                 ',
     '            LFFFFFFFFRJXXXXXXXXK                                       ',
@@ -77,7 +80,7 @@ basic_layout = [
     '            LFFFFFFFFJKFFFFFFFFJ                                       ',
     '            LFFFFFFFFRLFFFFFFFFR                                       ',
     '            LFFFFFFFFRLsFFFFFFSL                                       ',
-    '            LFFFFFFFFRLFFFFOOFFR                                       ',
+    '            LFnFFFFoFRLFFFFOOFFR                                       ',
     '            LFFFFFFFFRLgFFFFFFhR                                       ',
     '            HXXXXXXXXGLuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
