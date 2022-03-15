@@ -152,4 +152,17 @@ class Bed02(DialogueCharacter):
         image = "npc/bed02.png"
         dialg = "bed02.txt"
         DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+        
+        
+
+class Mate(DialogueCharacter):
+    """
+    Bed character
+    """
+
+    def __init__(self, position, playerGroup):
+        image = "npc/mate_old_man.png"
+        dialg = "mate01.txt"
+        DialogueCharacter.__init__(self, image, dialg, position, playerGroup)
+
 

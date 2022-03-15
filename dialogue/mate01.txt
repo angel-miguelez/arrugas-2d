@@ -1,0 +1,10 @@
+@elder5.png
+Ya te has olvidado de como moverte?
+No tienes remedio
+@character_avatar.png
+Déjame en paz...
+@elder5.png
+Recuerda que puedes cambiar las 
+opciones de movimiento
+#
+en el menú de configuración.

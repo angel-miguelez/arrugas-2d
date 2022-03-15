@@ -476,7 +476,7 @@ class Level(Observer):
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    self.__setSprite(_GREY_SOFA_RIGHT, (x-8, y), self.walls)
+                    self.__setSprite(_GREY_SOFA_RIGHT, (x-12, y), self.walls)
                 
                 if cell == 's':
                     #Set floor tile first
@@ -488,7 +488,7 @@ class Level(Observer):
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    self.__setSprite(_BROWN_SOFA_RIGHT, (x-8, y), self.walls)
+                    self.__setSprite(_BROWN_SOFA_RIGHT, (x-12, y), self.walls)
                 
                 if cell == 'u':
                     #Set floor tile first
