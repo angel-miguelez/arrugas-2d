@@ -1,7 +1,6 @@
-@elder.png
+@elder4.png
 Dicen que últimamente está apareciendo gente extraña
-por los pasillos. Yo no he visto a nadie, pero 
+por los pasillos.
+#
+Yo no he visto a nadie, pero 
 estaría alerta.
-@character_avatar.png
-Y las enfermeras han reducido la dosis diaria de 
-pastillas...

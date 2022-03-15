@@ -1,6 +1,6 @@
-@elder.png
+@elder3.png
 ¿Tienes alguna pastilla?
 @character_avatar.png
 No.
-@elder.png
+@elder3.png
 ¡Pues fuera de mi vista!

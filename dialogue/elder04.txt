@@ -1,4 +1,4 @@
-@elder.png
+@elder5.png
 ¿Has visto mis gafas? Las necesito para poder
 ver correctamente.
 @character_avatar.png

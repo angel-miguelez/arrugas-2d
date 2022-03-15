@@ -1,9 +1,10 @@
-@elder.png
+@elder5.png
 Escuché que te intestaste escapar de nuevo de la 
 residencia.
 @character_avatar.png
 ¡Cállate!
-@elder.png
+@elder5.png
 ¡Ja, ja, ja!
+#
 Parece que alguien se ha levantado con el pie 
 izquierdo.
