@@ -5,10 +5,13 @@ tile_size = 32 #Tile size used as a base to construct the map
     that we want to draw:
 
     'A' -> labcoat
+    'a' -> table
     'B' -> glasses
+    'b' -> left chair
     'I' -> dragon enemy (Advanced2)
     'c' -> credits
     'C' -> letter
+    'e' -> right chair
     'E' -> elevator
     'f' -> door carpet
     'F' -> floor
@@ -17,7 +20,9 @@ tile_size = 32 #Tile size used as a base to construct the map
     'J' -> top left intersection
     'K' -> top right intersection
     'L' -> left wall
+    'l' -> library light
     'M' -> magic range enemy (Basic2)
+    'm' -> library dark
     'N' -> nurse (NurseCharacter)
     'O' -> old man (ElderCharacter)
     'P' -> player spawn.
@@ -59,12 +64,12 @@ basic_layout = [
     '                                                                       ',
     '                                                                       ',
     '            JXXXXXXXXK                                                 ',
-    '            LFFFFFFFFR                                                 ',
+    '            LmFFFFFlFR                                                 ',
     '            LFFFFFFFFR                                                 ',
     '            LFPFFFFFFR                                                 ',
     '            LFFFFFFFFRJXXXXXXXXK                                       ',
     '            LFFFFFFFFHGFFFNFFFFH                                       ',
-    '            LFFFFFFFFFFFFFFFFFFD                                       ',
+    '            LFFbaeFFFFFFFFFFFFFD                                       ',
     '            LFFFFFFFFJKFFFFFFFFJ                                       ',
     '            LFFFFFFFFRLFFFFFFFFR                                       ',
     '            LFFFFFFFFRLsFFFFFFSL                                       ',

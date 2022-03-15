@@ -32,6 +32,12 @@ _GREY_SOFA_LEFT = 16
 _GREY_SOFA_RIGHT = 17
 _BROWN_SOFA_LEFT = 18
 _BROWN_SOFA_RIGHT = 19
+_LIBRARY_LIGHT = 20
+_LIBRARY_DARK = 21
+_CHAIR_RIGHT = 22
+_CHAIR_LEFT = 23
+_TABLE = 24
+
 
 class Level(Observer):
     def __init__(self, level, posx, posy):
@@ -489,6 +495,38 @@ class Level(Observer):
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BROWN_SOFA_LEFT, (x, y), self.walls)
+                    
+                if cell == 'l':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_LIBRARY_LIGHT, (x, y-10), self.walls)
+                    
+                if cell == 'm':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_LIBRARY_DARK, (x, y-10), self.walls)
+                    
+                if cell == 'e':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_CHAIR_RIGHT, (x+5, y), self.walls)
+                    
+                if cell == 'b':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_CHAIR_LEFT, (x+5, y), self.walls)
+                    
+                if cell == 'a':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_TABLE, (x, y), self.walls)
+
+
 
 
     def setupLevel(self, layout):
