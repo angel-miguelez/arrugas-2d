@@ -106,7 +106,6 @@ class Basic1(Enemy):
                 dir.normalize_ip()
                 vel = dir * (distance / self.targetRadius * self.speed)
             except ValueError:
-                print(dir)
                 vel = pygame.math.Vector2(0, 0)
 
         # Otherwise, move with max speed
@@ -115,7 +114,6 @@ class Basic1(Enemy):
                 dir.normalize_ip()
                 vel = dir * self.speed
             except ValueError:
-                print(dir)
                 vel = pygame.math.Vector2(0, 0)
 
         # If the enemy has stuck in a position due to collisions or other events
@@ -242,6 +240,7 @@ class Normal2(Enemy):
             Enemy.__init__(self, 'N2.2.png', 'coordNormal2.1.txt', [3,3,3,3], position, playerGroup, wallsGroup, (32, 50), speed, 10)
         self.area = 300  # area of vision of the enemy
         self._stopDistance = 5
+        self.speed = speed
 
     def move(self):
 

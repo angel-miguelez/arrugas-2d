@@ -24,7 +24,6 @@ class DeathCounter():
         yPos = 50
         
         self.rect = self.image.get_rect()
-        print(self.rect)
         self.rect.center = (xPos, yPos)
         
         self.ui = TextUI("ds-digi.TTF", 56, (xPos+100, yPos), (255, 255, 255))

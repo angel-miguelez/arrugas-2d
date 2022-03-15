@@ -101,7 +101,6 @@ class GamePhase(PlayablePhase):
         self.level = Level(level, 400, 300)  # Setup map structure
         self.nextScene = nextScene  # scene to load when this one is finished
         self.deathCounter = Director().getDeathCounter() # get current death counter
-        print(self.deathCounter)
 
         # Initialize the player
         self.player = Player((400, 300), 0.2)

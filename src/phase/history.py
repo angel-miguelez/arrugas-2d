@@ -1,43 +1,27 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-from pygame.locals import *
 
-from characters.npc import ElderTutorialCharacter, Television, Bed01, Bed02, Mate
-from conf.configuration import ConfManager
+from characters.npc import ElderTutorialCharacter
 from conf.metainfo import MetainfoManager
-from objects.door import Door
+from objects.door import Switch
 from phase.cinematic import DialoguePhase
 from phase.playable import GamePhase
-from res.levels import *
 from utils.observer import Observer, Subject
 
 
 class Tutorial(GamePhase, Observer):
 
     def __init__(self):
-        super().__init__(SceneDialog2, 1)
+        super().__init__(SceneDialog2, 0)
 
-        # Add a door so the player cannot explore the level yet (since it is the same as Phase1)
-        door = Door((635, 412), self.playerGroup)
-        door._locked = True
-        self.objectsGroup.add(door)
+        switch = Switch("switch.png", (500, 500), self.playerGroup, [])
+        switch.attach(self)
+        self.npcGroup.add(switch)
 
         # Partner who explains the player how to move
         self.partner = ElderTutorialCharacter((500, 300), self.playerGroup)
         self.npcGroup.add(self.partner)
-
-        self.movedInDir = [False, False, False, False]  # check that the player know how to move in every direction
-        self.lastPos = self.player.lastPos
-        self.player.attach(self)
-
-    def update(self, *args):
-
-        # If the player has moved in all directions, finish the tutorial
-        if all(self.movedInDir):
-            self.finish()
-
-        super().update(*args)
 
     def onEnterScene(self):
         super().onEnterScene()
@@ -51,20 +35,7 @@ class Tutorial(GamePhase, Observer):
         MetainfoManager.setTutorialDone()
 
     def updateObserver(self, subject: Subject):
-
-        x, y = subject.getPos()
-
-        if y < self.lastPos[1]:
-            self.movedInDir[0] = True
-        elif y > self.lastPos[1]:
-            self.movedInDir[1] = True
-
-        if x < self.lastPos[0]:
-            self.movedInDir[2] = True
-        elif x > self.lastPos[0]:
-            self.movedInDir[3] = True
-
-        self.lastPos = x, y
+        self.finish()
 
 
 class SceneDialog2(DialoguePhase):
@@ -94,11 +65,6 @@ class Phase1(GamePhase):
 
     def __init__(self):
         super().__init__(Capture, 1)
-        #television = Television((500, 240), self.playerGroup)
-        #mate = Mate((384, 380), self.playerGroup)
-        #bed01 = Bed01((400, 540), self.playerGroup)
-        #bed02 = Bed02((600, 540), self.playerGroup)
-        #self.npcGroup.add([television, bed01, bed02, mate])
 
     def onEnterScene(self):
         super().onEnterScene()
