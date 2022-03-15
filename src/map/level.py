@@ -56,6 +56,10 @@ class Level(Observer):
     def __init__(self, level, posx, posy):
 
         #Depending on the level variable we get passed on by parameters we choose the correct layout, rooms and floor tile
+        if level == 0:
+            level_data = tutorial_layout
+            rooms = []
+            self.floorType = _FLOOR_2
         if level == 1:
             level_data = basic_layout
             rooms = rooms_1

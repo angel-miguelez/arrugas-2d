@@ -57,7 +57,7 @@ tile_size = 32 #Tile size used as a base to construct the map
     'Z' -> purple right sofa
     'z' -> purple left sofa
 """
-moveStartPhase=[
+tutorial_layout=[
     '            JXXXXXXXXK                                                 ',
     '            LFFFFFFFFR                                                 ',
     '            LFFFFFFFFR                                                 ',
@@ -69,7 +69,7 @@ moveStartPhase=[
     '            LFFFFFFFFR                                                 ',
     '            LFFFFFFFFR                                                 ',
     '            LFFFFFFFFR                                                 ',
-    '            LFFFCFFFFR                                                 ',
+    '            LFFFFFFFFR                                                 ',
     '            HXXXXXXXXG                                                 ',
 ]
 

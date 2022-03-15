@@ -25,7 +25,7 @@ class MetainfoManager(object):
 
         with open(cls.META_FILE, 'w') as file:
             json.dump(cls.data, file, indent=4)
-            print("[Configuration] Changes on the configuration file saved")
+            print("[Metainfo] Changes on the meta file saved")
 
     @classmethod
     def getInfo(cls):
