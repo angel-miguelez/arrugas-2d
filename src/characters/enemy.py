@@ -277,20 +277,21 @@ class Advanced2(Enemy):
     Bird that runs against the Player when it walks by its side
     """
 
-    def __init__(self, position, playerGroup, wallsGroup):
+    def __init__(self, position, playerGroup, wallsGroup, orientation):
         Enemy.__init__(self, 'A2.png', 'coordA2.txt', [3, 10, 8, 3, 10, 8], position, playerGroup, wallsGroup, (32, 32), 0.2, 5)
 
         self.deathcounter=0
         self.activated = False
         self.destruction = False
+        self.orientation=orientation
 
     def move(self):
 
         # If the enemy is not active, set an IDLE sprite looking to a specific direction
         if not self.activated:
-            if self.movement == RIGHT:
+            if self.orientation == RIGHT:
                 self.posture = 0
-            if self.movement == LEFT:
+            if self.orientation == LEFT:
                 self.posture = 3
 
         # Otherwise, set movement animations
@@ -326,12 +327,14 @@ class Advanced2(Enemy):
         # Otherwise, it tries to hit the player moving horizontally
         else:
             self.activated = True
-            if self._player.rect.center[0] > self.x:
+            if self._player.rect.center[0] > self.x and self.orientation=="RIGHT":
                 self.movement = RIGHT
                 return self.speed, 0
-            else:
+            elif self._player.rect.center[0] < self.x and self.orientation=="LEFT":
                 self.movement = LEFT
                 return -self.speed, 0
+        
+        return 0,0
 
     def onCollisionEnter(self, collided):
         super().onCollisionEnter(collided)
