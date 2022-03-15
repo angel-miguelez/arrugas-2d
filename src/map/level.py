@@ -37,6 +37,10 @@ _LIBRARY_DARK = 21
 _CHAIR_RIGHT = 22
 _CHAIR_LEFT = 23
 _TABLE = 24
+_FRUIT1 = 25
+_FRUIT2 = 26
+_FRUIT3 = 27
+_ELEVATOR = 28
 
 
 class Level(Observer):
@@ -525,6 +529,30 @@ class Level(Observer):
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_TABLE, (x, y), self.walls)
+                    
+                if cell == 'g':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_FRUIT1, (x, y), self.walls)
+                
+                if cell == 'h':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_FRUIT2, (x, y), self.walls)
+                    
+                if cell == 'j':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_FRUIT3, (x, y), self.walls)
+                    
+                if cell == 'i':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_ELEVATOR, (x, y-32), self.walls)
 
 
 

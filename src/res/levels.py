@@ -9,6 +9,7 @@ tile_size = 32 #Tile size used as a base to construct the map
     'B' -> glasses
     'b' -> left chair
     'I' -> dragon enemy (Advanced2)
+    'i' -> elevator door
     'c' -> credits
     'C' -> letter
     'e' -> right chair
@@ -16,7 +17,10 @@ tile_size = 32 #Tile size used as a base to construct the map
     'f' -> door carpet
     'F' -> floor
     'G' -> bottom right intersection
+    'g' -> fruit1
+    'h' -> fruit2
     'H' -> bottom left intersection
+    'j' -> fruit3
     'J' -> top left intersection
     'K' -> top right intersection
     'L' -> left wall
@@ -74,7 +78,7 @@ basic_layout = [
     '            LFFFFFFFFRLFFFFFFFFR                                       ',
     '            LFFFFFFFFRLsFFFFFFSL                                       ',
     '            LFFFFFFFFRLFFFFOOFFR                                       ',
-    '            LFFFFFFFFRLpFFFFFFpR                                       ',
+    '            LFFFFFFFFRLgFFFFFFhR                                       ',
     '            HXXXXXXXXGLuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
@@ -84,7 +88,7 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LsFFFFFFSR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LpFFFFFFpR                                       ',
+    '                      LjFFFFFFgR                                       ',
     '                      LuFOFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      GFFFFFFFFH                                       ',
@@ -93,7 +97,7 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LsFFFFNFSR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LpFFFFFFpR                                       ',
+    '                      LjFFFFFFhR                                       ',
     '                      LuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
@@ -102,7 +106,7 @@ basic_layout = [
     '                      LFNFNFFFFR                                       ',
     '                      LsFFFFFFSR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LpFFFFFFpR                                       ',
+    '                      LjFFFFFFgR                                       ',
     '                      LuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
@@ -117,15 +121,15 @@ basic_layout = [
     '                      LFFFFFFFFR                                       ',
     '                      LsFFFFFFSR                                       ',
     '                      LFFFFONFFR                                       ',
-    '                      LpFFFFFFpR                                       ',
+    '                      LhFFFFFFgR                                       ',
     '                      LuFFFFFFUR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
     '                      LFFFFFFFFR                                       ',
-    '                      LFFFFFFFFR                                       ',
-    '                      LsFFFFFFSR                                       ',
     '                      LFFFFFFNFR                                       ',
-    '                      LpFFFFFFpH                                       ',
+    '                      LsFFFFFFSR                                       ',
+    '                      LFFFFFFFFR                                       ',
+    '                      LjFFFFFFFH                                       ',
     '                      LuFFFFFFfD                                       ',
     '                      LFFFFFFFFJ                                       ',
     '                      LFFFFFFFFR                                       ',
@@ -183,7 +187,7 @@ basic_layout_2 = [
     '                                                                                                                                                                    ',
     '                                                                                                                                                                    ',
     '                                                                             JXXXXXXXXK                                                                             ',
-    '                                                                             LFFFFFFNNR                                                                             ',
+    '                                                                             LFFFiFFNNR                                                                             ',
     '                                                                             DfPFFFFFfD                                                                             ',
     '                                                                             LpFFFFFFpR                                                                             ',
     '                                                                             LFFFFFFFFR                                                                             ',
@@ -335,7 +339,7 @@ basic_layout_3 = [
     '                                                                                                                                                                    ',
     '                                                                                                                                                                    ',
     '                                                                             JXXXXXXXXK                                                                             ',
-    '                                                                             LFFFFFFFpR                                                                             ',
+    '                                                                             LFFFiFFFpR                                                                             ',
     '                                                                             DfPFFFFFFR                                                                             ',
     '                                                                             LpFFFFFFfD                                                                             ',
     '                                                                             LFFFOFFFpR                                                                             ',
