@@ -294,6 +294,12 @@ class Level(Observer):
                 
                 #Check to see if we have to add a Advanced2 enemy
                 if room_cell == 'r':
+                    if orientation:
+                        #Room is on the right
+                        pass
+                    else:
+                        #Room is on the left
+                        pass
                     
                     #Calculate position for the tile
                     (x, y) = self.__calculatePos(aux_x, start_row)
@@ -306,6 +312,13 @@ class Level(Observer):
                     #Check to see if we have to add a Advanced2 enemy
                 if room_cell == 'l':
                     
+                    if orientation:
+                        #Room is on the right
+                        pass
+                    else:
+                        #Room is on the left
+                        pass
+
                     #Calculate position for the tile
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
