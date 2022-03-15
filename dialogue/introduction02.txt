@@ -7,12 +7,14 @@ seguir intentándolo cabezota?
 @character_avatar.png
 ¿Intentar el qué? Todavía no me ha dicho ni su
 nombre y me trata como si fuésemos conocidos de
+#
 toda la vida.
 @elder.png
 ...
 #
 Aunque no valga de nada me volveré a presentar. 
 Soy Asel, y esto es Girondins, la mansión de
+#
 las viejas glorias.
 @character_avatar.png
 ¿¡Estoy en una residencia de ancianos!?
@@ -27,6 +29,7 @@ tampoco, pero aquí estamos majo.
 @character_avatar.png
 Acabo de despertarme y ya no aguanto ni un segundo
 más aquí. No pienso quedarme a pudrirme 
+#
 en esta habitación.
 @elder.png
 Tu siempre tan melodramático... Puedes intentarlo,
