@@ -28,6 +28,10 @@ _SMALL_CARPET_1 = 12
 _SMALL_CARPET_2 = 13
 _SMALL_CARPET_3 = 14
 _PLANT = 15
+_GREY_SOFA_LEFT = 16
+_GREY_SOFA_RIGHT = 17
+_BROWN_SOFA_LEFT = 18
+_BROWN_SOFA_RIGHT = 19
 
 class Level(Observer):
     def __init__(self, level, posx, posy):
@@ -461,6 +465,30 @@ class Level(Observer):
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_PLANT, (x, y), self.walls)
+                
+                if cell == 'S':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_GREY_SOFA_RIGHT, (x-8, y), self.walls)
+                
+                if cell == 's':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_GREY_SOFA_LEFT, (x, y), self.walls)
+                
+                if cell == 'U':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_BROWN_SOFA_RIGHT, (x-8, y), self.walls)
+                
+                if cell == 'u':
+                    #Set floor tile first
+                    self.__setSprite(self.floorType, (x, y), self.floor)
+
+                    self.__setSprite(_BROWN_SOFA_LEFT, (x, y), self.walls)
 
 
     def setupLevel(self, layout):
