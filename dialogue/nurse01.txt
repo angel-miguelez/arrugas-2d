@@ -1,8 +1,5 @@
 @nurse.png
-Pareces un poco cansado. ¿Has descansado
-bien estos días?
+Pareces un poco cansado. ¿Has descansado bien
+estos días?
 @character_avatar.png
 ...
-@nurse.png
-Deberíamos reducir aún más la dosis de píldoras.
-Parece que os tienen el cerebro atrofiado.
