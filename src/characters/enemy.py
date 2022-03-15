@@ -205,7 +205,7 @@ class Bat(Enemy):
 
         # If the bat hits with a wall
         if self.destruction:
-            self.remove()  # delete the enemy
+            self.deactivate()  # delete the enemy
             return 0, 0
 
         # Depending on the direction, the bat will move on one of them
@@ -226,8 +226,7 @@ class Bat(Enemy):
         super().onCollisionEnter(collided)
 
         # If collide with a tile, its set to dissapear
-        if isinstance(collided, Tile):
-            self.destruction = True
+        self.destruction = True
 
 
 class Normal2(Enemy):

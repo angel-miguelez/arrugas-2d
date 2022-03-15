@@ -78,7 +78,7 @@ basic_layout = [
     '            LFFFFFFFFR                                                 ',
     '            LFPFFFFFFR                                                 ',
     '            LFFFFFFFFRJXXXXXXXXK                                       ',
-    '            LFFFFFFFFHGFFFNFFFFH                                       ',
+    '            LqFFFFFFFHGFFFNFFFFH                                       ',
     '            LFFbaeFFFFFfFFFFFFfD                                       ',
     '            LFFFFFFFFJKFFFFFFFFJ                                       ',
     '            LFFFFFFFFRLFFFFFFFFR                                       ',
