@@ -303,31 +303,22 @@ class Level(Observer):
                     enemyGroup.append(str(x) + " " + str(y) + " Basic2")
                 
                 #Check to see if we have to add a Advanced2 enemy
-                if room_cell == 'r':
-                    if orientation:
-                        #Room is on the right
-                        pass
-                    else:
-                        #Room is on the left
-                        pass
-                    
+                if room_cell == 'r':                   
                     #Calculate position for the tile
                     (x, y) = self.__calculatePos(aux_x, start_row)
                     
                     #Creating tile and adding it to the group
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    enemyGroup.append(str(x) + " " + str(y) + " Advanced2R")
+                    if orientation:
+                        #Room is on the right
+                        enemyGroup.append(str(x) + " " + str(y) + " Advanced2L")
+                    else:
+                        #Room is on the left
+                        enemyGroup.append(str(x) + " " + str(y) + " Advanced2R")
 
                     #Check to see if we have to add a Advanced2 enemy
                 if room_cell == 'l':
-                    
-                    if orientation:
-                        #Room is on the right
-                        pass
-                    else:
-                        #Room is on the left
-                        pass
 
                     #Calculate position for the tile
                     (x, y) = self.__calculatePos(aux_x, start_row)
@@ -335,7 +326,12 @@ class Level(Observer):
                     #Creating tile and adding it to the group
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    enemyGroup.append(str(x) + " " + str(y) + " Advanced2L")
+                    if orientation:
+                        #Room is on the right
+                        enemyGroup.append(str(x) + " " + str(y) + " Advanced2R")
+                    else:
+                        #Room is on the left
+                        enemyGroup.append(str(x) + " " + str(y) + " Advanced2L")
                     
                 #Check to see if we have to add a Normal2 fast enemy
                 if room_cell == 'T':
