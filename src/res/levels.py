@@ -8,7 +8,6 @@ tile_size = 32 #Tile size used as a base to construct the map
     'a' -> table
     'B' -> glasses
     'b' -> left chair
-    'I' -> dragon enemy (Advanced2)
     'i' -> elevator door
     'c' -> credits
     'C' -> letter
@@ -25,7 +24,7 @@ tile_size = 32 #Tile size used as a base to construct the map
     'K' -> top right intersection
     'k' -> Television
     'L' -> left wall
-    'l' -> library light
+    'l' -> library light when generating in the corridor
     'M' -> magic range enemy (Basic2)
     'm' -> library dark
     'N' -> nurse (NurseCharacter)
@@ -44,6 +43,8 @@ tile_size = 32 #Tile size used as a base to construct the map
     'S' -> sofa right(grey)
     'T' -> tracking enemy (Normal21)
     't' -> tracking enemy 2 (Normal22)
+    'l' -> dragon enemy (Advanced2) moves to the left when generating in the room
+    'r' -> dragon enemy (Advanced2) moves to the right when generating in the room
     'u' -> sofa left(brown)
     'U' -> sofa right(brown)
     'V' -> red lamp
@@ -545,8 +546,8 @@ rooms_1 = [
     [
         'XXXXXXXXXXXXXXXXXX ',
         'XFFFFFFFWFFFFFFFAX ',
-        'XFFFFFFFFFFFFFFFFX ',
         'XFFFFFFFFFFQFFFFFX ',
+        'XFFFFFFFFFFFFFFFFX ',
         'XFFFFXXXXXXXXXXXXX ',
         'XFFFFXXXXXXXXXXXXXX',
         'XCFFFFFFFFFFFFFFFFX',
@@ -593,7 +594,7 @@ rooms_2 = [
     [
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
         'XFFFFFFFFXFFFFFFFXrFFFFFFFFFFFFFFFFFFFFFFXrFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFX',
-        'XFFFCFFFFFFFRFFFFFFFFFFFFFFFFFFFRFFFFFFFFFFFFFFFFFRFFFFFFFFFFFFFFFFFFFFFFFD',
+        'XFFFCFFFFFFFFFFFRFFFFFFFFFFFFFFFFFFFRFFFFFFFFFFFFFRFFFFFFFFFFFFFFFFFFFFFFFD',
         'XFFFFFFFFXrFFFFFFFFFFFFFFFFFFXrFFFFFFFFFFFFFFFFFFFFFFXrFFFFFFFFFFFFFFFFFFFX',
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     ],
