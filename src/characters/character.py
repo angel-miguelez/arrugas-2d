@@ -161,8 +161,6 @@ class Player(Character, Subject):
 
         self.eventsEnabled = True
 
-        self.hasPills = 0
-
     def increaseSpeed(self):
         self.speed *= 1.5
         self.animationDelay /= 1.5
@@ -258,13 +256,3 @@ class Player(Character, Subject):
     def getPos(self):
         return self.x, self.y
 
-    def getPill(self):
-        self.hasPills=self.hasPills+1
-
-    def usePill(self, grupo):
-        #if self.hasPills==0:
-            #Sonido incorrecto
-        #else:
-        if self.hasPills>0:
-            self.hasPills=self.hasPills-1
-            grupo.pillEffect()
