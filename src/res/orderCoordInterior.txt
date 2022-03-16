@@ -1,8 +1,0 @@
-//Muro izquierda
-//Muro derecha
-//Interseccion arriba derecha
-//Interseccion arriba izquierda
-//Interseccion abajo izquierda
-//Interseccion abajo derecha
-//Muro frontal
-//Suelo

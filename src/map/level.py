@@ -1,8 +1,5 @@
-from turtle import pos
-import pygame
 import numpy as np
-from map.tiles import Tile
-from res.levels import *
+from map.levels import *
 from characters.character import *
 from utils.observer import *
 from utils.resourcesmanager import *
