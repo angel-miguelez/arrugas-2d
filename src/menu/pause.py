@@ -27,6 +27,7 @@ class PauseScene(Scene):
             # Unpause the game
             elif event.type == KEYDOWN and (event.key == K_ESCAPE or event.key == K_p):
                 Director().pop()
+                Director().getCurrentScene().player.eventsEnabled = True
 
     def update(self, *args):
         pass
