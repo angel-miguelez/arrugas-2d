@@ -130,3 +130,6 @@ dmypy.json
 
 # PyCharm IDLE configuration
 .idea/
+
+# Game metadata
+.info/

@@ -2,7 +2,6 @@
 import sys
 
 import pygame
-import pygame_menu
 from pygame.locals import *
 
 from game.dialogue import TextUI
@@ -42,7 +41,7 @@ class PauseScene(Scene):
             transparentSurface.fill((0, 0, 0, 200))  # fill the transparent surface with a black color
             surface.blit(transparentSurface, (0, 0))  # draw on the surface
 
-            text = TextUI('munro.ttf', 60, (150, 270), (255, 255, 255))
+            text = TextUI('munro.ttf', 60, (400, 300), (255, 255, 255))
             text.setText("Press 'p' to resume...")
             text.draw(surface)
 
