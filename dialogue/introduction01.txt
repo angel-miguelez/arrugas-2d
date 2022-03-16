@@ -8,5 +8,4 @@ Siempre lo mismo... ¿No te acuerdas ni
 de cómo se respira verdad?
 #
 Prueba a mover un poco las piernas con:
-UP, LEFT, DOWN RIGHT 
-a ver si por lo menos puedes andar.
+UP, LEFT, DOWN RIGHT

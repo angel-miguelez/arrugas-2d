@@ -1,7 +1,7 @@
 @nurse.png
 ¡Hombre! 
 #
-Tú otra vez, Tomás
+Tú otra vez, Tomás.
 @character_avatar.png
 ¿Y tú quien eres?
 @nurse.png
