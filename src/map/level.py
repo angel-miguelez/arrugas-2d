@@ -52,6 +52,11 @@ _BLUE_LAMP = 37
 class Level(Observer):
     def __init__(self, level, posx, posy):
 
+        """
+        In charge of the generation the different levels inside the game
+        """
+
+
         #Depending on the level variable we get passed on by parameters we choose the correct layout, rooms and floor tile
         if level == 0:
             level_data = tutorial_layout
@@ -73,7 +78,7 @@ class Level(Observer):
             self.floorType = _FLOOR_5
             self.doorCarpet = _SMALL_CARPET_3
 
-        #Load the images
+        #Load the images for the level generation and decorations
         self.sheet = ResourcesManager.loadImage("Room_Builder_free_32x32.png", -1)
         self.sheet = self.sheet.convert_alpha()
 
@@ -139,13 +144,14 @@ class Level(Observer):
         #Coordinates to place the elevator on
         self.elevator = (0, 0)
 
-        #Setup map
-        self.setupLevel(level_data)
-        self.addDecorations(level_data)
+        #Setup map structure based on the basic_layout of the level
+        self.__setupLevel(level_data)
+        self.__addDecorations(level_data)
         
         #Adjust the positions of the elements in the map based on the player spawn position
         self.__setupPlayerSpawn()
 
+    #Getters for the different elements of the level
     def getNPC(self):
         return self.npc
 
@@ -198,6 +204,8 @@ class Level(Observer):
         tileGroup.add(tile)
 
     def __calculatePos(self, x, y):
+        #Calculates the final position for the room generation
+
         if x == 0:
             x = x + tile_size
         else:
@@ -419,6 +427,11 @@ class Level(Observer):
         self.objects.append(objectGroup)
 
     def __setupPlayerSpawn(self):
+        #Since the player spawn can be modified depending on the level to any position on the
+        #layout, this function is in charge of adjusting the initial position of all the elements in
+        #the level so that onStart the player spawn is on the center of the screen
+
+        #Difference that needs to be applied to all the elements
         difference = (self._playerPosX -
                       self._playerSpawnX, self._playerPosY - self._playerSpawnY)
 
@@ -432,6 +445,7 @@ class Level(Observer):
 
         #Update enemies position based on the player spawn
         for groupIndex, enemyGroup in enumerate(self.enemies):
+            #Each group represents the set of enemies in a room in order from top to bottom and left to right
             if enemyGroup == []:
                 pass
             else:
@@ -461,6 +475,9 @@ class Level(Observer):
         
         #Update objects position based on the player spawn
         for objectGroupIndex, objectGroup in enumerate(self.objects):
+            #Each group represents the set of objects that could be generated in a room
+            #in order from top to bottom and left to right
+
             for objectIndex, object in enumerate(objectGroup):
                 data = object.split()
 
@@ -481,7 +498,7 @@ class Level(Observer):
             
             self.npc[npcIndex] = npc
 
-    def addDecorations(self, layout):
+    def __addDecorations(self, layout):
 
         #Iterate through the map layout in order to add the decorations
         for row_index, row in enumerate(layout):
@@ -500,148 +517,168 @@ class Level(Observer):
                     else:
                         self.__setSprite(self.doorCarpet, (x, y-8), self.noHitboxDecorations)
                 
+                #Check to see if we have to add a plant
                 if cell == 'p':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_PLANT, (x, y), self.walls)
                 
+                #Check to see if we have to add a sofa right (Grey version)
                 if cell == 'S':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_GREY_SOFA_RIGHT, (x-12, y), self.walls)
                 
+                #Check to see if we have to add a sofa left (Grey version)
                 if cell == 's':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_GREY_SOFA_LEFT, (x, y), self.walls)
                 
+                #Check to see if we have to add a sofa right (Brown version)
                 if cell == 'U':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BROWN_SOFA_RIGHT, (x-12, y), self.walls)
                 
+                #Check to see if we have to add a sofa left (Brown version)
                 if cell == 'u':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BROWN_SOFA_LEFT, (x, y), self.walls)
-                    
+                
+                #Check to see if we have to add a library light version
                 if cell == 'l':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_LIBRARY_LIGHT, (x, y-10), self.walls)
-                    
+                
+                #Check to see if we have to add a library dark version
                 if cell == 'm':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_LIBRARY_DARK, (x, y-10), self.walls)
-                    
+                
+                #Check to see if we have to add a chair (Right orientation)
                 if cell == 'e':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_CHAIR_RIGHT, (x+5, y), self.walls)
-                    
+                
+                #Check to see if we have to add a chair (Left orientation)
                 if cell == 'b':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_CHAIR_LEFT, (x+5, y), self.walls)
-                    
+                
+                #Check to see if we have to add a table
                 if cell == 'a':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_TABLE, (x, y), self.walls)
-                    
+                
+                #Check to see if we have to add a fruit1
                 if cell == 'g':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_FRUIT1, (x, y), self.walls)
                 
+                #Check to see if we have to add a fruit2
                 if cell == 'h':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_FRUIT2, (x, y), self.walls)
-                    
+
+                #Check to see if we have to add a fruit3
                 if cell == 'j':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_FRUIT3, (x, y), self.walls)
-                    
+
+                #Check to see if we have to add an elevator door (Non-functional)
                 if cell == 'i':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_ELEVATOR, (x, y-32), self.walls)
-                    
+                
+                #Check to see if we have to add a cauldron1
                 if cell == 'ñ':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_CAULDRON1, (x, y), self.walls)
                 
+                #Check to see if we have to add a cauldron2
                 if cell == 'Ñ':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_CAULDRON2, (x, y), self.walls)
                 
+                #Check to see if we have to add a bed table
                 if cell == 'w':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BED_TABLE, (x+10, y), self.walls)
                 
+                #Check to see if we have to add a blue sofa (Right orientation)
                 if cell == 'Y':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BLUE_SOFA_RIGHT, (x-12, y), self.walls)
                 
+                #Check to see if we have to add a blue sofa (Left orientation)
                 if cell == 'y':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BLUE_SOFA_LEFT, (x, y), self.walls)
                 
+                #Check to see if we have to add a purple sofa (Right orientation)
                 if cell == 'Z':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_PURPLE_SOFA_RIGHT, (x-12, y), self.walls)
                 
+                #Check to see if we have to add a purple sofa (Left orientation)
                 if cell == 'z':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_PURPLE_SOFA_LEFT, (x, y), self.walls)
-                    
+                
+                #Check to see if we have to add a red lamp
                 if cell == 'V':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_RED_LAMP, (x, y), self.walls)
                 
+                #Check to see if we have to add a blue lamp
                 if cell == 'v':
                     #Set floor tile first
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
                     self.__setSprite(_BLUE_LAMP, (x, y), self.walls)
 
-
-
-
-    def setupLevel(self, layout):
+    def __setupLevel(self, layout):
         inside = False
         
         #Iterate through the map layout in order to build it
@@ -702,6 +739,7 @@ class Level(Observer):
                     self._playerSpawnX = x
                     self._playerSpawnY = y
 
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
                 
                 #Check to see if we have to add a player tile
@@ -754,40 +792,46 @@ class Level(Observer):
                     
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                elif cell == 'N':
+                #Check to see if we have to add a nurse NPC
+                if cell == 'N':
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Nurse")
-
-                elif cell == 'O':
+                
+                #Check to see if we have to add an elder NPC
+                if cell == 'O':
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Elder")
                 
-                elif cell == 'k':
+                #Check to see if we have to add a television
+                if cell == 'k':
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y-10} Television")
                 
-                elif cell == 'n':
+                #Check to see if we have to add bed1
+                if cell == 'n':
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Bed01")
                 
-                elif cell == 'o':
+                #Check to see if we have to add bed2
+                if cell == 'o':
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Bed02")
-                  
-                elif cell == 'q':
+                
+                #Check to see if we have to add the protagonist mate
+                if cell == 'q':
+                    #Set floor tile
                     self.__setSprite(self.floorType, (x, y), self.floor)
 
-                    #x, y = self.__calculatePos(col_index, row_index)
                     self.npc.append(f"{x} {y} Mate")
 
 
@@ -804,6 +848,9 @@ class Level(Observer):
             self.walls.draw(self.display_surface) #Draw the walls of the map itself
     
     def updateObserver(self, subject: Player):
+        #Update the elements that form the level based on the player input, to be more precise based
+        #on the player position on the map
+
         newPos = subject.getPos()
         difference = (self.worldShiftX -
                       newPos[0], self.worldShiftY - newPos[1])

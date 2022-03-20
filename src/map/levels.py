@@ -1,8 +1,7 @@
 tile_size = 32 #Tile size used as a base to construct the map
 
 """
-    The following variable consist of a list of strings that sets the layout for the map
-    that we want to draw:
+    The following list works as a legend to indicate what letter represents wich object, player, npc, decoration or world generation tiles should be added
 
     'A' -> labcoat
     'a' -> table
@@ -24,7 +23,7 @@ tile_size = 32 #Tile size used as a base to construct the map
     'K' -> top right intersection
     'k' -> Television
     'L' -> left wall
-    'l' -> library light when generating in the corridor
+    'l' -> library light, when generating in the corridor
     'M' -> magic range enemy (Basic2)
     'm' -> library dark
     'N' -> nurse (NurseCharacter)
@@ -57,7 +56,12 @@ tile_size = 32 #Tile size used as a base to construct the map
     'y' -> blue left sofa
     'Z' -> purple right sofa
     'z' -> purple left sofa
+
+Each level is made up of the basic_layout wich represents the corridor structure and a set
+of rooms that can be generated for that layout
 """
+
+#This is the basic_layout for the tutorial
 tutorial_layout=[
     '            JXXXXXXXXK                                                 ',
     '            LFFFFFFFFR                                                 ',
@@ -74,7 +78,7 @@ tutorial_layout=[
     '            HXXXXXXXXG                                                 ',
 ]
 
-#This is the basic layout for the first level were you spawn in your room
+#This is the basic_layout for the first level were you spawn in your room
 basic_layout = [
     '                                                                           ',
     '                                                                           ',
@@ -177,7 +181,7 @@ basic_layout = [
     '                                                                           ',
 ]
 
-#This is the basic layout for the rest of the levels
+#This is the basic_layout for the second level
 basic_layout_2 = [
     '                                                                                                                                                                    ',
     '                                                                                                                                                                    ',
@@ -342,6 +346,7 @@ basic_layout_2 = [
     '                                                                                                                                                                    ',
 ]
 
+#This is the basic_layout for the second level
 basic_layout_3 = [
     '                                                                                                                                                                    ',
     '                                                                                                                                                                    ',
@@ -451,6 +456,7 @@ basic_layout_3 = [
     '                                                                                                                                                                    ',
 ]
 
+#Set of rooms for level 1
 rooms_1 = [
     [
         'XXXXXXXXXXXX  XXXXXX',
@@ -579,6 +585,8 @@ rooms_1 = [
         'XXXXXXXXXXXXXXXXXXXXX',
     ],
 ]
+
+#Set of rooms for level 2
 rooms_2 = [
     [
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
@@ -703,6 +711,8 @@ rooms_2 = [
         'XXXXXXXXXXXXXXXXXXXXX',
     ]
 ]
+
+#Set of rooms for level 3
 rooms_3 = [
     [
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
@@ -804,7 +814,7 @@ rooms_3 = [
         'XFFFFFFFFFFFFFFFFFFFFFFFFFFFCX                XFFFFFFFFFFFFFFFFFFFFFFFFFFFD',
         'XFFFFFFFFFFFFFFFFFFFFFFFFFFFFX                XFFFFFFFFFFFFFFFFFFFFFFFFFXXX',
         'XFFXXXXXXXXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXXXXXXFFXXX',
-        'XFFX                                                                 XFFXXX',      #METER CREDITOS
+        'XFFX                                                                 XFFXXX',
         'XFFX                                                                 XFFXXX',
         'XFFX                                                                 XFFXXX',
         'XFFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXFFXXX',
