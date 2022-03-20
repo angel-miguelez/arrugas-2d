@@ -438,7 +438,7 @@ class Level(Observer):
                 for enemyIndex, enemy in enumerate(enemyGroup):
                     data = enemy.split()
                     enemy = str(int(data[0]) + difference[0] + 16) + \
-                        " " + str(int(data[1]) + difference[1]) + " " + data[2]
+                        " " + str(int(data[1]) + difference[1] + 16) + " " + data[2]
                     enemyGroup[enemyIndex] = enemy
             
             self.enemies[groupIndex] = enemyGroup
