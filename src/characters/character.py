@@ -169,6 +169,11 @@ class Player(Character, Subject):
         self.lastMovements = [IDLE]
         self.movement = IDLE
         self.eventsEnabled = False
+    
+    def start(self):
+        self.lastMovements = [IDLE]
+        self.movement = IDLE
+        self.eventsEnabled = True
 
     def move(self):
 
