@@ -4,7 +4,7 @@
 import pygame
 
 from game.director import Director
-from menu.mainmenu import MainMenu
+from scenes.menu import MainMenu
 
 
 if __name__ == '__main__':

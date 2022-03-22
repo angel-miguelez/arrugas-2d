@@ -18,7 +18,6 @@ class Letter(Switch):
         Switch.__init__(self, "closed_letter.png", position, playerGroup, [], lock=False, active=True)
 
         self._opened = False  # if the player has collided with it
-        self.id = id  # image file of the letter opened
 
         self.digit = TextUI("southernaire.ttf", 200, (415, 330), (0, 0, 0))
         self.digit.setText(str(digit))
@@ -49,13 +48,12 @@ class Letter(Switch):
         # Change group to the foreground one, so it is always visible
         scene = Director().getCurrentScene()
 
-        self._player.stop()
+        scene.player.stop()
 
         scene.removeFromGroup(self, "objectsGroup")
         scene.addToGroup(self, "foregroundGroup")
         scene.addToGroup(self.digit, "uiGroup")
         scene.addToGroup(self, "objectsToEvent")
-
 
     def close(self):
         """
@@ -66,7 +64,7 @@ class Letter(Switch):
 
         scene = Director().getCurrentScene()
         scene.removeFromGroup(self.digit, "uiGroup")
-        self._player.eventsEnabled = True
+        scene.player.eventsEnabled = True
 
         self.deactivate()
         self.notify()

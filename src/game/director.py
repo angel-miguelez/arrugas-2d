@@ -142,8 +142,9 @@ class Director(metaclass=Singleton):
         """
         Loads the current level again
         """
-        self.deathCounter += 1 # adds one death to the counter
+        self.deathCounter += 1  # adds one death to the counter
         MetainfoManager.saveDeathCounter(str(self.deathCounter))
+
         scene = copy.copy(self.getCurrentScene())
         scene.__init__()
         self.change(scene, fade=fade)
@@ -154,8 +155,7 @@ class Director(metaclass=Singleton):
         """
 
         return self._scenes[-1]
-        
-        
+
     def getDeathCounter(self):
         """
         Returns the current number of deaths

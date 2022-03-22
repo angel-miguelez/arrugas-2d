@@ -5,11 +5,10 @@ from pygame.locals import *
 
 from conf.configuration import ConfManager
 from game.director import Director
-from utils.observer import Observer, Subject
 from utils.resourcesmanager import ResourcesManager
 
 
-class Dialogue(Observer):
+class Dialogue:
 
     def __init__(self):
         self.interventions = []  # list of all the interventions in the dialogue
@@ -18,17 +17,14 @@ class Dialogue(Observer):
         self.scene = None
         self.finished = False
 
-    def updateObserver(self, subject):
-        self.next()
-
     def add(self, intervention):
         """
         Adds a new interventions to the tail of the interventions. If a dialogue was played before,
         we must call clear() before adding the new interventions to clean the state.
         """
 
+        intervention.dialogue = self
         self.interventions.append(intervention)
-        intervention.attach(self)  # so we know when the intervention has finished (it notifies)
 
     def next(self):
         """
@@ -98,8 +94,7 @@ class TextUI:
         self.text = self.font.render(text, self.antialiasing, self.color)
         rect = self.text.get_rect()
 
-        # Adjust the position to satisfy that the center is the same. Useful to have texts
-        # of different sizes in the same position
+        # Adjust the position to satisfy that the center is the same.
         x, y = (self.position[0] - rect.width / 2, self.position[1] - rect.height / 2)
         self.position = (x, y)
 
@@ -107,13 +102,12 @@ class TextUI:
         surface.blit(self.text, self.position)
 
 
-class SimpleDialogueIntervention(TextUI, Subject):
+class SimpleDialogueIntervention(TextUI):
     """
     Class to draw some text on a dialogue box, with an avatar of the character who is speaking
     """
 
     def __init__(self):
-        Subject.__init__(self)
 
         # Font properties
         font = ConfManager.getValue("dialogue.font")
@@ -127,6 +121,7 @@ class SimpleDialogueIntervention(TextUI, Subject):
         self.avatarPosition = (110, 483)
 
         # Dialogue box
+        self.dialogue = None
         self.box = ResourcesManager.loadImage("paper-dialog.png", transparency=True)
         self.boxPosition = (140, 500)
 
@@ -149,7 +144,7 @@ class SimpleDialogueIntervention(TextUI, Subject):
             if event.type == KEYDOWN and (event.key in (K_SPACE, K_RETURN)):
 
                 if self.done:
-                    self.notify()  # notify when all the text has been rendered
+                    self.dialogue.next()  # pass to the next intervention
                 else:
                     self.nextParagraph()  # render the next paragraph
 
@@ -226,8 +221,8 @@ class DynamicDialogueIntervention(SimpleDialogueIntervention):
         for event in events:
             if event.type == KEYDOWN and (event.key in (K_SPACE, K_RETURN)):
 
-                if self.done:  # all paragraphs rendered
-                    self.notify()
+                if self.done:  # all paragraphs rendered, # pass to the next intervention
+                    self.dialogue.next()
 
                 elif self.paragraphDone:  # the current paragraph rendered completely
                     self.nextParagraph()

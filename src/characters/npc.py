@@ -5,10 +5,10 @@ import random
 import pygame
 
 from conf.configuration import ConfManager
-from game.dialogue import DynamicDialogueIntervention, SimpleDialogueIntervention, Dialogue
+from game.dialogue import DynamicDialogueIntervention, Dialogue
 from game.director import Director
 from objects.object import Interactive
-from characters.entity import Entity
+from game.entity import Entity
 from utils.resourcesmanager import ResourcesManager
 
 
@@ -25,7 +25,6 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
 
         Entity.__init__(self, position)
         Entity.setPlayer(self, playerGroup.sprites()[0])
-        self.enabledPlayed = False
 
         Interactive.__init__(self, self.rect)
         self.addCollisionGroup(playerGroup)
@@ -37,9 +36,12 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
         pygame.sprite.Sprite.update(self, *args)
         Interactive.updateCollisions(self, *args)
 
-        if self.dialogue is not None and self.dialogue.finished and not self.enabledPlayed:
+        if self.dialogue is None:
+            return
+
+        if self.dialogue.finished:
             Director().getCurrentScene().player.eventsEnabled = True
-            self.enabledPlayed = True
+            self.dialogue = None
 
     def onCollisionEnter(self, collided):
         Interactive.onCollisionEnter(self, collided)
@@ -57,7 +59,6 @@ class DialogueCharacter(pygame.sprite.Sprite, Entity, Interactive):
             intervention.setText(interv[1])
             self.dialogue.add(intervention)
 
-        self.enabledPlayed = False
         Director().getCurrentScene().player.stop()
         self.dialogue.start()  # start the dialogue
 

@@ -2,7 +2,7 @@
 
 from objects.object import InstaUseObject
 
-from utils.observer import Subject, Observer
+from utils.observer import Subject
 from utils.resourcesmanager import ResourcesManager
 
 

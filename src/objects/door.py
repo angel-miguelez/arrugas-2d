@@ -9,6 +9,9 @@ from utils.resourcesmanager import ResourcesManager
 
 
 class Switch(Object, Subject):
+    """
+    Object to lock or unlock another object
+    """
 
     def __init__(self, image, position, playerGroup, entitiesToUpdate, lock=True, visible=True, active=True, addEntities=False):
         Object.__init__(self, image, position, playerGroup)
@@ -38,6 +41,7 @@ class Switch(Object, Subject):
         self.activated = True
         self.image = pygame.transform.flip(self.image, True, False)
 
+        # Activate or deactivate the entities attached to it
         for entity in self.entities:
             if self.addEntities:
                 entity.activate()
@@ -54,18 +58,24 @@ class Switch(Object, Subject):
 
 
 class Door(Object):
+    """
+    Object that allows the player to enter a specific room or blocks it from leaving it.
+    """
 
     def __init__(self, position, playerGroup, room=None):
         super().__init__("door_closed.png", position, playerGroup)
 
         self.room = room
-        self._locked = False
+        self._locked = False  # True to block the player (activate collisions)
         self._opened = False
 
     def onCollisionEnter(self, collided):
 
+        # If the player can enter the room (not visited yet)
         if not self._locked:
             self.open()
+
+        # If the door is blocked, the player cannot go through it (room visited previously or still inside it)
         else:
             collided.x, collided.y = collided.lastPos
             self.objectsEnterCollision.remove(collided)
@@ -75,25 +85,16 @@ class Door(Object):
 
         if isinstance(subject, Switch):
             self._locked = subject.lock
+
             if subject.lock:
                 self.close()
             else:
                 self.open()
 
     def open(self):
-
-        if self._opened:
-            return
-
-        self._opened = True
         self.image = ResourcesManager.loadImage("door_opened.png", transparency=True)
         ResourcesManager.loadSound("door.wav").play()
 
     def close(self):
-
-        if not self._opened:
-            return
-
-        self._opened = False
         self.image = ResourcesManager.loadImage("door_closed.png", transparency=True)
         ResourcesManager.loadSound("door.wav").play()

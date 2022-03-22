@@ -5,8 +5,8 @@ import pygame
 from characters.npc import ElderTutorialCharacter
 from conf.metainfo import MetainfoManager
 from objects.door import Switch
-from phase.cinematic import DialoguePhase
-from phase.playable import GamePhase
+from scenes.cinematic import DialoguePhase
+from scenes.playable import GamePhase
 from utils.observer import Observer, Subject
 
 

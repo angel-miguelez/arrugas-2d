@@ -4,7 +4,7 @@ import pygame
 
 from game.director import Director
 from game.interactive import Interactive
-from characters.entity import Entity
+from game.entity import Entity
 from utils.resourcesmanager import ResourcesManager
 
 

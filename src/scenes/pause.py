@@ -6,7 +6,7 @@ from pygame.locals import *
 
 from game.dialogue import TextUI
 from game.director import Director
-from game.scene import Scene
+from scenes.scene import Scene
 
 
 class PauseScene(Scene):

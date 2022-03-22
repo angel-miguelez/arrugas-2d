@@ -12,9 +12,9 @@ from characters.npc import NurseCharacter, ElderCharacter, Television, Bed01, Be
 from conf.metainfo import MetainfoManager
 from effects.occlusion import Occlude
 from game.director import Director
-from game.scene import Scene
+from scenes.scene import Scene
 from map.level import Level
-from menu.pause import PauseScene
+from scenes.pause import PauseScene
 from objects.door import Switch, Door
 from objects.elevator import Elevator
 from objects.glasses import Glasses
@@ -25,7 +25,7 @@ from objects.deathCounter import DeathCounter
 
 class PlayablePhase(Scene):
     """
-    Base class to every playable scene
+    Base class to every playable scene.
     """
 
     def __init__(self, nextScene):
@@ -94,6 +94,9 @@ class PlayablePhase(Scene):
 
 
 class GamePhase(PlayablePhase):
+    """
+    Common behaviour to phases with a level, a player, objects, NPCs and enemies.
+    """
 
     def __init__(self, nextScene, level):
         super().__init__(nextScene)
@@ -220,7 +223,7 @@ class GamePhase(PlayablePhase):
         """
         Creates the switches and doors of every room based on the level data, links the corresponding enemies and
         objects of each one to their switches and spawns the letters of the level (they are switches since they open
-        the doors when picked up)
+        the doors when picked up).
         """
 
         lettersCreated = 0
@@ -255,7 +258,7 @@ class GamePhase(PlayablePhase):
             offset = ((data[4] * 45) - 22)
             insideSwitch = Switch("invisible_tile.png", (data[2] + offset, data[3]), self.playerGroup, entities, visible=False, addEntities=True)
 
-            offset = - ((data[4] * 100) - 50)  # move the outside switch to the left or right 50px
+            offset = - ((data[4] * 100) - 50)
             outsideSwitch = Switch("invisible_tile.png", (data[0] + offset, data[1]), self.playerGroup, entities, active=False, visible=False)
 
             insideSwitch.attach(door)  # close the door on enter the room

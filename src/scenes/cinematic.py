@@ -6,7 +6,7 @@ import sys
 
 from game.dialogue import Dialogue, DynamicDialogueIntervention
 from game.director import Director
-from game.scene import Scene
+from scenes.scene import Scene
 from utils.resourcesmanager import ResourcesManager
 
 
@@ -64,6 +64,9 @@ class CinematicPhase(Scene):
 
 
 class DialoguePhase(CinematicPhase):
+    """
+    Phase with just a dialogue between some characters.
+    """
 
     def __init__(self, nextScene, backgroundImage, dialogue):
         super().__init__(nextScene)

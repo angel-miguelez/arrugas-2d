@@ -2,7 +2,7 @@
 
 import pygame.key
 
-from characters.entity import Entity
+from game.entity import Entity
 from characters.character import *
 from game.director import Director
 from map.tiles import Tile
@@ -30,14 +30,15 @@ class Enemy(Character, Entity):
 
     def updateObserver(self, subject):
         Entity.updateObserver(self, subject)
-        self.x, self.y = self.position  # the (x,y) of Character must be consistent with position of Entity
+        self.x, self.y = self.position  # the (x,y) of Character should be consistent with position of Entity
 
     def onCollisionEnter(self, collided):
         Character.onCollisionEnter(self, collided)
 
         if isinstance(collided, Tile):
-            self.position = self.lastPos  # the (x,y) of Character must be consistent with position of Entity
+            self.position = self.lastPos  # the (x,y) of Character should be consistent with position of Entity
 
+        # The player looses and has to start the level again
         if isinstance(collided, Player):
             Director().reset(fade=True)
 

@@ -2,10 +2,8 @@
 
 import pygame.key
 
-from game.director import Director
 from game.interactive import Interactive
 from map.tiles import Tile
-from characters.npc import DialogueCharacter
 from utils.resourcesmanager import *
 from utils.observer import Subject
 
@@ -166,11 +164,17 @@ class Player(Character, Subject):
         self.animationDelay /= 1.5
 
     def stop(self):
+        """
+        Disables the events from the player and sets the sprite to IDLE
+        """
         self.lastMovements = [IDLE]
         self.movement = IDLE
         self.eventsEnabled = False
     
     def start(self):
+        """
+        Activates the events to the player from the IDLE position
+        """
         self.lastMovements = [IDLE]
         self.movement = IDLE
         self.eventsEnabled = True
