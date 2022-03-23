@@ -23,19 +23,20 @@ class Tutorial(GamePhase, Observer):
         self.partner = ElderTutorialCharacter((500, 300), self.playerGroup)
         self.npcGroup.add(self.partner)
 
+        self.dialoguePlayed = False  # True if the dialogue been already played
+
     def onEnterScene(self):
         super().onEnterScene()
 
         # Provoke a fake collision, to trigger the dialogue
-        self.partner.objectsEnterCollision.append(self.player)  # consistency with the collision system
-        self.partner.onCollisionEnter(self.player)
-
-    def onExitScene(self):
-        super().onExitScene()
-        MetainfoManager.setTutorialDone()
+        if not self.dialoguePlayed:
+            self.partner.objectsEnterCollision.append(self.player)  # consistency with the collision system
+            self.partner.onCollisionEnter(self.player)
+            self.dialoguePlayed = True
 
     def updateObserver(self, subject: Subject):
         self.finish()
+        MetainfoManager.setTutorialDone()
 
 
 class SceneDialog2(DialoguePhase):

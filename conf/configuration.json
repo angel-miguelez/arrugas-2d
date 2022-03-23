@@ -11,8 +11,8 @@
         }
     },
     "sound": {
-        "menu_music_volume": 0.27,
-        "game_music_volume": 0.3,
+        "menu_music_volume": 0.48,
+        "game_music_volume": 0.25,
         "sound_effects_volume": 0.72
     },
     "dialogue": {

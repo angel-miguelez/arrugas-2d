@@ -256,7 +256,7 @@ class GamePhase(PlayablePhase):
             letterOrSwitch.attach(door)  # open the door when picking the letter or pushing the switch
 
             offset = ((data[4] * 45) - 22)
-            insideSwitch = Switch("invisible_tile.png", (data[2] + offset, data[3]), self.playerGroup, entities, visible=False, addEntities=True)
+            insideSwitch = Switch("invisible_tile.png", (data[2] + offset, data[3]), self.playerGroup, entities, visible=False, spawnEntities=True)
 
             offset = - ((data[4] * 100) - 50)
             outsideSwitch = Switch("invisible_tile.png", (data[0] + offset, data[1]), self.playerGroup, entities, active=False, visible=False)

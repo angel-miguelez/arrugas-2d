@@ -13,7 +13,7 @@ class Switch(Object, Subject):
     Object to lock or unlock another object
     """
 
-    def __init__(self, image, position, playerGroup, entitiesToUpdate, lock=True, visible=True, active=True, addEntities=False):
+    def __init__(self, image, position, playerGroup, entitiesToUpdate, lock=True, visible=True, active=True, spawnEntities=False):
         Object.__init__(self, image, position, playerGroup)
         Subject.__init__(self)
 
@@ -23,9 +23,10 @@ class Switch(Object, Subject):
         self.visible = visible  # if it is visible (the player cannot step over it)
         self.active = active  # if the lock effect is active
 
-        self.entities = entitiesToUpdate  # activate or desactivate entities
-
-        self.addEntities = addEntities
+        # If entitiesToUpdate is not empty, and spawnEntities is False, then those entities are removed
+        # If entitiesToUpdate is not empty, and spawnEntities is True, then those entities are activated
+        self.entities = entitiesToUpdate
+        self.spawnEntities = spawnEntities
 
     def onCollisionEnter(self, collided):
 
@@ -43,7 +44,7 @@ class Switch(Object, Subject):
 
         # Activate or deactivate the entities attached to it
         for entity in self.entities:
-            if self.addEntities:
+            if self.spawnEntities:
                 entity.activate()
             else:
                 entity.deactivate()
@@ -71,6 +72,9 @@ class Door(Object):
 
     def onCollisionEnter(self, collided):
 
+        if self._opened:
+            return
+
         # If the player can enter the room (not visited yet)
         if not self._locked:
             self.open()
@@ -92,9 +96,11 @@ class Door(Object):
                 self.open()
 
     def open(self):
+        self._opened = True
         self.image = ResourcesManager.loadImage("door_opened.png", transparency=True)
         ResourcesManager.loadSound("door.wav").play()
 
     def close(self):
+        self._opened = False
         self.image = ResourcesManager.loadImage("door_closed.png", transparency=True)
         ResourcesManager.loadSound("door.wav").play()
